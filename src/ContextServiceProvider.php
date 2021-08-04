@@ -6,6 +6,7 @@ namespace Seasalt\NicoScaffold;
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -54,6 +55,8 @@ final class ContextServiceProvider extends ServiceProvider
             foreach (glob("{$context}/*", GLOB_ONLYDIR) as $entity) {
                 foreach (glob("{$entity}/*.php") as $routes) {
                     $this->loadRoutesFrom($routes);
+					Route::middleware('web')
+						->group($routes);
                 }
             }
         }
