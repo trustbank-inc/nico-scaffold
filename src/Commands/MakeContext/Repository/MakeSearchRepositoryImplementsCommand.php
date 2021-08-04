@@ -98,26 +98,6 @@ final class MakeSearchRepositoryImplementsCommand extends GeneratorCommand
     }
 
     /**
-     * 処理に成功したらImplementsとModelの作成処理も実行する
-     *
-     * @throws FileNotFoundException
-     */
-    public function handle(): bool
-    {
-        $result = parent::handle();
-        if ($result === false) {
-            return false;
-        }
-
-        $this->call('repository:register', [
-            'context' => $this->getContextInput(),
-            'interface' => "{$this->rootNamespace()}Contexts\\{$this->getContextInput()}\\Domain\\Persistence\\Search{$this->getEntityInput()}ListRepository",
-        ]);
-
-        return true;
-    }
-
-    /**
      * @param string $name
      * @return string
      * @throws FileNotFoundException
