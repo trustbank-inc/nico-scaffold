@@ -1,0 +1,32 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\Domain\Entity\IdGenerator;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
+
+/**
+ * 削除
+ */
+final class Interactor
+{
+    /**
+     * @param {{ entity }}Repository $repository
+     */
+    public function __construct(private {{ entity }}Repository $repository)
+    {
+
+    }
+
+    /**
+     * @param Input $input
+     */
+    public function execute(Input $input): void
+    {
+        {{ entity }}::destroy(
+            id: $input->getId(),
+            repository: $this->repository);
+    }
+}

@@ -1,0 +1,59 @@
+<?php
+/** @noinspection NonAsciiCharacters */
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Update\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Update\Interactor;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\UseCase\{{ context }}\{{ entity }}\Fixture\UpdateFixture;
+use Tests\TestCase;
+
+/**
+ * 更新のテスト
+ */
+final class UpdateTest extends TestCase
+{
+    use WithFaker;
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    public function エンティティが更新できること()
+    {
+        /** @var UpdateFixture $fixture */
+        $fixture = resolve(UpdateFixture::class);
+        $entity = $fixture->create();
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'id' => $entity->getId()->getValue(),
+            'title' => '更新テスト',
+            /** TODO add fields */
+        ]));
+
+        $this->assertDatabaseCount(table: '{{ table }}', count: 1);
+        $this->assertDatabaseHas(table: '{{ table }}', data: ['title' => '更新テスト']);
+        /** TODO assert fields */
+    }
+
+    /**
+     * @test
+     */
+    public function 存在しないエンティティの更新でエラーとなること()
+    {
+        $this->expectException({{ entity }}NotFoundException::class);
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'id' => 'dummy',
+            'title' => '更新テスト',
+        ]));
+    }
+}

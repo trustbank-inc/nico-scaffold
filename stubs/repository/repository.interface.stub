@@ -1,0 +1,33 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
+
+/**
+ * データベースへの永続化のインターフェース
+ */
+interface {{ class }}
+{
+    /**
+     * @param {{ entity }}RepositoryRecord $record
+     */
+    public function save({{ entity }}RepositoryRecord $record): void;
+
+    /**
+     * @param {{ entity }}Id $id
+     * @return {{ entity }}RepositoryRecord
+     */
+    public function restore({{ entity }}Id $id): {{ entity }}RepositoryRecord;
+
+    /**
+     * @param {{ entity }}Id $id
+     */
+    public function exists({{ entity }}Id $id): bool;
+
+    /**
+     * @param {{ entity }}Id $id
+     */
+    public function destroy({{ entity }}Id $id): void;
+}

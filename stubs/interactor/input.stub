@@ -1,0 +1,42 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\UseCase\InputValidator;
+
+final class Input
+{
+    public function __construct(
+        // TODO add input
+        )
+    {
+
+    }
+
+    // TODO add getters
+
+    /**
+     * POST値からインスタンスを作成する
+     *
+     * @param array<string, string> $input
+     * @return static
+     */
+    public static function fromArray(array $input): self
+    {
+        $validator = new InputValidator(
+            requiredFields: [
+                // TODO add fields
+                // 'fieldName' => 'className',
+                // ** class require "isValidString" method. **
+            ],
+            optionalFields: [
+
+            ]);
+        $validator->validate($input);
+
+        return new self(
+            // TODO add input
+        );
+    }
+}

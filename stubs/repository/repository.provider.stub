@@ -1,0 +1,19 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
+use App\Contexts\{{ context }}\Infrastructure\Persistence\{{ entity }}RepositoryImpl;
+use Illuminate\Support\ServiceProvider;
+
+final class {{ class }} extends ServiceProvider
+{
+    /**
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->bind({{ entity }}Repository::class, {{ entity }}RepositoryImpl::class);
+    }
+}

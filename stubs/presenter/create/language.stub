@@ -1,0 +1,10 @@
+<?php
+/** TODO replace placeholders */
+return [
+    'title' => '***作成',
+    'fields' => [
+        'title' => 'タイトル',
+        /** TODO add fields */
+    ],
+    'submit' => '送信',
+];

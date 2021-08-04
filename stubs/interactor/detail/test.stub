@@ -1,0 +1,60 @@
+<?php
+/** @noinspection NonAsciiCharacters */
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Interactor;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\UseCase\{{ context }}\{{ entity }}\Fixture\DetailFixture;
+use Tests\TestCase;
+
+final class DetailTest extends TestCase
+{
+    use WithFaker;
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    public function エンティティの詳細が取得できること()
+    {
+        /** @var DetailFixture $fixture */
+        $fixture = resolve(DetailFixture::class);
+        $entity = $fixture->create();
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $output = $interactor->execute(Input::fromArray([
+            'id' => $entity->getId()->getValue(),
+        ]));
+
+        $this->assertEquals(
+            expected: $entity->getId(),
+            actual: $output->getEntity()->getId());
+        $this->assertEquals(
+            expected: $entity->getTitle(),
+            actual: $output->getEntity()->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function 存在しないIDを指定するとエラーになること()
+    {
+        $this->expectException({{ entity }}NotFoundException::class);
+
+        /** @var DetailFixture $fixture */
+        $fixture = resolve(DetailFixture::class);
+        $fixture->create();
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'id' => '***invalid-id***',
+        ]));
+    }
+}

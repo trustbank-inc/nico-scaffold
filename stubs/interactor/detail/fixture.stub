@@ -1,0 +1,36 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Interactor;
+use Illuminate\Foundation\Testing\WithFaker;
+
+/**
+ * 詳細取得対象のデータを準備する
+ */
+final class DetailFixture
+{
+    use WithFaker;
+
+    public function __construct(
+        private {{ entity }}Repository $repository)
+    {
+        $this->setUpFaker();
+    }
+
+    public function create(): {{ entity }}
+    {
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $output = $interactor->execute(Input::fromArray([
+            'title' => 'テスト',
+        ]));
+        return {{ entity }}::restore(
+            id: $output->getId(),
+            repository: $this->repository);
+    }
+}

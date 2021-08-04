@@ -1,0 +1,39 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}List;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+final class {{ entity }}IndexView
+{
+    private LengthAwarePaginator $paginator;
+
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function getPaginator(): LengthAwarePaginator
+    {
+        return $this->paginator;
+    }
+
+    /**
+     * @param {{ entity }}List $list
+     * @return Factory|View|Application
+     */
+    public function render({{ entity }}List $list): Factory|View|Application
+    {
+        $this->paginator = new LengthAwarePaginator(
+            items: $list,
+            total: $list->getTotal(),
+            perPage: $list->getLimit(),
+            currentPage: $list->getCurrentPage(),
+            options: ['path' => '/{{ uri }}']);
+        $this->paginator->withQueryString();
+        return view('{{ template }}')->with('view', $this);
+    }
+}

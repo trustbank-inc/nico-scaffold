@@ -1,0 +1,25 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
+
+/**
+ * 新規作成の出力結果
+ */
+final class Output
+{
+    public function __construct(private {{ entity }}Id $id)
+    {
+
+    }
+
+    /**
+     * @return {{ entity }}Id
+     */
+    public function getId(): {{ entity }}Id
+    {
+        return $this->id;
+    }
+}

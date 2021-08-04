@@ -1,0 +1,28 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+
+/**
+ * 詳細を取得する際の出力結果
+ */
+final class Output
+{
+    /**
+     * @param {{ entity }} $entity
+     */
+    public function __construct(private {{ entity }} $entity)
+    {
+
+    }
+
+    /**
+     * @return {{ entity }}
+     */
+    public function getEntity(): {{ entity }}
+    {
+        return $this->entity;
+    }
+}

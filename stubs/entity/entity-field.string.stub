@@ -1,0 +1,45 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\StringValue;
+use JsonSerializable;
+
+/**
+ * TODO add description
+ */
+final class {{ class }} implements JsonSerializable
+{
+    use StringValue;
+
+    /**
+     * 文字数の下限値
+     *
+     * @return int
+     * @noinspection PhpUnusedPrivateMethodInspection
+     */
+    private static function getMinLength(): int
+    {
+        return 1;
+    }
+
+    /**
+     * 文字数の上限値
+     *
+     * @return int
+     * @noinspection PhpUnusedPrivateMethodInspection
+     */
+    private static function getMaxLength(): int
+    {
+        return 100;
+    }
+
+    /**
+     * @return string
+     */
+    public function jsonSerialize(): string
+    {
+        return $this->getValue();
+    }
+}

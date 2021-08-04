@@ -1,0 +1,33 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
+
+/**
+ * 更新
+ */
+final class Interactor
+{
+    /**
+     * @param {{ entity }}Repository $repository
+     */
+    public function __construct(
+        private {{ entity }}Repository $repository)
+    {
+
+    }
+
+    /**
+     * @param Input $input
+     */
+    public function execute(Input $input): void
+    {
+        $entity = {{ entity }}::restore(id: $input->getId(), repository: $this->repository);
+        $entity->setTitle($input->getTitle());
+        /** TODO set fields */
+        $entity->save($this->repository);
+    }
+}

@@ -1,0 +1,11 @@
+<?php
+declare(strict_types=1);
+
+use App\Http\Controllers\{{ context }}\{{ entity }}UpdateController;
+use Illuminate\Support\Facades\Route;
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::put('/{{ resource }}/{id}', {{ entity }}UpdateController::class)
+        ->whereAlphaNumeric('id')
+        ->name('{{ resource }}.update');
+});

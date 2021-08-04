@@ -1,0 +1,76 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\SearchPhrase;
+use Seasalt\NicoScaffold\Components\UseCase\InputValidator;
+
+/**
+ * 一覧取得の入力パラメータ
+ */
+final class Input
+{
+    /**
+     * @param SearchPhrase $searchPhrase
+     * @param int|null $limit
+     * @param int $currentPage
+     */
+    public function __construct(
+        private SearchPhrase $searchPhrase,
+        private ?int $limit = null,
+        private int $currentPage = 1)
+    {
+
+    }
+
+    /**
+     * @return SearchPhrase
+     */
+    public function getSearchPhrase(): SearchPhrase
+    {
+        return $this->searchPhrase;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentPage(): int
+    {
+        return $this->currentPage;
+    }
+
+    /**
+     * POST値からインスタンスを作成する
+     *
+     * @param array<string, string> $input
+     * @param int|null $limit
+     * @param int $currentPage
+     * @return static
+     */
+    public static function fromArray(array $input, ?int $limit = null, int $currentPage = 1): self
+    {
+        $validator = new InputValidator(
+            requiredFields: [
+
+            ],
+            optionalFields: [
+                'search_phrase' => SearchPhrase::class,
+            ]);
+        $validator->validate($input);
+
+        return new self(
+            searchPhrase: SearchPhrase::fromString($input['search_phrase'] ?? ''),
+            limit: $limit,
+            currentPage: $currentPage
+        );
+    }
+}

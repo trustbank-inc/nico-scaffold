@@ -1,0 +1,86 @@
+<?php
+/** @noinspection NonAsciiCharacters */
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Interactor;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\UseCase\{{ context }}\{{ entity }}\Fixture\DestroyFixture;
+use Tests\TestCase;
+
+final class DestroyTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    public function エンティティが削除できること()
+    {
+        /** @var DestroyFixture $fixture */
+        $fixture = resolve(DestroyFixture::class);
+        $entity1 = $fixture->create();
+        $entity2 = $fixture->create();
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'id' => $entity1->getId()->getValue(),
+        ]));
+        $interactor->execute(Input::fromArray([
+            'id' => $entity2->getId()->getValue(),
+        ]));
+
+        $this->assertDatabaseCount('{{ table }}', 0);
+    }
+
+    /**
+     * @test
+     */
+    public function 削除対象以外のエンティティに影響がないこと()
+    {
+        /** @var DestroyFixture $fixture */
+        $fixture = resolve(DestroyFixture::class);
+        $entity1 = $fixture->create();
+        $entity2 = $fixture->create();
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'id' => $entity1->getId()->getValue(),
+        ]));
+
+        $this->assertDatabaseMissing('{{ table }}', [
+            'id' => $entity1->getId(),
+        ]);
+        $this->assertDatabaseHas('{{ table }}', [
+            'id' => $entity2->getId(),
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function 削除済みのエンティティを削除してもエラーにならないこと()
+    {
+        /** @var DestroyFixture $fixture */
+        $fixture = resolve(DestroyFixture::class);
+        $entity = $fixture->create();
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'id' => $entity->getId()->getValue(),
+        ]));
+        // もう一度削除
+        $interactor->execute(Input::fromArray([
+            'id' => $entity->getId()->getValue(),
+        ]));
+
+        $this->assertDatabaseMissing('{{ table }}', [
+            'id' => $entity->getId(),
+        ]);
+    }
+}

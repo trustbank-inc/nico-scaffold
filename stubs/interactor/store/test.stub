@@ -1,0 +1,85 @@
+<?php
+/** @noinspection NonAsciiCharacters */
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\UseCase\InvalidInputException;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Interactor;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+
+/**
+ * 新規登録のテスト
+ */
+final class StoreTest extends TestCase
+{
+    use WithFaker;
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    public function エンティティが登録できること()
+    {
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'title' => 'テストタイトル',
+            /** TODO add fields */
+        ]));
+
+        $this->assertDatabaseCount(table: '{{ table }}', count: 1);
+        $this->assertDatabaseHas(table: '{{ table }}', data: [
+            'title' => 'テストタイトル',
+            /** TODO add fields */
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルの最大文字数まで登録できること()
+    {
+        $title = implode('', array_pad([], 100, 'あ'));
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'title' => $title,
+        ]));
+
+        $this->assertDatabaseCount(table: '{{ table }}', count: 1);
+        $this->assertDatabaseHas(table: '{{ table }}', data: ['title' => $title]);
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルを指定していないとエラーになること()
+    {
+        $this->expectException(InvalidInputException::class);
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'title' => '',
+        ]));
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルの最大文字数超過でエラーになること()
+    {
+        $this->expectException(InvalidInputException::class);
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $interactor->execute(Input::fromArray([
+            'title' => implode('', array_pad([], 101, 'あ')),
+        ]));
+    }
+}

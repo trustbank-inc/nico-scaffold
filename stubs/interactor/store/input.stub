@@ -1,0 +1,55 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\UseCase\InputValidator;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+
+/**
+ * 新規作成の入力パラメータ
+ */
+final class Input
+{
+    public function __construct(
+        private Title $title,
+        /** TODO add fields */
+        )
+    {
+
+    }
+
+    /**
+     * @return Title
+     */
+    public function getTitle(): Title
+    {
+        return $this->title;
+    }
+
+    /** TODO add getter */
+
+    /**
+     * POST値からインスタンスを作成する
+     *
+     * @param array<string, string> $input
+     * @return static
+     */
+    public static function fromArray(array $input): self
+    {
+        $validator = new InputValidator(
+            requiredFields: [
+                'title' => Title::class,
+                /** TODO add fields */
+            ],
+            optionalFields: [
+
+            ]);
+        $validator->validate($input);
+
+        return new self(
+            Title::fromString($input['title']),
+            /** TODO add fields */
+        );
+    }
+}

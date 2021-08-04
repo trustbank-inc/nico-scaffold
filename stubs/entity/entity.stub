@@ -1,0 +1,203 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Contexts\{{ context }}\Domain\Entity;
+
+use Seasalt\NicoScaffold\Components\Domain\Entity\IdGenerator;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}ListRepository;
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
+use JsonSerializable;
+use Traversable;
+
+/**
+ * TODO add description
+ */
+final class {{ entity }} implements JsonSerializable
+{
+    /**
+     * newによるインスタンス化はさせない
+     *
+     * @param {{ entity }}Id $id
+     * @param Title $title
+     * @see create()
+     * @see restore()
+     * @see restoreList()
+     */
+    private function __construct(
+        private {{ entity }}Id $id,
+        private Title $title,
+        /** TODO add fields */
+        )
+    {
+
+    }
+
+    /**
+     * @return {{ entity }}Id
+     */
+    public function getId(): {{ entity }}Id
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Title
+     */
+    public function getTitle(): Title
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param Title $title
+     */
+    public function setTitle(Title $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        return get_object_vars($this);
+    }
+
+    /**
+     * 新規のエンティティを作成する
+     *
+     * @param Title $title タイトル
+     * @param IdGenerator $idGenerator IDジェネレータ
+     * @return self
+     */
+    public static function create(
+        Title $title,
+        /** TODO add fields */
+        IdGenerator $idGenerator): self
+    {
+        return new self(
+            {{ entity }}Id::generate($idGenerator),
+            $title
+            /** TODO add fields */
+        );
+    }
+
+    /**
+     * 永続化されたエンティティを復元する
+     *
+     * @param {{ entity }}Id $id エンティティID
+     * @param {{ entity }}Repository $repository リポジトリ
+     * @return self
+     */
+    public static function restore(
+        {{ entity }}Id $id,
+        {{ entity }}Repository $repository): self
+    {
+        return self::restoreFromRecord($repository->restore($id));
+    }
+
+    /**
+     * エンティティを永続化する
+     *
+     * @param {{ entity }}Repository $repository リポジトリ
+     */
+    public function save(
+        {{ entity }}Repository $repository): void
+    {
+        // {{ entity }}が直接{{ entity }}RepositoryRecordをimplementsしない
+        $record = new class($this) implements {{ entity }}RepositoryRecord
+        {
+            public function __construct(private {{ entity }} $entity)
+            {
+
+            }
+
+            public function getId(): {{ entity }}Id
+            {
+                return $this->entity->getId();
+            }
+
+            public function getTitle(): Title
+            {
+                return $this->entity->getTitle();
+            }
+
+            /** TODO add fields */
+        };
+        $repository->save($record);
+    }
+
+    /**
+     * 永続化されたエンティティのリストを復元する
+     *
+     * @param {{ entity }}ListRepository $repository
+     * @return {{ entity }}List
+     */
+    public static function restoreList({{ entity }}ListRepository $repository): {{ entity }}List
+    {
+        $paginator = $repository->restore();
+        $entities = self::restoreFromRecords($paginator->getRecords());
+        return new class(
+            $entities,
+            $paginator->getTotal(),
+            $paginator->getLimit(),
+            $paginator->getCurrentPage()) implements {{ entity }}List
+        {
+            public function __construct(
+                private Traversable $entities,
+                private int $total,
+                private int $limit,
+                private int $currentPage) {}
+            public function getIterator(): Traversable { return $this->entities; }
+            public function getTotal(): int { return $this->total; }
+            public function getLimit(): int { return $this->limit; }
+            public function getCurrentPage(): int { return $this->currentPage; }
+            public function jsonSerialize(): array { return iterator_to_array($this->entities); }
+        };
+    }
+
+    /**
+     * 永続化されたエンティティを削除する
+     *
+     * @param {{ entity }}Id $id
+     * @param {{ entity }}Repository $repository
+     */
+    public static function destroy(
+        {{ entity }}Id $id,
+        {{ entity }}Repository $repository): void
+    {
+        $repository->destroy($id);
+    }
+
+    /**
+     * リポジトリの返すデータからエンティティのリストを復元する
+     *
+     * @param {{ entity }}RepositoryRecord[] $records
+     * @return Traversable
+     */
+    private static function restoreFromRecords(array $records): Traversable
+    {
+        foreach ($records as $record) {
+            yield self::restoreFromRecord($record);
+        }
+    }
+
+    /**
+     * リポジトリの返すデータからエンティティを復元する
+     *
+     * @param {{ entity }}RepositoryRecord $row
+     * @return self
+     */
+    private static function restoreFromRecord({{ entity }}RepositoryRecord $record): self
+    {
+        return new self(
+            id: $record->getId(),
+            title: $record->getTitle(),
+            /** TODO add fields */
+        );
+    }
+}

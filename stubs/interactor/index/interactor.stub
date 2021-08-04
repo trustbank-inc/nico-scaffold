@@ -1,0 +1,34 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Persistence\Search{{ entity }}ListRepository;
+
+/**
+ * TODO add description
+ */
+final class Interactor
+{
+    /**
+     * @param Search{{ entity }}ListRepository $listRepository
+     */
+    public function __construct(
+        private Search{{ entity }}ListRepository $listRepository)
+    {
+
+    }
+
+    /**
+     * @param Input $input
+     * @return Output
+     */
+    public function execute(Input $input): Output
+    {
+        $this->listRepository->setSearchPhrase($input->getSearchPhrase());
+        $this->listRepository->setLimit($input->getLimit());
+        $this->listRepository->setCurrentPage($input->getCurrentPage());
+        return new Output({{ entity }}::restoreList($this->listRepository));
+    }
+}

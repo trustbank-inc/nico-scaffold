@@ -1,0 +1,34 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Contexts\{{ context }}\Domain\Entity;
+
+use IteratorAggregate;
+use JsonSerializable;
+
+/**
+ * TODO add description
+ */
+interface {{ entity }}List extends IteratorAggregate, JsonSerializable
+{
+    /**
+     * 総件数
+     *
+     * @return int
+     */
+    public function getTotal(): int;
+
+    /**
+     * 1ページあたりの表示件数
+     *
+     * @return int
+     */
+    public function getLimit(): int;
+
+    /**
+     * 現在ページ
+     *
+     * @return int
+     */
+    public function getCurrentPage(): int;
+}

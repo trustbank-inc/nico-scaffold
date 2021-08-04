@@ -1,0 +1,33 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Contexts\{{ context }}\Domain\Persistence;
+
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\SearchPhrase;
+
+/**
+ * 検索フレーズで絞り込んだエンティティ一覧
+ */
+interface Search{{ entity }}ListRepository extends {{ entity }}ListRepository
+{
+    /**
+     * 検索フレーズ
+     *
+     * @param SearchPhrase $searchPhrase
+     */
+    public function setSearchPhrase(SearchPhrase $searchPhrase): void;
+
+    /**
+     * 1ページ当たりの表示件数
+     *
+     * @param int|null $limit
+     */
+    public function setLimit(?int $limit): void;
+
+    /**
+     * 現在ページ
+     *
+     * @param int $currentPage
+     */
+    public function setCurrentPage(int $currentPage): void;
+}

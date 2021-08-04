@@ -1,0 +1,33 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+
+use Seasalt\NicoScaffold\Components\Domain\Entity\IdGenerator;
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\StringValue;
+use JsonSerializable;
+
+/**
+ * TODO add description
+ */
+final class {{ entity }}Id implements JsonSerializable
+{
+    use StringValue;
+
+    /**
+     * @param IdGenerator $generator
+     * @return static
+     */
+    public static function generate(IdGenerator $generator): self
+    {
+        return self::fromString($generator->generate());
+    }
+
+    /**
+     * @return string
+     */
+    public function jsonSerialize(): string
+    {
+        return $this->getValue();
+    }
+}

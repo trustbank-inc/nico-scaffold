@@ -1,0 +1,118 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\Domain\Persistence\Paginator;
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\SearchPhrase;
+use Seasalt\NicoScaffold\Components\Infrastructure\Persistence\HasSearchPhrase;
+use Seasalt\NicoScaffold\Components\Infrastructure\Persistence\Paginatable;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
+use App\Contexts\{{ context }}\Domain\Persistence\Search{{ entity }}ListRepository;
+use App\Models\{{ model }} as {{ model }}Model;
+
+final class {{ class }} implements Search{{ entity }}ListRepository
+{
+    use HasSearchPhrase;
+    use Paginatable;
+
+    /**
+     * @var SearchPhrase
+     */
+    private SearchPhrase $searchPhrase;
+
+    /**
+     * @var int|null
+     */
+    private ?int $limit = null;
+
+    /**
+     * @var int
+     */
+    private int $currentPage = 1;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->searchPhrase = SearchPhrase::fromString('');
+    }
+
+    /**
+     * @param SearchPhrase $searchPhrase
+     */
+    public function setSearchPhrase(SearchPhrase $searchPhrase): void
+    {
+        $this->searchPhrase = $searchPhrase;
+    }
+
+    /**
+     * @param int|null $limit
+     */
+    public function setLimit(?int $limit): void
+    {
+        $this->limit = $limit;
+    }
+
+    /**
+     * @param int $currentPage
+     */
+    public function setCurrentPage(int $currentPage): void
+    {
+        $this->currentPage = $currentPage;
+    }
+
+    /**
+     * @return Paginator
+     */
+    public function restore(): Paginator
+    {
+        $builder = {{ model }}Model::query();
+        $this->buildSearchPhraseWhereClauses($builder, $this->searchPhrase, [
+            'title',
+            /** TODO add fields */
+        ]);
+        $paginator = $builder->paginate(perPage: $this->limit, page: $this->currentPage);
+        $records = [];
+        /** @var {{ model }}Model $row */
+        foreach ($paginator as $row) {
+            $records[] = $this->createRecord($row->toArray());
+        }
+        return $this->createPaginator(
+            records: $records,
+            total: $paginator->total(),
+            limit: $paginator->perPage(),
+            currentPage: $paginator->currentPage(),
+            lastPage: $paginator->lastPage());
+    }
+
+    /**
+     * 行データからエンティティ向けのレコードを作成する
+     *
+     * @param array $row
+     * @return {{ entity }}RepositoryRecord
+     */
+    private function createRecord(array $row): {{ entity }}RepositoryRecord
+    {
+        return new class($row) implements {{ entity }}RepositoryRecord
+        {
+            public function __construct(private array $row)
+            {
+
+            }
+
+            public function getId(): {{ entity }}Id
+            {
+                return {{ entity }}Id::fromString($this->row['id']);
+            }
+
+            public function getTitle(): Title
+            {
+                return Title::fromString($this->row['title'] ?? '');
+            }
+        };
+    }
+}

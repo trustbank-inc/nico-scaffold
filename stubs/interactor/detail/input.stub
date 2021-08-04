@@ -1,0 +1,48 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\UseCase\InputValidator;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
+
+/**
+ * 詳細を取得する際の入力パラメータ
+ */
+final class Input
+{
+    /**
+     * @param {{ entity }}Id $id
+     */
+    public function __construct(private {{ entity }}Id $id)
+    {
+
+    }
+
+    /**
+     * @return {{ entity }}Id
+     */
+    public function getId(): {{ entity }}Id
+    {
+        return $this->id;
+    }
+
+    /**
+     * POST値からインスタンスを作成する
+     *
+     * @param array<string, string> $input
+     * @return self
+     */
+    public static function fromArray(array $input): self
+    {
+        $validator = new InputValidator(
+            requiredFields: [
+                'id' => {{ entity }}Id::class,
+            ]);
+        $validator->validate($input);
+
+        return new self(
+            {{ entity }}Id::fromString($input['id'])
+        );
+    }
+}

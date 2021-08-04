@@ -1,0 +1,33 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
+
+/**
+ * 詳細を取得
+ */
+final class Interactor
+{
+    /**
+     * @param {{ entity }}Repository $repository
+     */
+    public function __construct(
+        private {{ entity }}Repository $repository)
+    {
+
+    }
+
+    /**
+     * @param Input $input
+     * @return Output
+     */
+    public function execute(Input $input): Output
+    {
+        return new Output({{ entity }}::restore(
+            id: $input->getId(),
+            repository: $this->repository));
+    }
+}

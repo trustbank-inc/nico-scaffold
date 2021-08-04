@@ -1,0 +1,31 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\Domain\Entity\IdGenerator;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
+
+/**
+ * TODO add description
+ */
+final class Interactor
+{
+    public function __construct(
+        private {{ entity }}Repository $repository,
+        private IdGenerator $idGenerator)
+    {
+
+    }
+
+    public function execute(Input $input): Output
+    {
+        $entity = {{ entity }}::create(
+            $input->getTitle(),
+            /** TODO add fields */
+            $this->idGenerator);
+        $entity->save($this->repository);
+        return new Output($entity->getId());
+    }
+}

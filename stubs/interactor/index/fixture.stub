@@ -1,0 +1,93 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}List;
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Interactor;
+use Illuminate\Foundation\Testing\WithFaker;
+use Traversable;
+
+/**
+ * 一覧取得用のデータを準備する
+ */
+final class IndexFixture
+{
+    use WithFaker;
+
+    private string $titlePrefix = '';
+    private string $titleSuffix = '';
+
+    public function __construct(
+        private {{ entity }}Repository $repository)
+    {
+        $this->setUpFaker();
+    }
+
+    /**
+     * 生成するデータのタイトルに付けるプレフィクス
+     *
+     * @param string $titlePrefix
+     */
+    public function setTitlePrefix(string $titlePrefix): void
+    {
+        $this->titlePrefix = $titlePrefix;
+    }
+
+    /**
+     * 生成するデータのタイトルに付けるサフィックス
+     *
+     * @param string $titleSuffix
+     */
+    public function setTitleSuffix(string $titleSuffix): void
+    {
+        $this->titleSuffix = $titleSuffix;
+    }
+
+    /**
+     * @param int $limit
+     * @return {{ entity }}List
+     */
+    public function create(int $limit = 15): {{ entity }}List
+    {
+        return new class($this->createEntities($limit), $limit) implements {{ entity }}List
+        {
+            public function __construct(private Traversable $entities, private int $limit) {}
+            public function getIterator(): Traversable { return $this->entities; }
+            public function getTotal(): int { return $this->limit; }
+            public function getLimit(): int { return $this->limit; }
+            public function getCurrentPage(): int { return 1; }
+            public function jsonSerialize(): array { return iterator_to_array($this->entities); }
+        };
+    }
+
+    /**
+     * @param int $limit
+     * @return Traversable
+     */
+    private function createEntities(int $limit): Traversable
+    {
+        for ($index = 0; $index < $limit; ++$index) {
+            yield $this->createEntity($index);
+        }
+    }
+
+    /**
+     * @param int $index
+     * @return {{ entity }}
+     */
+    private function createEntity(int $index): {{ entity }}
+    {
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $output = $interactor->execute(Input::fromArray([
+            'title' => "{$this->titlePrefix}一覧テスト{$index}{$this->titleSuffix}",
+        ]));
+        return {{ entity }}::restore(
+            id: $output->getId(),
+            repository: $this->repository);
+    }
+}

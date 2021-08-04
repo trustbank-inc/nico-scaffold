@@ -1,0 +1,28 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}List;
+
+/**
+ * 一覧取得の出力
+ */
+final class Output
+{
+    /**
+     * @param {{ entity }}List $list
+     */
+    public function __construct(private {{ entity }}List $list)
+    {
+
+    }
+
+    /**
+     * @return {{ entity }}List
+     */
+    public function getList(): {{ entity }}List
+    {
+        return $this->list;
+    }
+}

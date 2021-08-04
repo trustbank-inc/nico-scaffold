@@ -1,0 +1,86 @@
+<?php
+declare(strict_types=1);
+
+use App\Contexts\{{ context }}\Infrastructure\Presenter\{{ entity }}DetailView;
+use Illuminate\Support\ViewErrorBag;
+
+/**
+ * @var {{ entity }}DetailView $view
+ * @var ViewErrorBag $errors
+ */
+?>
+
+@extends('layouts.basic')
+
+@section('title')
+    {{ __('{{ lang }}/detail.title') }}
+@endsection
+
+@section('breadcrumb')
+    @parent
+    <li class="breadcrumb-item">
+        <a href="{{ $view->getIndexUrl() }}">
+            {{ __('{{ lang }}/index.title') }}
+        </a>
+    </li>
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col-md-6">
+        @if (session()->has('info_message'))
+            <div class="alert alert-info">{{ session('info_message') }}</div>
+        @endif
+        @if (session()->has('error_message'))
+            <div class="alert alert-danger">{{ session('error_message') }}</div>
+        @endif
+
+        <form id="form" action="{{ route('{{ uri }}.update', ['id' => $view->getEntity()->getId()]) }}" method="post">
+            @csrf
+            @method('put')
+
+            <div class="title form-floating mb-3">
+                <input type="text" id="title" name="title" class="form-control {{ $errors->has('title') ? ' is-invalid' : '' }}" value="{{ old('title', $view->getEntity()->getTitle()) }}" placeholder="-" autocomplete="off">
+                <label for="title" class="mb-1">{{ __('{{ lang }}/detail.fields.title') }} <span class="required">*</span></label>
+                @include('elements.validation.message', ['field' => 'title'])
+            </div>
+
+            <!-- TODO add fields -->
+
+            <button type="submit" class="btn btn-primary float-end fixed-120-px">
+                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                {{ __('{{ lang }}/detail.submit') }}
+            </button>
+        </form>
+    </div>
+    <div class="col-3">
+    </div>
+    <div class="col-3">
+        <div class="side-bar card w-100">
+            <div class="card-header">
+                {{ __('{{ lang }}/detail.operations') }}
+            </div>
+            <div class="card-body">
+                <nav class="nav flex-column">
+                    <a href="javascript: window.submitForm('delete')" class="list-link nav-link text-danger">{{ __('{{ lang }}/detail.delete_book') }}</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form action="{{ route('{{ uri }}.destroy', ['id' => $view->getEntity()->getId()->getValue()]) }}" method="post" id="delete">
+    @csrf
+    @method('delete')
+    <div class="confirm" data-message="{{ __('{{ lang }}/detail.delete_confirm') }}"></div>
+</form>
+@endsection
+
+@section('scripts')
+    @parent
+    <script>
+        window.onload = () => {
+            window.setupForm(document.getElementById('form'));
+        };
+    </script>
+@endsection

@@ -1,0 +1,25 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+
+/**
+ * データベースへの永続化のレコードインターフェース
+ */
+interface {{ class }}
+{
+    /**
+     * @return {{ entity }}Id $id
+     */
+    public function getId(): {{ entity }}Id;
+
+    /**
+     * @return Title
+     */
+    public function getTitle(): Title;
+
+    /** TODO add fields */
+}

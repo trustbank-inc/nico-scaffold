@@ -1,0 +1,43 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Illuminate\Foundation\Http\FormRequest;
+
+final class {{ entity }}StoreRequest extends FormRequest
+{
+    /**
+     * @return bool
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+            /** TODO add fields */
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function attributes(): array
+    {
+        return [
+            'title' => __('{{ lang }}/create.fields.title'),
+            /** TODO add fields */
+        ];
+    }
+}

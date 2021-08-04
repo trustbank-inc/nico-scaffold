@@ -1,0 +1,240 @@
+<?php
+/** @noinspection NonAsciiCharacters */
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\SearchPhrase;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Index\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Index\Interactor;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\UseCase\{{ context }}\{{ entity }}\Fixture\IndexFixture;
+use Tests\TestCase;
+
+/**
+ * 一覧取得のテスト
+ */
+final class IndexTest extends TestCase
+{
+    use WithFaker;
+    use RefreshDatabase;
+
+    /**
+     * @test
+     */
+    public function エンティティの一覧が取得できること()
+    {
+        /** @var IndexFixture $fixture */
+        $fixture = resolve(IndexFixture::class);
+        $entities = iterator_to_array($fixture->create());
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $output = $interactor->execute(Input::fromArray(input: []));
+        /** @var {{ entity }} $entity */
+        foreach ($output->getList() as $index => $entity) {
+            $this->assertEquals(
+                expected: $entities[$index]->getId(),
+                actual: $entity->getId());
+            $this->assertEquals(
+                expected: $entities[$index]->getTitle(),
+                actual: $entity->getTitle());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function エンティティが0件でもエラーにならないこと()
+    {
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $output = $interactor->execute(Input::fromArray(input: []));
+        $this->assertCount(0, iterator_to_array($output->getList()));
+    }
+
+    /**
+     * @test
+     * @note 10件のテストデータを用意し、3件ずつのページネーションをテストする
+     */
+    public function ページ分割されたエンティティの一覧が取得できること()
+    {
+        /** @var IndexFixture $fixture */
+        $fixture = resolve(IndexFixture::class);
+        $entities = iterator_to_array($fixture->create(10));
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $page1 = $interactor->execute(Input::fromArray(input: [], limit: 3));
+        $page1Items = iterator_to_array($page1->getList());
+        $this->assertSame(10, $page1->getList()->getTotal());
+        $this->assertCount(3, $page1Items);
+        $this->assertEquals(
+            expected: $entities[0]->getId(),
+            actual: $page1Items[0]->getId()); // データの一致はIDだけで行う
+
+        $page2 = $interactor->execute(Input::fromArray(input: [], limit: 3, currentPage: 2));
+        $page2Items = iterator_to_array($page2->getList());
+        $this->assertSame(10, $page2->getList()->getTotal());
+        $this->assertCount(3, $page2Items);
+        $this->assertEquals(
+            expected: $entities[3]->getId(),
+            actual: $page2Items[0]->getId()); // データの一致はIDだけで行う
+
+        $page3 = $interactor->execute(Input::fromArray(input: [], limit: 3, currentPage: 3));
+        $page3Items = iterator_to_array($page3->getList());
+        $this->assertSame(10, $page3->getList()->getTotal());
+        $this->assertCount(3, $page3Items);
+        $this->assertEquals(
+            expected: $entities[6]->getId(),
+            actual: $page3Items[0]->getId()); // データの一致はIDだけで行う
+
+        $page4 = $interactor->execute(Input::fromArray(input: [], limit: 3, currentPage: 4));
+        $page4Items = iterator_to_array($page4->getList());
+        $this->assertSame(10, $page4->getList()->getTotal());
+        $this->assertCount(1, $page4Items); // 最終ページの件数もちゃんと合っていること
+        $this->assertEquals(
+            expected: $entities[9]->getId(),
+            actual: $page4Items[0]->getId()); // データの一致はIDだけで行う
+    }
+
+    /**
+     * @test
+     */
+    public function フレーズで前方一致検索ができること()
+    {
+        /** @var IndexFixture $fixture */
+        $fixture = resolve(IndexFixture::class);
+        $fixture->create(); // 検索にヒットしないデータも混ぜておく
+
+        $fixture->setTitlePrefix('検索確認');
+        $matchedRules = iterator_to_array($fixture->create());
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('|検索確認')));
+
+        // 復元したデータの件数が正しいこと
+        $this->assertEquals(count($matchedRules), $output->getList()->getTotal());
+
+        /** @var {{ entity }} $entity */
+        foreach ($output->getList() as $index => $entity) {
+            $this->assertEquals(
+                expected: $matchedRules[$index]->getId(),
+                actual: $entity->getId());
+            $this->assertEquals(
+                expected: $matchedRules[$index]->getTitle(),
+                actual: $entity->getTitle());
+        }
+
+        // 後方一致ではヒットしないこと
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('検索確認|')));
+        $this->assertEquals(0, $output->getList()->getTotal());
+    }
+
+    /**
+     * @test
+     */
+    public function フレーズで後方一致検索ができること()
+    {
+        /** @var IndexFixture $fixture */
+        $fixture = resolve(IndexFixture::class);
+        $fixture->create(); // 検索にヒットしないデータも混ぜておく
+
+        $fixture->setTitleSuffix('検索確認');
+        $matchedRules = iterator_to_array($fixture->create());
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('検索確認|')));
+
+        // 復元したデータの件数が正しいこと
+        $this->assertEquals(count($matchedRules), $output->getList()->getTotal());
+
+        /** @var {{ entity }} $entity */
+        foreach ($output->getList() as $index => $entity) {
+            $this->assertEquals(
+                expected: $matchedRules[$index]->getId(),
+                actual: $entity->getId());
+            $this->assertEquals(
+                expected: $matchedRules[$index]->getTitle(),
+                actual: $entity->getTitle());
+        }
+
+        // 前方一致ではヒットしないこと
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('|検索確認')));
+        $this->assertEquals(0, $output->getList()->getTotal());
+    }
+
+    /**
+     * @test
+     */
+    public function フレーズで中間一致検索ができること()
+    {
+        /** @var IndexFixture $fixture */
+        $fixture = resolve(IndexFixture::class);
+        $fixture->create(); // 検索にヒットしないデータも混ぜておく
+
+        $fixture->setTitleSuffix('検索確認');
+        $matchedRules = iterator_to_array($fixture->create());
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('テスト')));
+
+        // 復元したデータの件数が正しいこと
+        $this->assertEquals(count($matchedRules), $output->getList()->getTotal());
+
+        /** @var {{ entity }} $entity */
+        foreach ($output->getList() as $index => $entity) {
+            $this->assertEquals(
+                expected: $matchedRules[$index]->getId(),
+                actual: $entity->getId());
+            $this->assertEquals(
+                expected: $matchedRules[$index]->getTitle(),
+                actual: $entity->getTitle());
+        }
+
+        // 前方一致ではヒットしないこと
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('|テスト')));
+        $this->assertEquals(0, $output->getList()->getTotal());
+        // 後方一致ではヒットしないこと
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('テスト|')));
+        $this->assertEquals(0, $output->getList()->getTotal());
+    }
+
+    /**
+     * @test
+     */
+    public function フレーズで完全一致検索ができること()
+    {
+        /** @var IndexFixture $fixture */
+        $fixture = resolve(IndexFixture::class);
+        $fixture->create(); // 検索にヒットしないデータも混ぜておく
+
+        $fixture->setTitlePrefix('検索確認プレフィクス');
+        $fixture->setTitleSuffix('検索確認サフィックス');
+        $matchedRules = iterator_to_array($fixture->create());
+
+        /** @var Interactor $interactor */
+        $interactor = resolve(Interactor::class);
+        $phrase = '|検索確認プレフィクス一覧テスト0検索確認サフィックス|';
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => $phrase]));
+
+        // 復元したデータの件数が正しいこと
+        $this->assertEquals(1, $output->getList()->getTotal());
+
+        $this->assertEquals(
+            expected: $matchedRules[0]->getId(),
+            actual: iterator_to_array($output->getList())[0]->getId());
+
+        // 前方一致ではヒットしないこと
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('|テスト')));
+        $this->assertEquals(0, $output->getList()->getTotal());
+        // 後方一致ではヒットしないこと
+        $output = $interactor->execute(new Input(SearchPhrase::fromString('テスト|')));
+        $this->assertEquals(0, $output->getList()->getTotal());
+    }
+}

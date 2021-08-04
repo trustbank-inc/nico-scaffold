@@ -1,0 +1,65 @@
+<?php
+declare(strict_types=1);
+
+use App\Contexts\{{ context }}\Infrastructure\Presenter\{{ entity }}CreateView;
+use Illuminate\Support\ViewErrorBag;
+
+/**
+ * @var {{ entity }}CreateView $view
+ * @var ViewErrorBag $errors
+ */
+?>
+
+@extends('layouts.basic')
+
+@section('title')
+    {{ __('{{ lang }}/create.title') }}
+@endsection
+
+@section('breadcrumb')
+    @parent
+    <li class="breadcrumb-item">
+        <a href="{{ $view->getIndexUrl() }}">
+            {{ __('{{ lang }}/index.title') }}
+        </a>
+    </li>
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col-md-6">
+        @if (session()->has('info_message'))
+            <div class="alert alert-info">{{ session('info_message') }}</div>
+        @endif
+        @if (session()->has('error_message'))
+            <div class="alert alert-danger">{{ session('error_message') }}</div>
+        @endif
+
+        <form id="form" action="{{ route('{{ uri }}.store') }}" method="post">
+            @csrf
+
+            <div class="title form-floating mb-3">
+                <input type="text" id="title" name="title" class="form-control {{ $errors->has('title') ? ' is-invalid' : '' }}" value="{{ old('title') }}" placeholder="-" autocomplete="off">
+                <label for="title" class="mb-1">{{ __('{{ lang }}/create.fields.title') }} <span class="required">*</span></label>
+                @include('elements.validation.message', ['field' => 'title'])
+            </div>
+
+            <!-- TODO add fields -->
+
+            <button type="submit" class="btn btn-primary float-end fixed-120-px">
+                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                {{ __('{{ lang }}/create.submit') }}
+            </button>
+        </form>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+    @parent
+    <script>
+        window.onload = () => {
+            window.setupForm(document.getElementById('form'));
+        };
+    </script>
+@endsection

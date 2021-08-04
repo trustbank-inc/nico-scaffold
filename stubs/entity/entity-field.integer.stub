@@ -1,0 +1,23 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\IntegerValue;
+use JsonSerializable;
+
+/**
+ * TODO add description
+ */
+final class {{ class }} implements JsonSerializable
+{
+    use IntegerValue;
+
+    /**
+     * @return string
+     */
+    public function jsonSerialize(): string
+    {
+        return (string)$this->getValue();
+    }
+}

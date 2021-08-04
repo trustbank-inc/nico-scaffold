@@ -1,0 +1,25 @@
+{
+    "name": "seasalt/nico-scaffold",
+    "description": "Create a clean architecture scaffold",
+    "authors": [{
+        "name": "youhei-ushio"
+    }],
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": "8.*",
+        "robinvdvleuten/ulid": "^5.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Seasalt\\NicoScaffold\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Seasalt\\NicoScaffold\\ContextServiceProvider"
+            ]
+        }
+    }
+}
