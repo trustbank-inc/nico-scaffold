@@ -189,7 +189,7 @@ final class {{ entity }} implements JsonSerializable
     /**
      * リポジトリの返すデータからエンティティを復元する
      *
-     * @param {{ entity }}RepositoryRecord $row
+     * @param {{ entity }}RepositoryRecord $record
      * @return self
      */
     private static function restoreFromRecord({{ entity }}RepositoryRecord $record): self
