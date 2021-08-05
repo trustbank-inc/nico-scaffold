@@ -17,8 +17,6 @@ use Symfony\Component\Finder\Finder;
 
 /**
  * 各コンテキストのサービスを登録する
- *
- * @note コマンドにより生成されたインターフェースと実装はcontexts.phpへ動的に追加される
  */
 final class ContextServiceProvider extends ServiceProvider
 {
