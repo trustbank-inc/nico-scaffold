@@ -9,14 +9,13 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
- * REST操作コントローラmakeコマンド
+ * REST APIテストmakeコマンド
  *
- * @note 各コントローラのmakeコマンドへ派生
+ * @note 各APIテストのmakeコマンドへ派生
  */
-abstract class MakeRestControllerCommand extends GeneratorCommand
+abstract class MakeRestApiTestCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -32,9 +31,9 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
     {
         $useCase = Str::snake($this->getUseCase());
 
-        $this->name = "make:controller-{$useCase}";
-        $this->description = "Create a new controller ({$useCase})";
-        $this->type = "Controller({$useCase})";
+        $this->name = "make:api-test-{$useCase}";
+        $this->description = "Create a new api test ({$useCase})";
+        $this->type = "ApiTest({$useCase})";
 
         parent::__construct($files);
     }
@@ -45,12 +44,28 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-        $filename = 'controller.stub';
-        if ($this->option('api')) {
-			$filename = 'controller.api.stub';
-		}
+        $filename = 'test.api.stub';
         return $this->resolveStubPath("controller/{$useCase}/{$filename}");
     }
+
+	/**
+	 * @param string $name
+	 * @return string
+	 */
+	protected function getPath($name): string
+	{
+		$name = Str::replaceFirst($this->rootNamespace(), '', $name);
+
+		return base_path('tests').str_replace('\\', '/', $name).'.php';
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function rootNamespace(): string
+	{
+		return 'Tests';
+	}
 
     /**
      * @param string $rootNamespace
@@ -58,11 +73,7 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-		if ($this->option('api')) {
-			return $rootNamespace . "\\Http\\Controllers\\{$this->getContextInput()}\\Api";
-		} else {
-			return $rootNamespace . "\\Http\\Controllers\\{$this->getContextInput()}";
-		}
+		return "{$rootNamespace}\\Feature\\{$this->getContextInput()}\\{$this->getEntityInput()}\\Api";
     }
 
     /**
@@ -73,25 +84,16 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
         return [
             ['context', InputArgument::REQUIRED, 'The context for this Repository'],
             ['entity', InputArgument::REQUIRED, 'The name of target entity'],
+			['model', InputArgument::OPTIONAL, 'The name of eloquent model'],
         ];
     }
-
-	/**
-	 * @return array
-	 */
-    protected function getOptions(): array
-	{
-		return [
-			['api', 'a', InputOption::VALUE_NONE, 'API mode option'],
-		];
-	}
 
 	/**
      * @return string
      */
     protected function getNameInput(): string
     {
-        return $this->getEntityInput() . $this->getUseCase() . 'Controller';
+        return $this->getUseCase() . 'Test';
     }
 
     /**
@@ -118,28 +120,17 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
         return Str::plural(Str::snake($this->getEntityInput()));
     }
 
-    /**
-     * 処理に成功したらRequestの作成処理も実行する
-     *
-     * @throws FileNotFoundException
-     */
-    public function handle(): bool
-    {
-        $result = parent::handle();
-        if ($result === false) {
-            return false;
-        }
-
-        $params = $this->arguments();
-        $this->call($this->name . '-request', $params);
-        if ($this->option('api')) {
-        	$apiParams = array_merge($params, ['--api' => true]);
-			$this->call($this->name . '-route', $apiParams);
+	/**
+	 * @return string
+	 */
+	protected function getModelInput(): string
+	{
+		if (empty($this->argument('model'))) {
+			return trim($this->argument('entity'));
 		} else {
-			$this->call($this->name . '-route', $params);
+			return trim($this->argument('model'));
 		}
-        return true;
-    }
+	}
 
     /**
      * @param string $name
@@ -151,7 +142,8 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
-        return $this->replaceUri($stub);
+		$stub = $this->replaceUri($stub);
+        return $this->replaceModel($stub);
     }
 
     /**
@@ -180,4 +172,13 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
     {
         return str_replace(['{{ uri }}', '{{uri}}'], $this->getUriInput(), $stub);
     }
+
+	/**
+	 * @param string $stub
+	 * @return string
+	 */
+	private function replaceModel(string $stub): string
+	{
+		return str_replace(['{{ model }}', '{{model}}'], $this->getModelInput(), $stub);
+	}
 }

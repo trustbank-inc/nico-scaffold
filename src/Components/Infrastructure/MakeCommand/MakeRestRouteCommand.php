@@ -9,6 +9,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * REST操作ルートmakeコマンド
@@ -44,7 +45,11 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-        return $this->resolveStubPath("controller/{$useCase}/route.stub");
+		$filename = 'route.stub';
+		if ($this->option('api')) {
+			$filename = 'route.api.stub';
+		}
+        return $this->resolveStubPath("controller/{$useCase}/{$filename}");
     }
 
     /**
@@ -56,7 +61,11 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
         $context = Str::snake($this->getContextInput());
         $entity = Str::snake($this->getEntityInput());
         $useCase = Str::snake($this->getUseCase());
-        return base_path("routes/contexts/{$context}/{$entity}/{$useCase}.php");
+        if ($this->option('api')) {
+			return base_path("routes/contexts/{$context}/{$entity}/api/{$useCase}.php");
+		} else {
+			return base_path("routes/contexts/{$context}/{$entity}/{$useCase}.php");
+		}
     }
 
     /**
@@ -69,6 +78,16 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
             ['entity', InputArgument::REQUIRED, 'The name of target entity'],
         ];
     }
+
+	/**
+	 * @return array
+	 */
+	protected function getOptions(): array
+	{
+		return [
+			['api', 'a', InputOption::VALUE_NONE, 'API mode option'],
+		];
+	}
 
     /**
      * @return string

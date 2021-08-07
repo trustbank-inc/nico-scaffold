@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Destroy;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestRequestCommand;
+use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestApiTestCommand;
 
 /**
- * 削除リクエストのひな型のmakeコマンド
+ * 削除APIテストのひな型のmakeコマンド
  */
-final class MakeRequestCommand extends MakeRestRequestCommand
+final class MakeApiTestCommand extends MakeRestApiTestCommand
 {
     /**
      * @return string

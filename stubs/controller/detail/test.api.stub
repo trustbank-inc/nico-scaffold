@@ -1,0 +1,46 @@
+<?php
+/** @noinspection NonAsciiCharacters */
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Models\{{ model }} as {{ model }}Model;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+
+final class {{ class }} extends TestCase
+{
+    use RefreshDatabase;
+    use WithFaker;
+
+    /**
+     * @test
+     */
+    public function 詳細が取得できること()
+    {
+        /** @var {{ model }}Model $row */
+        $row = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->first();
+
+        $this->actingAs(new User());
+
+        $response = $this->getJson("/api/{{ uri }}/{$row->getAttribute('id')}");
+        $response->assertOk();
+        $this->assertEquals($row->toArray(), $response->json());
+    }
+
+    /**
+     * @test
+     */
+    public function 存在しないIDを指定するとエラーになること()
+    {
+        $this->actingAs(new User());
+
+        $response = $this->getJson("/api/{{ uri }}/xxxxxxxxx");
+        $response->assertNotFound();
+    }
+}

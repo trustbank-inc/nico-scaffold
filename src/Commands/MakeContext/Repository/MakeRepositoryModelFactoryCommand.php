@@ -10,38 +10,53 @@ use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * リポジトリで利用するEloquentModelのmakeコマンド
+ * EloquentModelFactoryのmakeコマンド
  */
-final class MakeRepositoryModelCommand extends GeneratorCommand
+final class MakeRepositoryModelFactoryCommand extends GeneratorCommand
 {
     use StubsFindable;
 
     /**
-     * The name and signature of the console command.
-     *
      * @var string
      */
-    protected $name = 'make:repository-model';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create a new eloquent model for repository';
+    protected $name = 'make:repository-model-factory';
 
     /**
      * @var string
      */
-    protected $type = 'Repository eloquent model';
+    protected $description = 'Create a new eloquent model factory';
+
+    /**
+     * @var string
+     */
+    protected $type = 'Repository eloquent model factory';
 
     /**
      * @return string
      */
     protected function getStub(): string
     {
-        return $this->resolveStubPath('repository/repository.model.stub');
+        return $this->resolveStubPath('repository/repository.model-factory.stub');
     }
+
+	/**
+	 * @param string $name
+	 * @return string
+	 */
+	protected function getPath($name): string
+	{
+		$name = Str::replaceFirst($this->rootNamespace(), '', $name);
+
+		return base_path('database/factories').str_replace('\\', '/', $name).'.php';
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function rootNamespace(): string
+	{
+		return "Database\\Factories";
+	}
 
     /**
      * @param string $rootNamespace
@@ -49,7 +64,7 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . "\\Models";
+        return $rootNamespace;
     }
 
     /**
@@ -67,7 +82,7 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
      */
     protected function getNameInput(): string
     {
-        return $this->getModelInput();
+        return $this->getModelInput() . 'Factory';
     }
 
     /**
@@ -96,36 +111,5 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
     private function replaceModel(string $stub): string
     {
         return str_replace(['{{ model }}', '{{model}}'], $this->getModelInput(), $stub);
-    }
-
-    /**
-     * 処理に成功したらImplementsとModelの作成処理も実行する
-     *
-     * @throws FileNotFoundException
-     */
-    public function handle(): bool
-    {
-        $result = parent::handle();
-        if ($result === false) {
-            return false;
-        }
-
-		$this->call('make:repository-model-factory', $this->arguments());
-        $this->createMigration();
-
-        return true;
-    }
-
-    /**
-     *
-     */
-    protected function createMigration(): void
-    {
-        $table = Str::snake(Str::pluralStudly(class_basename($this->getModelInput())));
-
-        $this->call('make:repository-migration', [
-            'name' => "create_{$table}_table",
-            '--create' => $table,
-        ]);
     }
 }

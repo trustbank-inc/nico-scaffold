@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Models;
+namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +15,11 @@ final class {{ model }} extends Model
     public $incrementing = false;
 
     protected $guarded = [
+        'created_at',
+        'updated_at',
+    ];
+
+    protected $hidden = [
         'created_at',
         'updated_at',
     ];

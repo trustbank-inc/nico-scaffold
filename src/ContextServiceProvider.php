@@ -56,6 +56,12 @@ final class ContextServiceProvider extends ServiceProvider
 					Route::middleware('web')
 						->group($routes);
                 }
+				foreach (glob("{$entity}/api/*.php") as $routes) {
+					$this->loadRoutesFrom($routes);
+					Route::prefix('api')
+						->middleware('api')
+						->group($routes);
+				}
             }
         }
 

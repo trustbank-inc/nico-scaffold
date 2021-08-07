@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Detail;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestRequestCommand;
+use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestApiTestCommand;
 
 /**
- * 詳細取得リクエストのひな型のmakeコマンド
+ * 詳細取得APIテストのひな型のmakeコマンド
  */
-final class MakeRequestCommand extends MakeRestRequestCommand
+final class MakeApiTestCommand extends MakeRestApiTestCommand
 {
     /**
      * @return string

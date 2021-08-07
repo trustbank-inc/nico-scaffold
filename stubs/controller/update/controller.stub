@@ -11,19 +11,18 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 
-final class {{ entity }}UpdateController extends Controller
+final class {{ class }} extends Controller
 {
     /**
      * @param {{ entity }}UpdateRequest $request
      * @param Interactor $interactor
-     * @param $id
      * @return Redirector|Application|RedirectResponse
      */
     public function __invoke(
         {{ entity }}UpdateRequest $request,
-        Interactor $interactor, $id): Redirector|Application|RedirectResponse
+        Interactor $interactor): Redirector|Application|RedirectResponse
     {
-        $interactor->execute(Input::fromArray(array_merge($request->validated(), ['id' => $id])));
+        $interactor->execute(Input::fromArray($request->validated()));
         // 一覧画面の表示パラメータを復元する
         $searchPhrase = session('{{ context }}.{{ entity }}.search_phrase');
         $limit = session('{{ context }}.{{ entity }}.limit');

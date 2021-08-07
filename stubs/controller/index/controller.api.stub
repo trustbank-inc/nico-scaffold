@@ -3,27 +3,22 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use App\Contexts\{{ context }}\Infrastructure\Presenter\{{ entity }}IndexView;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Index\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Index\Interactor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{{ context }}\{{ entity }}IndexRequest;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 final class {{ class }} extends Controller
 {
     /**
      * @param {{ entity }}IndexRequest $request
      * @param Interactor $interactor
-     * @param {{ entity }}IndexView $view
-     * @return Factory|View|Application
+     * @return LengthAwarePaginator
      */
     public function __invoke(
         {{ entity }}IndexRequest $request,
-        Interactor $interactor,
-        {{ entity }}IndexView $view): Factory|View|Application
+        Interactor $interactor): LengthAwarePaginator
     {
         $params = $request->validated();
         $limit = $params['limit'] ?? null;
@@ -32,16 +27,18 @@ final class {{ class }} extends Controller
         }
         $currentPage = intval($params['page'] ?? 1);
 
-        // ページ移動毎にlimitとpageを保持し、別画面に遷移して一覧に戻った際に現在ページを復元する
-        $request->session()->flash('{{ context }}.{{ entity }}.search_phrase', $params['search_phrase'] ?? '');
-        $request->session()->flash('{{ context }}.{{ entity }}.limit', $limit);
-        $request->session()->flash('{{ context }}.{{ entity }}.page', $currentPage);
-
         $output = $interactor->execute(Input::fromArray(
             input: $params,
             limit: $limit,
             currentPage: $currentPage
         ));
-        return $view->render($output->getList());
+        $paginator = new LengthAwarePaginator(
+            items: $output->getList(),
+            total: $output->getList()->getTotal(),
+            perPage: $output->getList()->getLimit(),
+            currentPage: $output->getList()->getCurrentPage(),
+            options: ['path' => '/api/{{ uri }}']);
+        $paginator->withQueryString();
+        return $paginator;
     }
 }

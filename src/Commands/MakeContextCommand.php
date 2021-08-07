@@ -10,7 +10,7 @@ final class MakeContextCommand extends Command
     /**
      * @var string
      */
-    protected $signature = 'make:context {name} {entity} {model?}';
+    protected $signature = 'make:context {name} {entity} {model?} {--api}';
 
     /**
      * @var string
@@ -34,15 +34,38 @@ final class MakeContextCommand extends Command
         $this->call('make:interactor-detail', compact('context', 'entity'));
         $this->call('make:interactor-update', compact('context', 'entity'));
         $this->call('make:interactor-destroy', compact('context', 'entity'));
-        $this->call('make:view-index', compact('context', 'entity'));
-        $this->call('make:view-create', compact('context', 'entity'));
-        $this->call('make:view-detail', compact('context', 'entity'));
-        $this->call('make:controller-index', compact('context', 'entity'));
-        $this->call('make:controller-create', compact('context', 'entity'));
-        $this->call('make:controller-store', compact('context', 'entity'));
-        $this->call('make:controller-detail', compact('context', 'entity'));
-        $this->call('make:controller-update', compact('context', 'entity'));
-        $this->call('make:controller-destroy', compact('context', 'entity'));
+        if ($this->option('api')) {
+        	$apiParam = [
+				'context' => $context,
+				'entity' => $entity,
+				'--api' => true,
+			];
+			$this->call('make:controller-index', $apiParam);
+			$this->call('make:controller-detail', $apiParam);
+			$this->call('make:controller-store', $apiParam);
+			$this->call('make:controller-update', $apiParam);
+			$this->call('make:controller-destroy', $apiParam);
+			$apiTestParam = [
+				'context' => $context,
+				'entity' => $entity,
+				'model' => $model,
+			];
+			$this->call('make:api-test-index', $apiTestParam);
+			$this->call('make:api-test-detail', $apiTestParam);
+			$this->call('make:api-test-store', $apiTestParam);
+			$this->call('make:api-test-update', $apiTestParam);
+			$this->call('make:api-test-destroy', $apiTestParam);
+		} else {
+			$this->call('make:controller-index', compact('context', 'entity'));
+			$this->call('make:controller-create', compact('context', 'entity'));
+			$this->call('make:controller-store', compact('context', 'entity'));
+			$this->call('make:controller-detail', compact('context', 'entity'));
+			$this->call('make:controller-update', compact('context', 'entity'));
+			$this->call('make:controller-destroy', compact('context', 'entity'));
+			$this->call('make:view-index', compact('context', 'entity'));
+			$this->call('make:view-create', compact('context', 'entity'));
+			$this->call('make:view-detail', compact('context', 'entity'));
+		}
 
         $this->line('<info>Context classes created successfully.</info>');
         return 0;
