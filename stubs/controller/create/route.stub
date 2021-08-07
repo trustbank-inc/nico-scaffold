@@ -4,6 +4,6 @@ declare(strict_types=1);
 use App\Http\Controllers\{{ context }}\{{ entity }}CreateController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('/{{ resource }}/create', {{ entity }}CreateController::class)->name('{{ resource }}.create');
 });

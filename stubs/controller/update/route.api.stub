@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Http\Controllers\{{ context }}\Api\{{ entity }}UpdateController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth']], function () {
-    Route::put('/{{ resource }}/{id}', {{ entity }}UpdateController::class)
+Route::group(['middleware' => ['api', 'auth:api']], function () {
+    Route::put('/api/{{ resource }}/{id}', {{ entity }}UpdateController::class)
         ->whereAlphaNumeric('id');
 });

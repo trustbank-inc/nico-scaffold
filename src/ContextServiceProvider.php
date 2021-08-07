@@ -53,14 +53,9 @@ final class ContextServiceProvider extends ServiceProvider
             foreach (glob("{$context}/*", GLOB_ONLYDIR) as $entity) {
                 foreach (glob("{$entity}/*.php") as $routes) {
                     $this->loadRoutesFrom($routes);
-					Route::middleware('web')
-						->group($routes);
                 }
 				foreach (glob("{$entity}/api/*.php") as $routes) {
 					$this->loadRoutesFrom($routes);
-					Route::prefix('api')
-						->middleware('api')
-						->group($routes);
 				}
             }
         }
