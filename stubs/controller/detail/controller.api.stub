@@ -1,0 +1,31 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Interactor;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\MyCompany\{{ entity }}DetailRequest;
+use Illuminate\Http\JsonResponse;
+
+final class {{ entity }}DetailController extends Controller
+{
+    /**
+     * @param {{ entity }}DetailRequest $request
+     * @param Interactor $interactor
+     * @return {{ entity }}|JsonResponse
+     */
+    public function __invoke(
+        {{ entity }}DetailRequest $request, Interactor $interactor): {{ entity }}|JsonResponse
+    {
+        try {
+            $output = $interactor->execute(Input::fromArray($request->validated()));
+            return $output->getEntity();
+        } catch ({{ entity }}NotFoundException) {
+            return response()->json(status: 404);
+        }
+    }
+}

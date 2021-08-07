@@ -1,0 +1,125 @@
+<?php
+/** @noinspection NonAsciiCharacters */
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Models\{{ model }} as {{ model }}Model;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+
+final class {{ class }} extends TestCase
+{
+    use RefreshDatabase;
+    use WithFaker;
+
+    /**
+     * @test
+     */
+    public function 更新できること()
+    {
+        /** @var {{ model }}Model $row */
+        $row = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->first();
+
+        $this->actingAs(new User());
+
+        $response = $this->putJson("/api/{{ uri }}/{$row->getAttribute('id')}", data: [
+            'title' => 'テストタイトル',
+            /** TODO add fields */
+        ]);
+        $response->assertOk();
+
+        $table = (new {{ model }}Model())->getTable();
+        $this->assertDatabaseCount(table: $table, count: 1);
+        $this->assertDatabaseHas(table: $table, data: [
+            'title' => 'テストタイトル',
+            /** TODO add fields */
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function 存在しないIDを指定するとエラーになること()
+    {
+        $this->actingAs(new User());
+
+        $response = $this->putJson('/api/{{ uri }}/xxxxxxxx', data: [
+            'title' => 'テストタイトル',
+            /** TODO add fields */
+        ]);
+        $response->assertNotFound();
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルの最大文字数まで登録できること()
+    {
+        /** @var {{ model }}Model $row */
+        $row = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->first();
+
+        $this->actingAs(new User());
+
+        $title = implode('', array_pad([], 100, 'あ'));
+        $response = $this->putJson("/api/{{ uri }}/{$row->getAttribute('id')}", data: [
+            'title' => $title,
+            /** TODO add fields */
+        ]);
+        $response->assertOk();
+
+        $table = (new {{ model }}Model())->getTable();
+        $this->assertDatabaseCount(table: $table, count: 1);
+        $this->assertDatabaseHas(table: $table, data: ['title' => $title]);
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルを指定していないとエラーになること()
+    {
+        /** @var {{ model }}Model $row */
+        $row = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->first();
+
+        $this->actingAs(new User());
+
+        $response = $this->putJson("/api/{{ uri }}/{$row->getAttribute('id')}", data: [
+            'title' => '',
+            /** TODO add fields */
+        ]);
+        $response->assertStatus(422);
+        $this->assertArrayHasKey(key: 'title', array: $response->json('errors'));
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルの最大文字数超過でエラーになること()
+    {
+        /** @var {{ model }}Model $row */
+        $row = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->first();
+
+        $this->actingAs(new User());
+
+        $response = $this->putJson("/api/{{ uri }}/{$row->getAttribute('id')}", data: [
+            'title' => implode('', array_pad([], 101, 'あ')),
+            /** TODO add fields */
+        ]);
+        $response->assertStatus(422);
+        $this->assertArrayHasKey(key: 'title', array: $response->json('errors'));
+    }
+}

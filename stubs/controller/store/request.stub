@@ -5,7 +5,7 @@ namespace {{ namespace }};
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class {{ entity }}StoreRequest extends FormRequest
+final class {{ class }} extends FormRequest
 {
     /**
      * @return bool

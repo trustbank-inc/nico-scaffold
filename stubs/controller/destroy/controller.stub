@@ -3,28 +3,27 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Input;
-use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Interactor;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Interactor;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MyCompany\{{ entity }}DestroyRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 final class {{ entity }}DestroyController extends Controller
 {
     /**
-     * @param Request $request
+     * @param {{ entity }}DestroyRequest $request
      * @param Interactor $interactor
-     * @param $id
      * @return Factory|View|RedirectResponse
      */
     public function __invoke(
         Request $request,
-        Interactor $interactor, $id): Factory|View|RedirectResponse
+        Interactor $interactor): Factory|View|RedirectResponse
     {
-        $interactor->execute(Input::fromArray(['id' => $id]));
+        $interactor->execute(Input::fromArray($request->validated()));
         // 一覧画面の表示パラメータを復元する
         $searchPhrase = session('{{ context }}.{{ entity }}.search_phrase');
         $limit = session('{{ context }}.{{ entity }}.limit');

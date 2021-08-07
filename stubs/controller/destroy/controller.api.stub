@@ -1,0 +1,23 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Interactor;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\MyCompany\{{ entity }}DestroyRequest;
+
+final class {{ class }} extends Controller
+{
+    /**
+     * @param {{ entity }}DestroyRequest $request
+     * @param Interactor $interactor
+     * @return array
+     */
+    public function __invoke({{ entity }}DestroyRequest $request, Interactor $interactor): array
+    {
+        $interactor->execute(Input::fromArray($request->validated()));
+        return [];
+    }
+}

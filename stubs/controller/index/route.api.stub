@@ -1,0 +1,9 @@
+<?php
+declare(strict_types=1);
+
+use App\Http\Controllers\{{ context }}\Api\{{ entity }}IndexController;
+use Illuminate\Support\Facades\Route;
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/{{ resource }}', {{ entity }}IndexController::class);
+});

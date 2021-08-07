@@ -1,0 +1,24 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Update\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Update\Interactor;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\{{ context }}\{{ entity }}UpdateRequest;
+use Illuminate\Http\JsonResponse;
+
+final class {{ class }} extends Controller
+{
+    public function __invoke({{ entity }}UpdateRequest $request, Interactor $interactor): JsonResponse
+    {
+        try {
+            $interactor->execute(Input::fromArray($request->validated()));
+            return response()->json();
+        } catch ({{ entity }}NotFoundException) {
+            return response()->json(status: 404);
+        }
+    }
+}

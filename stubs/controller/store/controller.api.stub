@@ -1,0 +1,24 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Input;
+use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Interactor;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\{{ context }}\{{ entity }}StoreRequest;
+
+final class {{ class }} extends Controller
+{
+    /**
+     * @param {{ entity }}StoreRequest $request
+     * @param Interactor $interactor
+     * @return {{ entity }}Id
+     */
+    public function __invoke({{ entity }}StoreRequest $request, Interactor $interactor): {{ entity }}Id
+    {
+        $output = $interactor->execute(Input::fromArray($request->validated()));
+        return $output->getId();
+    }
+}

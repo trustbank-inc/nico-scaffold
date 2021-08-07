@@ -1,0 +1,27 @@
+<?php
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Models\{{ model }};
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Ulid\Ulid;
+
+final class EmployeeFactory extends Factory
+{
+    /**
+     * @var string
+     */
+    protected $model = {{ model }}::class;
+
+    /**
+     * @return array
+     */
+    public function definition(): array
+    {
+        return [
+            'id' => (string)Ulid::generate(),
+            'title' => $this->faker->title,
+        ];
+    }
+}

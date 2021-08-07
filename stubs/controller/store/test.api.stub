@@ -1,0 +1,87 @@
+<?php
+/** @noinspection NonAsciiCharacters */
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Models\{{ model }} as {{ model }}Model;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+
+final class {{ class }} extends TestCase
+{
+    use RefreshDatabase;
+    use WithFaker;
+
+    /**
+     * @test
+     */
+    public function 新規登録できること()
+    {
+        $this->actingAs(new User());
+
+        $response = $this->postJson('/api/{{ uri }}', data: [
+            'title' => 'テストタイトル',
+            /** TODO add fields */
+        ]);
+        $response->assertOk();
+
+        $table = (new {{ model }}Model())->getTable();
+        $this->assertDatabaseCount(table: $table, count: 1);
+        $this->assertDatabaseHas(table: $table, data: [
+            'title' => 'テストタイトル',
+            /** TODO add fields */
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルの最大文字数まで登録できること()
+    {
+        $this->actingAs(new User());
+
+        $title = implode('', array_pad([], 100, 'あ'));
+        $response = $this->postJson('/api/{{ uri }}', data: [
+            'title' => $title,
+            /** TODO add fields */
+        ]);
+        $response->assertOk();
+
+        $table = (new {{ model }}Model())->getTable();
+        $this->assertDatabaseCount(table: $table, count: 1);
+        $this->assertDatabaseHas(table: $table, data: ['title' => $title]);
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルを指定していないとエラーになること()
+    {
+        $this->actingAs(new User());
+
+        $response = $this->postJson('/api/{{ uri }}', data: [
+            'title' => '',
+            /** TODO add fields */
+        ]);
+        $response->assertStatus(422);
+        $this->assertArrayHasKey(key: 'title', array: $response->json('errors'));
+    }
+
+    /**
+     * @test
+     */
+    public function タイトルの最大文字数超過でエラーになること()
+    {
+        $this->actingAs(new User());
+
+        $response = $this->postJson('/api/{{ uri }}', data: [
+            'title' => implode('', array_pad([], 101, 'あ')),
+            /** TODO add fields */
+        ]);
+        $response->assertStatus(422);
+        $this->assertArrayHasKey(key: 'title', array: $response->json('errors'));
+    }
+}

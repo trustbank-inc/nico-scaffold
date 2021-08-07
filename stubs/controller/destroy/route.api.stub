@@ -1,0 +1,10 @@
+<?php
+declare(strict_types=1);
+
+use App\Http\Controllers\{{ context }}\Api\{{ entity }}DestroyController;
+use Illuminate\Support\Facades\Route;
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::delete('/{{ resource }}/{id}', {{ entity }}DestroyController::class)
+        ->whereAlphaNumeric('id');
+});
