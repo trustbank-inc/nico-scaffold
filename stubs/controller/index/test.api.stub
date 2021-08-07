@@ -16,6 +16,22 @@ final class {{ class }} extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    private const API_TOKEN = '123456789012345678901234567890123456789012345678901234567890';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $user = new User();
+        $user->fill([
+            'name' => 'test',
+            'email' => $this->faker->safeEmail(),
+            'password' => password_hash('test-password', PASSWORD_DEFAULT),
+            'api_token' => self::API_TOKEN,
+        ]);
+        $user->save();
+    }
+
     /**
      * @test
      */
@@ -26,9 +42,11 @@ final class {{ class }} extends TestCase
             ->create()
             ->toArray();
 
-        $this->actingAs(new User());
-
-        $response = $this->getJson('/api/{{ uri }}');
+        $response = $this->getJson(
+            uri: '/api/{{ uri }}',
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertOk();
         $this->assertEquals($entities, $response->json('data'));
         $this->assertEquals(10, $response->json('total'));
@@ -44,24 +62,34 @@ final class {{ class }} extends TestCase
             ->create()
             ->toArray();
 
-        $this->actingAs(new User());
-
         // 最初のページ
-        $response = $this->getJson('/api/{{ uri }}?limit=12');
+        $response = $this->getJson(
+            uri: '/api/{{ uri }}?limit=12',
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $this->assertEquals(array_slice($entities, 0, 12), $response->json('data'));
         $this->assertEquals(30, $response->json('total'));
         $this->assertEquals(12, $response->json('per_page'));
         $this->assertEquals(1, $response->json('current_page'));
 
         // 次ページ
-        $response = $this->getJson($response->json('next_page_url'));
+        $response = $this->getJson(
+            uri: $response->json('next_page_url'),
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $this->assertEquals(array_slice($entities, 12, 12), $response->json('data'));
         $this->assertEquals(30, $response->json('total'));
         $this->assertEquals(12, $response->json('per_page'));
         $this->assertEquals(2, $response->json('current_page'));
 
         // 次ページ
-        $response = $this->getJson($response->json('next_page_url'));
+        $response = $this->getJson(
+            uri: $response->json('next_page_url'),
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $this->assertEquals(array_slice($entities, 24), $response->json('data'));
         $this->assertEquals(30, $response->json('total'));
         $this->assertEquals(12, $response->json('per_page'));
@@ -93,9 +121,11 @@ final class {{ class }} extends TestCase
             ->create()
             ->toArray();
 
-        $this->actingAs(new User());
-
-        $response = $this->getJson('/api/{{ uri }}?search_phrase=' . $phrase);
+        $response = $this->getJson(
+            uri: '/api/{{ uri }}?search_phrase=' . $phrase,
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertOk();
         $this->assertEquals($entities, $response->json('data'));
         $this->assertEquals(3, $response->json('total'));
@@ -106,11 +136,13 @@ final class {{ class }} extends TestCase
      */
     public function 検索フレーズの文字数オーバーでエラーになること()
     {
-        $this->actingAs(new User());
-
         // 全角文字で100文字オーバー
         $phrase = implode('', array_pad([], 101, 'あ'));
-        $response = $this->getJson('/api/{{ uri }}?search_phrase=' . $phrase);
+        $response = $this->getJson(
+            uri: '/api/{{ uri }}?search_phrase=' . $phrase,
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertStatus(422);
     }
 }

@@ -15,6 +15,22 @@ final class {{ class }} extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    private const API_TOKEN = '123456789012345678901234567890123456789012345678901234567890';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $user = new User();
+        $user->fill([
+            'name' => 'test',
+            'email' => $this->faker->safeEmail(),
+            'password' => password_hash('test-password', PASSWORD_DEFAULT),
+            'api_token' => self::API_TOKEN,
+        ]);
+        $user->save();
+    }
+
     /**
      * @test
      */
@@ -30,9 +46,11 @@ final class {{ class }} extends TestCase
         $table = (new {{ model }}Model())->getTable();
         $this->assertDatabaseCount(table: $table, count: 1);
 
-        $this->actingAs(new User());
-
-        $response = $this->deleteJson("/api/{{ uri }}/{$row->getAttribute('id')}");
+        $response = $this->deleteJson(
+            uri: "/api/{{ uri }}/{$row->getAttribute('id')}",
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertOk();
         // 削除後にデータが無いこと
         $this->assertDatabaseCount(table: $table, count: 0);
@@ -52,9 +70,11 @@ final class {{ class }} extends TestCase
         $table = (new {{ model }}Model())->getTable();
         $this->assertDatabaseCount(table: $table, count: 2);
 
-        $this->actingAs(new User());
-
-        $response = $this->deleteJson("/api/{{ uri }}/{$rows[0]->getAttribute('id')}");
+        $response = $this->deleteJson(
+            uri: "/api/{{ uri }}/{$rows[0]->getAttribute('id')}",
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertOk();
         // 削除対象が無いこと
         $this->assertDatabaseMissing(table: $table, data: $rows[0]->toArray());
@@ -67,9 +87,11 @@ final class {{ class }} extends TestCase
      */
     public function 存在しないIDを指定してもエラーにならないこと()
     {
-        $this->actingAs(new User());
-
-        $response = $this->deleteJson("/api/{{ uri }}/xxxxxxxxx");
+        $response = $this->deleteJson(
+            uri: "/api/{{ uri }}/xxxxxxxxx",
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertOk();
     }
 }

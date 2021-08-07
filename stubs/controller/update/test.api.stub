@@ -15,6 +15,22 @@ final class {{ class }} extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    private const API_TOKEN = '123456789012345678901234567890123456789012345678901234567890';
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $user = new User();
+        $user->fill([
+            'name' => 'test',
+            'email' => $this->faker->safeEmail(),
+            'password' => password_hash('test-password', PASSWORD_DEFAULT),
+            'api_token' => self::API_TOKEN,
+        ]);
+        $user->save();
+    }
+
     /**
      * @test
      */
@@ -28,10 +44,15 @@ final class {{ class }} extends TestCase
 
         $this->actingAs(new User());
 
-        $response = $this->putJson("/api/{{ uri }}/{$row->getAttribute('id')}", data: [
-            'title' => 'テストタイトル',
-            /** TODO add fields */
-        ]);
+        $response = $this->putJson(
+            uri: "/api/{{ uri }}/{$row->getAttribute('id')}",
+            data: [
+                'title' => 'テストタイトル',
+                /** TODO add fields */
+            ],
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertOk();
 
         $table = (new {{ model }}Model())->getTable();
@@ -49,10 +70,15 @@ final class {{ class }} extends TestCase
     {
         $this->actingAs(new User());
 
-        $response = $this->putJson('/api/{{ uri }}/xxxxxxxx', data: [
-            'title' => 'テストタイトル',
-            /** TODO add fields */
-        ]);
+        $response = $this->putJson(
+            uri: '/api/{{ uri }}/xxxxxxxx',
+            data: [
+                'title' => 'テストタイトル',
+                /** TODO add fields */
+            ],
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertNotFound();
     }
 
@@ -70,10 +96,15 @@ final class {{ class }} extends TestCase
         $this->actingAs(new User());
 
         $title = implode('', array_pad([], 100, 'あ'));
-        $response = $this->putJson("/api/{{ uri }}/{$row->getAttribute('id')}", data: [
-            'title' => $title,
-            /** TODO add fields */
-        ]);
+        $response = $this->putJson(
+            uri: "/api/{{ uri }}/{$row->getAttribute('id')}",
+            data: [
+                'title' => $title,
+                /** TODO add fields */
+            ],
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertOk();
 
         $table = (new {{ model }}Model())->getTable();
@@ -94,10 +125,15 @@ final class {{ class }} extends TestCase
 
         $this->actingAs(new User());
 
-        $response = $this->putJson("/api/{{ uri }}/{$row->getAttribute('id')}", data: [
-            'title' => '',
-            /** TODO add fields */
-        ]);
+        $response = $this->putJson(
+            uri: "/api/{{ uri }}/{$row->getAttribute('id')}",
+            data: [
+                'title' => '',
+                /** TODO add fields */
+            ],
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertStatus(422);
         $this->assertArrayHasKey(key: 'title', array: $response->json('errors'));
     }
@@ -115,10 +151,15 @@ final class {{ class }} extends TestCase
 
         $this->actingAs(new User());
 
-        $response = $this->putJson("/api/{{ uri }}/{$row->getAttribute('id')}", data: [
-            'title' => implode('', array_pad([], 101, 'あ')),
-            /** TODO add fields */
-        ]);
+        $response = $this->putJson(
+            uri: "/api/{{ uri }}/{$row->getAttribute('id')}",
+            data: [
+                'title' => implode('', array_pad([], 101, 'あ')),
+                /** TODO add fields */
+            ],
+            headers: [
+                'Authorization' => 'Bearer ' . self::API_TOKEN,
+            ]);
         $response->assertStatus(422);
         $this->assertArrayHasKey(key: 'title', array: $response->json('errors'));
     }
