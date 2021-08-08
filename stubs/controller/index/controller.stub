@@ -25,23 +25,7 @@ final class {{ class }} extends Controller
         Interactor $interactor,
         {{ entity }}IndexView $view): Factory|View|Application
     {
-        $params = $request->validated();
-        $limit = $params['limit'] ?? null;
-        if ($limit !== null) {
-            $limit = intval($limit);
-        }
-        $currentPage = intval($params['page'] ?? 1);
-
-        // ページ移動毎にlimitとpageを保持し、別画面に遷移して一覧に戻った際に現在ページを復元する
-        $request->session()->flash('{{ context }}.{{ entity }}.search_phrase', $params['search_phrase'] ?? '');
-        $request->session()->flash('{{ context }}.{{ entity }}.limit', $limit);
-        $request->session()->flash('{{ context }}.{{ entity }}.page', $currentPage);
-
-        $output = $interactor->execute(Input::fromArray(
-            input: $params,
-            limit: $limit,
-            currentPage: $currentPage
-        ));
+        $output = $interactor->execute(Input::fromArray($request->validated()));
         return $view->render($output->getList());
     }
 }

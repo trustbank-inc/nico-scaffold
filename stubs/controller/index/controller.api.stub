@@ -20,18 +20,7 @@ final class {{ class }} extends Controller
         {{ entity }}IndexRequest $request,
         Interactor $interactor): LengthAwarePaginator
     {
-        $params = $request->validated();
-        $limit = $params['limit'] ?? null;
-        if ($limit !== null) {
-            $limit = intval($limit);
-        }
-        $currentPage = intval($params['page'] ?? 1);
-
-        $output = $interactor->execute(Input::fromArray(
-            input: $params,
-            limit: $limit,
-            currentPage: $currentPage
-        ));
+        $output = $interactor->execute(Input::fromArray($request->validated()));
         $paginator = new LengthAwarePaginator(
             items: $output->getList(),
             total: $output->getList()->getTotal(),

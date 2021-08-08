@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\CurrentPage;
+use Seasalt\NicoScaffold\Components\Domain\ValueObject\LimitPerPage;
 use Seasalt\NicoScaffold\Components\Domain\ValueObject\SearchPhrase;
 use Seasalt\NicoScaffold\Components\UseCase\InputValidator;
 
@@ -13,13 +15,13 @@ final class Input
 {
     /**
      * @param SearchPhrase $searchPhrase
-     * @param int|null $limit
-     * @param int $currentPage
+     * @param LimitPerPage $limit
+     * @param CurrentPage $currentPage
      */
     public function __construct(
         private SearchPhrase $searchPhrase,
-        private ?int $limit = null,
-        private int $currentPage = 1)
+        private LimitPerPage $limit,
+        private CurrentPage $currentPage)
     {
 
     }
@@ -33,17 +35,17 @@ final class Input
     }
 
     /**
-     * @return int|null
+     * @return LimitPerPage
      */
-    public function getLimit(): ?int
+    public function getLimit(): LimitPerPage
     {
         return $this->limit;
     }
 
     /**
-     * @return int
+     * @return CurrentPage
      */
-    public function getCurrentPage(): int
+    public function getCurrentPage(): CurrentPage
     {
         return $this->currentPage;
     }
@@ -52,11 +54,9 @@ final class Input
      * POST値からインスタンスを作成する
      *
      * @param array<string, string> $input
-     * @param int|null $limit
-     * @param int $currentPage
      * @return static
      */
-    public static function fromArray(array $input, ?int $limit = null, int $currentPage = 1): self
+    public static function fromArray(array $input): self
     {
         $validator = new InputValidator(
             requiredFields: [
@@ -64,13 +64,15 @@ final class Input
             ],
             optionalFields: [
                 'search_phrase' => SearchPhrase::class,
+                'limit' => LimitPerPage::class,
+                'page' => CurrentPage::class,
             ]);
         $validator->validate($input);
 
         return new self(
             searchPhrase: SearchPhrase::fromString($input['search_phrase'] ?? ''),
-            limit: $limit,
-            currentPage: $currentPage
+            limit: LimitPerPage::fromString((string)($input['limit'] ?? '')),
+            currentPage: CurrentPage::fromString((string)($input['page'] ?? ''))
         );
     }
 }

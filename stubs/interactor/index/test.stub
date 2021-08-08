@@ -67,7 +67,7 @@ final class IndexTest extends TestCase
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
-        $page1 = $interactor->execute(Input::fromArray(input: [], limit: 3));
+        $page1 = $interactor->execute(Input::fromArray(['limit' => 3, 'page' => 1]));
         $page1Items = iterator_to_array($page1->getList());
         $this->assertSame(10, $page1->getList()->getTotal());
         $this->assertCount(3, $page1Items);
@@ -75,7 +75,7 @@ final class IndexTest extends TestCase
             expected: $entities[0]->getId(),
             actual: $page1Items[0]->getId()); // データの一致はIDだけで行う
 
-        $page2 = $interactor->execute(Input::fromArray(input: [], limit: 3, currentPage: 2));
+        $page2 = $interactor->execute(Input::fromArray(['limit' => 3, 'page' => 2]));
         $page2Items = iterator_to_array($page2->getList());
         $this->assertSame(10, $page2->getList()->getTotal());
         $this->assertCount(3, $page2Items);
@@ -83,7 +83,7 @@ final class IndexTest extends TestCase
             expected: $entities[3]->getId(),
             actual: $page2Items[0]->getId()); // データの一致はIDだけで行う
 
-        $page3 = $interactor->execute(Input::fromArray(input: [], limit: 3, currentPage: 3));
+        $page3 = $interactor->execute(Input::fromArray(['limit' => 3, 'page' => 3]));
         $page3Items = iterator_to_array($page3->getList());
         $this->assertSame(10, $page3->getList()->getTotal());
         $this->assertCount(3, $page3Items);
@@ -91,7 +91,7 @@ final class IndexTest extends TestCase
             expected: $entities[6]->getId(),
             actual: $page3Items[0]->getId()); // データの一致はIDだけで行う
 
-        $page4 = $interactor->execute(Input::fromArray(input: [], limit: 3, currentPage: 4));
+        $page4 = $interactor->execute(Input::fromArray(['limit' => 3, 'page' => 4]));
         $page4Items = iterator_to_array($page4->getList());
         $this->assertSame(10, $page4->getList()->getTotal());
         $this->assertCount(1, $page4Items); // 最終ページの件数もちゃんと合っていること
@@ -114,7 +114,7 @@ final class IndexTest extends TestCase
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('|検索確認')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => '|検索確認']));
 
         // 復元したデータの件数が正しいこと
         $this->assertEquals(count($matchedRules), $output->getList()->getTotal());
@@ -130,7 +130,7 @@ final class IndexTest extends TestCase
         }
 
         // 後方一致ではヒットしないこと
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('検索確認|')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => '検索確認|']));
         $this->assertEquals(0, $output->getList()->getTotal());
     }
 
@@ -148,7 +148,7 @@ final class IndexTest extends TestCase
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('検索確認|')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => '検索確認|']));
 
         // 復元したデータの件数が正しいこと
         $this->assertEquals(count($matchedRules), $output->getList()->getTotal());
@@ -164,7 +164,7 @@ final class IndexTest extends TestCase
         }
 
         // 前方一致ではヒットしないこと
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('|検索確認')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => '|検索確認']));
         $this->assertEquals(0, $output->getList()->getTotal());
     }
 
@@ -182,7 +182,7 @@ final class IndexTest extends TestCase
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('テスト')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => 'テスト']));
 
         // 復元したデータの件数が正しいこと
         $this->assertEquals(count($matchedRules), $output->getList()->getTotal());
@@ -198,10 +198,10 @@ final class IndexTest extends TestCase
         }
 
         // 前方一致ではヒットしないこと
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('|テスト')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => '|テスト']));
         $this->assertEquals(0, $output->getList()->getTotal());
         // 後方一致ではヒットしないこと
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('テスト|')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => 'テスト|']));
         $this->assertEquals(0, $output->getList()->getTotal());
     }
 
@@ -231,10 +231,10 @@ final class IndexTest extends TestCase
             actual: iterator_to_array($output->getList())[0]->getId());
 
         // 前方一致ではヒットしないこと
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('|テスト')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => '|テスト']));
         $this->assertEquals(0, $output->getList()->getTotal());
         // 後方一致ではヒットしないこと
-        $output = $interactor->execute(new Input(SearchPhrase::fromString('テスト|')));
+        $output = $interactor->execute(Input::fromArray(['search_phrase' => 'テスト|']));
         $this->assertEquals(0, $output->getList()->getTotal());
     }
 }
