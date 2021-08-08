@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Update;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestRouteCommand;
+use Seasalt\NicoScaffold\Components\MakeRestRouteCommand;
 
 /**
  * 更新ルートのひな型のmakeコマンド

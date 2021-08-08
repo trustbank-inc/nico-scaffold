@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\UseCase\Store;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestInteractorFixtureCommand;
+use Seasalt\NicoScaffold\Components\MakeRestInteractorFixtureCommand;
 
 /**
  * 新規作成ユースケーステストデータのひな型のmakeコマンド

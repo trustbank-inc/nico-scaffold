@@ -1,3 +1,3 @@
 ```
-composer require seasalt/nico-scaffold --dev
+composer require seasalt/nico-scaffold
 ```

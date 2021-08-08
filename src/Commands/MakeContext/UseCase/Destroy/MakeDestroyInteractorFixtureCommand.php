@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\UseCase\Destroy;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestInteractorFixtureCommand;
+use Seasalt\NicoScaffold\Components\MakeRestInteractorFixtureCommand;
 
 /**
  * 削除ユースケーステストデータのひな型のmakeコマンド

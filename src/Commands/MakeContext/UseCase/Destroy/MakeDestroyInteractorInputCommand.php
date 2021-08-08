@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\UseCase\Destroy;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestInteractorInputCommand;
+use Seasalt\NicoScaffold\Components\MakeRestInteractorInputCommand;
 
 /**
  * 削除ユースケース入力のひな型のmakeコマンド

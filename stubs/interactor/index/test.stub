@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use Seasalt\NicoScaffold\Components\Domain\ValueObject\SearchPhrase;
+use Seasalt\Nicoca\Components\UseCase\SearchPhrase;
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Index\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Index\Interactor;

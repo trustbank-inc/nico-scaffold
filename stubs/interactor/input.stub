@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use Seasalt\NicoScaffold\Components\UseCase\InputValidator;
+use Seasalt\Nicoca\Components\UseCase\InputValidator;
 
 final class Input
 {

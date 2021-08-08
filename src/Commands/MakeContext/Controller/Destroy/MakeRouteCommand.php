@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Destroy;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestRouteCommand;
+use Seasalt\NicoScaffold\Components\MakeRestRouteCommand;
 
 /**
  * 削除ルートのひな型のmakeコマンド

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Contexts\{{ context }}\Domain\Entity;
 
-use Seasalt\NicoScaffold\Components\Domain\Entity\IdGenerator;
+use Seasalt\Nicoca\Components\Domain\Persistence\IdGenerator;
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}ListRepository;

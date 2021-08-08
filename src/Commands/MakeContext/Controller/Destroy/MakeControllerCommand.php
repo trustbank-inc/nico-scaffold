@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Destroy;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestControllerCommand;
+use Seasalt\NicoScaffold\Components\MakeRestControllerCommand;
 
 /**
  * 削除コントローラのひな型のmakeコマンド

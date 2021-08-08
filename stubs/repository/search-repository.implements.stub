@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use Seasalt\NicoScaffold\Components\Domain\Persistence\Paginator;
-use Seasalt\NicoScaffold\Components\Domain\ValueObject\CurrentPage;
-use Seasalt\NicoScaffold\Components\Domain\ValueObject\LimitPerPage;
-use Seasalt\NicoScaffold\Components\Domain\ValueObject\SearchPhrase;
-use Seasalt\NicoScaffold\Components\Infrastructure\Persistence\HasSearchPhrase;
-use Seasalt\NicoScaffold\Components\Infrastructure\Persistence\Paginatable;
+use Seasalt\Nicoca\Components\Domain\Persistence\Paginator;
+use Seasalt\Nicoca\Components\UseCase\CurrentPage;
+use Seasalt\Nicoca\Components\UseCase\LimitPerPage;
+use Seasalt\Nicoca\Components\UseCase\SearchPhrase;
+use Seasalt\Nicoca\Components\Infrastructure\Persistence\HasSearchPhrase;
+use Seasalt\Nicoca\Components\Infrastructure\Persistence\PaginatorCreatable;
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
@@ -18,7 +18,7 @@ use App\Models\{{ model }} as {{ model }}Model;
 final class {{ class }} implements Search{{ entity }}ListRepository
 {
     use HasSearchPhrase;
-    use Paginatable;
+    use PaginatorCreatable;
 
     /**
      * @var SearchPhrase

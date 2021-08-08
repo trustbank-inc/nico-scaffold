@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Destroy;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestRequestCommand;
+use Seasalt\NicoScaffold\Components\MakeRestRequestCommand;
 
 /**
  * 削除リクエストのひな型のmakeコマンド

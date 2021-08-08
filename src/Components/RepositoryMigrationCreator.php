@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\Migration;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Migrations\MigrationCreator;
 use Illuminate\Filesystem\Filesystem;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 
 final class RepositoryMigrationCreator extends MigrationCreator
 {

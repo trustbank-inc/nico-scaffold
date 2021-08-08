@@ -1,20 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * REST操作ユースケーステストmakeコマンド
+ * REST操作ユースケース出力makeコマンド
  *
  * @note 各ユースケースのmakeコマンドへ派生
  */
-abstract class MakeRestInteractorTestCommand extends GeneratorCommand
+abstract class MakeRestInteractorOutputCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -29,26 +28,7 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-        return $this->resolveStubPath("interactor/{$useCase}/test.stub");
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    protected function getPath($name): string
-    {
-        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-
-        return base_path('tests').str_replace('\\', '/', $name).'.php';
-    }
-
-    /**
-     * @return string
-     */
-    protected function rootNamespace(): string
-    {
-        return 'Tests';
+        return $this->resolveStubPath("interactor/{$useCase}/output.stub");
     }
 
     /**
@@ -57,7 +37,7 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return "{$rootNamespace}\\UseCase\\{$this->getContextInput()}\\{$this->getEntityInput()}";
+        return $rootNamespace . "\\Contexts\\{$this->getContextInput()}\\UseCase\\{$this->getEntityInput()}\\{$this->getUseCase()}";
     }
 
     /**
@@ -76,7 +56,7 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
      */
     protected function getNameInput(): string
     {
-        return $this->getUseCase() . 'Test';
+        return 'Output';
     }
 
     /**
@@ -106,15 +86,14 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
     {
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
-        $stub = $this->replaceEntity($stub);
-        return $this->replaceDatabaseTable($stub);
+        return $this->replaceEntity($stub);
     }
 
     /**
      * @param string $stub
      * @return string
      */
-    private function replaceContext(string $stub): string
+    protected function replaceContext(string $stub): string
     {
         return str_replace(['{{ context }}', '{{context}}'], $this->getContextInput(), $stub);
     }
@@ -123,17 +102,8 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
      * @param string $stub
      * @return string
      */
-    private function replaceEntity(string $stub): string
+    protected function replaceEntity(string $stub): string
     {
         return str_replace(['{{ entity }}', '{{entity}}'], $this->getEntityInput(), $stub);
-    }
-
-    /**
-     * @param string $stub
-     * @return string
-     */
-    private function replaceDatabaseTable(string $stub): string
-    {
-        return str_replace(['{{ table }}', '{{table}}'], Str::plural(Str::snake($this->getEntityInput())), $stub);
     }
 }

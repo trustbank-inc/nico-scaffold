@@ -1,21 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
- * REST操作リクエストmakeコマンド
+ * REST操作ルートmakeコマンド
  *
- * @note 各コントローラのmakeコマンドへ派生
+ * @note 各ルートのmakeコマンドへ派生
  */
-abstract class MakeRestRequestCommand extends GeneratorCommand
+abstract class MakeRestRouteCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -31,9 +31,9 @@ abstract class MakeRestRequestCommand extends GeneratorCommand
     {
         $useCase = Str::snake($this->getUseCase());
 
-        $this->name = "make:controller-{$useCase}-request";
-        $this->description = "Create a new controller request ({$useCase})";
-        $this->type = "ControllerRequest({$useCase})";
+        $this->name = "make:controller-{$useCase}-route";
+        $this->description = "Create a new controller route ({$useCase})";
+        $this->type = "Route({$useCase})";
 
         parent::__construct($files);
     }
@@ -44,16 +44,27 @@ abstract class MakeRestRequestCommand extends GeneratorCommand
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-        return $this->resolveStubPath("controller/{$useCase}/request.stub");
+		$filename = 'route.stub';
+		if ($this->option('api')) {
+			$filename = 'route.api.stub';
+		}
+        return $this->resolveStubPath("controller/{$useCase}/{$filename}");
     }
 
     /**
-     * @param string $rootNamespace
+     * @param string $name
      * @return string
      */
-    protected function getDefaultNamespace($rootNamespace): string
+    protected function getPath($name): string
     {
-        return $rootNamespace . "\\Http\\Requests\\{$this->getContextInput()}";
+        $context = Str::snake($this->getContextInput());
+        $entity = Str::snake($this->getEntityInput());
+        $useCase = Str::snake($this->getUseCase());
+        if ($this->option('api')) {
+			return base_path("routes/contexts/{$context}/{$entity}/api/{$useCase}.php");
+		} else {
+			return base_path("routes/contexts/{$context}/{$entity}/{$useCase}.php");
+		}
     }
 
     /**
@@ -67,12 +78,22 @@ abstract class MakeRestRequestCommand extends GeneratorCommand
         ];
     }
 
+	/**
+	 * @return array
+	 */
+	protected function getOptions(): array
+	{
+		return [
+			['api', 'a', InputOption::VALUE_NONE, 'API mode option'],
+		];
+	}
+
     /**
      * @return string
      */
     protected function getNameInput(): string
     {
-        return $this->getEntityInput() . $this->getUseCase() . 'Request';
+        return $this->getEntityInput() . 'ListPageController';
     }
 
     /**
@@ -84,8 +105,6 @@ abstract class MakeRestRequestCommand extends GeneratorCommand
     }
 
     /**
-     * Get the desired context from the input.
-     *
      * @return string
      */
     protected function getContextInput(): string
@@ -103,7 +122,7 @@ abstract class MakeRestRequestCommand extends GeneratorCommand
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
-        return $this->replaceLanguage($stub);
+        return $this->replaceResource($stub);
     }
 
     /**
@@ -128,10 +147,9 @@ abstract class MakeRestRequestCommand extends GeneratorCommand
      * @param string $stub
      * @return string
      */
-    private function replaceLanguage(string $stub): string
+    protected function replaceResource(string $stub): string
     {
-        $context = Str::snake($this->getContextInput());
-        $entity = Str::snake($this->getEntityInput());
-        return str_replace(['{{ lang }}', '{{lang}}'], "{$context}/{$entity}", $stub);
+        $resource = Str::snake(Str::plural($this->getEntityInput()));
+        return str_replace(['{{ resource }}', '{{resource}}'], $resource, $stub);
     }
 }

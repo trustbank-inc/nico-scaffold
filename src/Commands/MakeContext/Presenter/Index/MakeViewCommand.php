@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Presenter\Index;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestViewCommand;
+use Seasalt\NicoScaffold\Components\MakeRestViewCommand;
 
 /**
  * 一覧画面のひな型のmakeコマンド

@@ -1,22 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
- * REST操作ルートmakeコマンド
+ * REST APIテストmakeコマンド
  *
- * @note 各ルートのmakeコマンドへ派生
+ * @note 各APIテストのmakeコマンドへ派生
  */
-abstract class MakeRestRouteCommand extends GeneratorCommand
+abstract class MakeRestApiTestCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -32,9 +30,9 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
     {
         $useCase = Str::snake($this->getUseCase());
 
-        $this->name = "make:controller-{$useCase}-route";
-        $this->description = "Create a new controller route ({$useCase})";
-        $this->type = "Route({$useCase})";
+        $this->name = "make:api-test-{$useCase}";
+        $this->description = "Create a new api test ({$useCase})";
+        $this->type = "ApiTest({$useCase})";
 
         parent::__construct($files);
     }
@@ -45,27 +43,36 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-		$filename = 'route.stub';
-		if ($this->option('api')) {
-			$filename = 'route.api.stub';
-		}
+        $filename = 'test.api.stub';
         return $this->resolveStubPath("controller/{$useCase}/{$filename}");
     }
 
+	/**
+	 * @param string $name
+	 * @return string
+	 */
+	protected function getPath($name): string
+	{
+		$name = Str::replaceFirst($this->rootNamespace(), '', $name);
+
+		return base_path('tests').str_replace('\\', '/', $name).'.php';
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function rootNamespace(): string
+	{
+		return 'Tests';
+	}
+
     /**
-     * @param string $name
+     * @param string $rootNamespace
      * @return string
      */
-    protected function getPath($name): string
+    protected function getDefaultNamespace($rootNamespace): string
     {
-        $context = Str::snake($this->getContextInput());
-        $entity = Str::snake($this->getEntityInput());
-        $useCase = Str::snake($this->getUseCase());
-        if ($this->option('api')) {
-			return base_path("routes/contexts/{$context}/{$entity}/api/{$useCase}.php");
-		} else {
-			return base_path("routes/contexts/{$context}/{$entity}/{$useCase}.php");
-		}
+		return "{$rootNamespace}\\Feature\\{$this->getContextInput()}\\{$this->getEntityInput()}\\Api";
     }
 
     /**
@@ -76,25 +83,16 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
         return [
             ['context', InputArgument::REQUIRED, 'The context for this Repository'],
             ['entity', InputArgument::REQUIRED, 'The name of target entity'],
+			['model', InputArgument::OPTIONAL, 'The name of eloquent model'],
         ];
     }
 
 	/**
-	 * @return array
-	 */
-	protected function getOptions(): array
-	{
-		return [
-			['api', 'a', InputOption::VALUE_NONE, 'API mode option'],
-		];
-	}
-
-    /**
      * @return string
      */
     protected function getNameInput(): string
     {
-        return $this->getEntityInput() . 'ListPageController';
+        return $this->getUseCase() . 'Test';
     }
 
     /**
@@ -114,6 +112,26 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
     }
 
     /**
+     * @return string
+     */
+    protected function getUriInput(): string
+    {
+        return Str::plural(Str::snake($this->getEntityInput()));
+    }
+
+	/**
+	 * @return string
+	 */
+	protected function getModelInput(): string
+	{
+		if (empty($this->argument('model'))) {
+			return trim($this->argument('entity'));
+		} else {
+			return trim($this->argument('model'));
+		}
+	}
+
+    /**
      * @param string $name
      * @return string
      * @throws FileNotFoundException
@@ -123,7 +141,8 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
-        return $this->replaceResource($stub);
+		$stub = $this->replaceUri($stub);
+        return $this->replaceModel($stub);
     }
 
     /**
@@ -148,9 +167,17 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
      * @param string $stub
      * @return string
      */
-    protected function replaceResource(string $stub): string
+    private function replaceUri(string $stub): string
     {
-        $resource = Str::snake(Str::plural($this->getEntityInput()));
-        return str_replace(['{{ resource }}', '{{resource}}'], $resource, $stub);
+        return str_replace(['{{ uri }}', '{{uri}}'], $this->getUriInput(), $stub);
     }
+
+	/**
+	 * @param string $stub
+	 * @return string
+	 */
+	private function replaceModel(string $stub): string
+	{
+		return str_replace(['{{ model }}', '{{model}}'], $this->getModelInput(), $stub);
+	}
 }

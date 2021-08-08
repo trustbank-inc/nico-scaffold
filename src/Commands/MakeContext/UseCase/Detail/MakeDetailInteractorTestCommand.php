@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\UseCase\Detail;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestInteractorTestCommand;
+use Seasalt\NicoScaffold\Components\MakeRestInteractorTestCommand;
 
 /**
  * 詳細取得ユースケーステストのひな型のmakeコマンド

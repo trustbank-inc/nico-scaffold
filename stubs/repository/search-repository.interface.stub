@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Contexts\{{ context }}\Domain\Persistence;
 
-use Seasalt\NicoScaffold\Components\Domain\ValueObject\CurrentPage;
-use Seasalt\NicoScaffold\Components\Domain\ValueObject\LimitPerPage;
-use Seasalt\NicoScaffold\Components\Domain\ValueObject\SearchPhrase;
+use Seasalt\Nicoca\Components\UseCase\CurrentPage;
+use Seasalt\Nicoca\Components\UseCase\LimitPerPage;
+use Seasalt\Nicoca\Components\UseCase\SearchPhrase;
 
 /**
  * 検索フレーズで絞り込んだエンティティ一覧

@@ -6,13 +6,10 @@ namespace Seasalt\NicoScaffold;
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionException;
-use Seasalt\NicoScaffold\Components\Domain\Entity\IdGenerator;
-use Seasalt\NicoScaffold\Components\Domain\Entity\IdGeneratorImpl;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -25,8 +22,6 @@ final class ContextServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(IdGenerator::class, IdGeneratorImpl::class);
-
         $namespace = "App\\";
         foreach (glob(app_path('Providers/Contexts/*')) as $contextDirectory) {
             foreach (glob("{$contextDirectory}/*ServiceProvider.php") as $providerPath) {

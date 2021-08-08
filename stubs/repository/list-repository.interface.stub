@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Contexts\{{ context }}\Domain\Persistence;
 
-use Seasalt\NicoScaffold\Components\Domain\Persistence\Paginator;
+use Seasalt\Nicoca\Components\Domain\Persistence\Paginator;
 
 /**
  * 永続化されたエンティティ一覧

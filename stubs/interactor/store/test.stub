@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use Seasalt\NicoScaffold\Components\UseCase\InvalidInputException;
+use Seasalt\Nicoca\Components\UseCase\InvalidInputException;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Interactor;
 use Illuminate\Foundation\Testing\RefreshDatabase;

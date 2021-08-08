@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Store;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestRequestCommand;
+use Seasalt\NicoScaffold\Components\MakeRestRequestCommand;
 
 /**
  * 新規登録リクエストのひな型のmakeコマンド

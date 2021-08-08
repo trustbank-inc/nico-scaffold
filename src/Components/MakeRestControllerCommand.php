@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 

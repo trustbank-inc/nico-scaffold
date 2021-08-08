@@ -1,20 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * REST操作ユースケーステストデータmakeコマンド
+ * REST操作ユースケーステストmakeコマンド
  *
  * @note 各ユースケースのmakeコマンドへ派生
  */
-abstract class MakeRestInteractorFixtureCommand extends GeneratorCommand
+abstract class MakeRestInteractorTestCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -29,7 +28,7 @@ abstract class MakeRestInteractorFixtureCommand extends GeneratorCommand
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-        return $this->resolveStubPath("interactor/{$useCase}/fixture.stub");
+        return $this->resolveStubPath("interactor/{$useCase}/test.stub");
     }
 
     /**
@@ -57,7 +56,7 @@ abstract class MakeRestInteractorFixtureCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return "{$rootNamespace}\\UseCase\\{$this->getContextInput()}\\{$this->getEntityInput()}\\Fixture";
+        return "{$rootNamespace}\\UseCase\\{$this->getContextInput()}\\{$this->getEntityInput()}";
     }
 
     /**
@@ -76,7 +75,7 @@ abstract class MakeRestInteractorFixtureCommand extends GeneratorCommand
      */
     protected function getNameInput(): string
     {
-        return $this->getUseCase() . 'Fixture';
+        return $this->getUseCase() . 'Test';
     }
 
     /**

@@ -1,21 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * REST APIテストmakeコマンド
+ * REST操作画面のひな型のmakeコマンド
  *
- * @note 各APIテストのmakeコマンドへ派生
+ * @note 各ユースケースのmakeコマンドへ派生
  */
-abstract class MakeRestApiTestCommand extends GeneratorCommand
+abstract class MakeRestViewCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -31,9 +30,9 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
     {
         $useCase = Str::snake($this->getUseCase());
 
-        $this->name = "make:api-test-{$useCase}";
-        $this->description = "Create a new api test ({$useCase})";
-        $this->type = "ApiTest({$useCase})";
+        $this->name = "make:view-{$useCase}";
+        $this->description = "Create a new view ({$useCase})";
+        $this->type = "View({$useCase})";
 
         parent::__construct($files);
     }
@@ -44,28 +43,8 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-        $filename = 'test.api.stub';
-        return $this->resolveStubPath("controller/{$useCase}/{$filename}");
+        return $this->resolveStubPath("presenter/{$useCase}/view.stub");
     }
-
-	/**
-	 * @param string $name
-	 * @return string
-	 */
-	protected function getPath($name): string
-	{
-		$name = Str::replaceFirst($this->rootNamespace(), '', $name);
-
-		return base_path('tests').str_replace('\\', '/', $name).'.php';
-	}
-
-	/**
-	 * @return string
-	 */
-	protected function rootNamespace(): string
-	{
-		return 'Tests';
-	}
 
     /**
      * @param string $rootNamespace
@@ -73,7 +52,7 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-		return "{$rootNamespace}\\Feature\\{$this->getContextInput()}\\{$this->getEntityInput()}\\Api";
+        return $rootNamespace . "\\Contexts\\{$this->getContextInput()}\\Infrastructure\\Presenter";
     }
 
     /**
@@ -84,16 +63,15 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
         return [
             ['context', InputArgument::REQUIRED, 'The context for this Repository'],
             ['entity', InputArgument::REQUIRED, 'The name of target entity'],
-			['model', InputArgument::OPTIONAL, 'The name of eloquent model'],
         ];
     }
 
-	/**
+    /**
      * @return string
      */
     protected function getNameInput(): string
     {
-        return $this->getUseCase() . 'Test';
+        return $this->getEntityInput() . $this->getUseCase() . 'View';
     }
 
     /**
@@ -105,6 +83,8 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
     }
 
     /**
+     * Get the desired context from the input.
+     *
      * @return string
      */
     protected function getContextInput(): string
@@ -120,17 +100,33 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
         return Str::plural(Str::snake($this->getEntityInput()));
     }
 
-	/**
-	 * @return string
-	 */
-	protected function getModelInput(): string
-	{
-		if (empty($this->argument('model'))) {
-			return trim($this->argument('entity'));
-		} else {
-			return trim($this->argument('model'));
-		}
-	}
+    /**
+     * @return string
+     */
+    protected function getTemplateInput(): string
+    {
+        $context = Str::snake($this->getContextInput());
+        $entity = Str::snake($this->getEntityInput());
+        $useCase = Str::snake($this->getUseCase());
+        return "{$context}/{$entity}/{$useCase}";
+    }
+
+    /**
+     * 処理に成功したらTemplateの作成処理も実行する
+     *
+     * @throws FileNotFoundException
+     */
+    public function handle(): bool
+    {
+        $result = parent::handle();
+        if ($result === false) {
+            return false;
+        }
+
+        $this->call($this->name . '.blade', $this->arguments());
+        $this->call($this->name . '.language', $this->arguments());
+        return true;
+    }
 
     /**
      * @param string $name
@@ -142,15 +138,15 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
-		$stub = $this->replaceUri($stub);
-        return $this->replaceModel($stub);
+        $stub = $this->replaceUri($stub);
+        return $this->replaceTemplate($stub);
     }
 
     /**
      * @param string $stub
      * @return string
      */
-    protected function replaceContext(string $stub): string
+    private function replaceContext(string $stub): string
     {
         return str_replace(['{{ context }}', '{{context}}'], $this->getContextInput(), $stub);
     }
@@ -159,7 +155,7 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
      * @param string $stub
      * @return string
      */
-    protected function replaceEntity(string $stub): string
+    private function replaceEntity(string $stub): string
     {
         return str_replace(['{{ entity }}', '{{entity}}'], $this->getEntityInput(), $stub);
     }
@@ -173,12 +169,12 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
         return str_replace(['{{ uri }}', '{{uri}}'], $this->getUriInput(), $stub);
     }
 
-	/**
-	 * @param string $stub
-	 * @return string
-	 */
-	private function replaceModel(string $stub): string
-	{
-		return str_replace(['{{ model }}', '{{model}}'], $this->getModelInput(), $stub);
-	}
+    /**
+     * @param string $stub
+     * @return string
+     */
+    private function replaceTemplate(string $stub): string
+    {
+        return str_replace(['{{ template }}', '{{template}}'], $this->getTemplateInput(), $stub);
+    }
 }

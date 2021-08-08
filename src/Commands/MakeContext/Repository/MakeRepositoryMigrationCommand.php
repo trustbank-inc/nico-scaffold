@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Repository;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\Migration\RepositoryMigrationCreator;
+use Seasalt\NicoScaffold\Components\RepositoryMigrationCreator;
 use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
 use Illuminate\Support\Composer;
 

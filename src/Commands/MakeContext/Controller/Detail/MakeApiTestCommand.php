@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Detail;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestApiTestCommand;
+use Seasalt\NicoScaffold\Components\MakeRestApiTestCommand;
 
 /**
  * 詳細取得APIテストのひな型のmakeコマンド

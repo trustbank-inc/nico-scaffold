@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Presenter\Detail;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestViewCommand;
+use Seasalt\NicoScaffold\Components\MakeRestViewCommand;
 
 /**
  * 詳細画面のひな型のmakeコマンド

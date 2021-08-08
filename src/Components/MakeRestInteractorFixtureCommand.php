@@ -1,21 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * REST操作画面のひな型のmakeコマンド
+ * REST操作ユースケーステストデータmakeコマンド
  *
  * @note 各ユースケースのmakeコマンドへ派生
  */
-abstract class MakeRestViewCommand extends GeneratorCommand
+abstract class MakeRestInteractorFixtureCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -25,26 +23,31 @@ abstract class MakeRestViewCommand extends GeneratorCommand
     abstract protected function getUseCase(): string;
 
     /**
-     * @param Filesystem $files
-     */
-    public function __construct(Filesystem $files)
-    {
-        $useCase = Str::snake($this->getUseCase());
-
-        $this->name = "make:view-{$useCase}";
-        $this->description = "Create a new view ({$useCase})";
-        $this->type = "View({$useCase})";
-
-        parent::__construct($files);
-    }
-
-    /**
      * @return string
      */
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-        return $this->resolveStubPath("presenter/{$useCase}/view.stub");
+        return $this->resolveStubPath("interactor/{$useCase}/fixture.stub");
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    protected function getPath($name): string
+    {
+        $name = Str::replaceFirst($this->rootNamespace(), '', $name);
+
+        return base_path('tests').str_replace('\\', '/', $name).'.php';
+    }
+
+    /**
+     * @return string
+     */
+    protected function rootNamespace(): string
+    {
+        return 'Tests';
     }
 
     /**
@@ -53,7 +56,7 @@ abstract class MakeRestViewCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . "\\Contexts\\{$this->getContextInput()}\\Infrastructure\\Presenter";
+        return "{$rootNamespace}\\UseCase\\{$this->getContextInput()}\\{$this->getEntityInput()}\\Fixture";
     }
 
     /**
@@ -72,7 +75,7 @@ abstract class MakeRestViewCommand extends GeneratorCommand
      */
     protected function getNameInput(): string
     {
-        return $this->getEntityInput() . $this->getUseCase() . 'View';
+        return $this->getUseCase() . 'Fixture';
     }
 
     /**
@@ -94,42 +97,6 @@ abstract class MakeRestViewCommand extends GeneratorCommand
     }
 
     /**
-     * @return string
-     */
-    protected function getUriInput(): string
-    {
-        return Str::plural(Str::snake($this->getEntityInput()));
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTemplateInput(): string
-    {
-        $context = Str::snake($this->getContextInput());
-        $entity = Str::snake($this->getEntityInput());
-        $useCase = Str::snake($this->getUseCase());
-        return "{$context}/{$entity}/{$useCase}";
-    }
-
-    /**
-     * 処理に成功したらTemplateの作成処理も実行する
-     *
-     * @throws FileNotFoundException
-     */
-    public function handle(): bool
-    {
-        $result = parent::handle();
-        if ($result === false) {
-            return false;
-        }
-
-        $this->call($this->name . '.blade', $this->arguments());
-        $this->call($this->name . '.language', $this->arguments());
-        return true;
-    }
-
-    /**
      * @param string $name
      * @return string
      * @throws FileNotFoundException
@@ -139,8 +106,7 @@ abstract class MakeRestViewCommand extends GeneratorCommand
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
-        $stub = $this->replaceUri($stub);
-        return $this->replaceTemplate($stub);
+        return $this->replaceDatabaseTable($stub);
     }
 
     /**
@@ -165,17 +131,8 @@ abstract class MakeRestViewCommand extends GeneratorCommand
      * @param string $stub
      * @return string
      */
-    private function replaceUri(string $stub): string
+    private function replaceDatabaseTable(string $stub): string
     {
-        return str_replace(['{{ uri }}', '{{uri}}'], $this->getUriInput(), $stub);
-    }
-
-    /**
-     * @param string $stub
-     * @return string
-     */
-    private function replaceTemplate(string $stub): string
-    {
-        return str_replace(['{{ template }}', '{{template}}'], $this->getTemplateInput(), $stub);
+        return str_replace(['{{ table }}', '{{table}}'], Str::plural(Str::snake($this->getEntityInput())), $stub);
     }
 }

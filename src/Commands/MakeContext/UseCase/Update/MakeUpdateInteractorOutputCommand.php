@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\UseCase\Update;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestInteractorOutputCommand;
+use Seasalt\NicoScaffold\Components\MakeRestInteractorOutputCommand;
 
 /**
  * 更新ユースケース出力のひな型のmakeコマンド

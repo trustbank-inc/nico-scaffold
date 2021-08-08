@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand;
+namespace Seasalt\NicoScaffold\Components;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * REST操作ユースケース出力makeコマンド
+ * REST操作リクエストmakeコマンド
  *
- * @note 各ユースケースのmakeコマンドへ派生
+ * @note 各コントローラのmakeコマンドへ派生
  */
-abstract class MakeRestInteractorOutputCommand extends GeneratorCommand
+abstract class MakeRestRequestCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -24,12 +24,26 @@ abstract class MakeRestInteractorOutputCommand extends GeneratorCommand
     abstract protected function getUseCase(): string;
 
     /**
+     * @param Filesystem $files
+     */
+    public function __construct(Filesystem $files)
+    {
+        $useCase = Str::snake($this->getUseCase());
+
+        $this->name = "make:controller-{$useCase}-request";
+        $this->description = "Create a new controller request ({$useCase})";
+        $this->type = "ControllerRequest({$useCase})";
+
+        parent::__construct($files);
+    }
+
+    /**
      * @return string
      */
     protected function getStub(): string
     {
         $useCase = Str::snake($this->getUseCase());
-        return $this->resolveStubPath("interactor/{$useCase}/output.stub");
+        return $this->resolveStubPath("controller/{$useCase}/request.stub");
     }
 
     /**
@@ -38,7 +52,7 @@ abstract class MakeRestInteractorOutputCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . "\\Contexts\\{$this->getContextInput()}\\UseCase\\{$this->getEntityInput()}\\{$this->getUseCase()}";
+        return $rootNamespace . "\\Http\\Requests\\{$this->getContextInput()}";
     }
 
     /**
@@ -57,7 +71,7 @@ abstract class MakeRestInteractorOutputCommand extends GeneratorCommand
      */
     protected function getNameInput(): string
     {
-        return 'Output';
+        return $this->getEntityInput() . $this->getUseCase() . 'Request';
     }
 
     /**
@@ -87,7 +101,8 @@ abstract class MakeRestInteractorOutputCommand extends GeneratorCommand
     {
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
-        return $this->replaceEntity($stub);
+        $stub = $this->replaceEntity($stub);
+        return $this->replaceLanguage($stub);
     }
 
     /**
@@ -106,5 +121,16 @@ abstract class MakeRestInteractorOutputCommand extends GeneratorCommand
     protected function replaceEntity(string $stub): string
     {
         return str_replace(['{{ entity }}', '{{entity}}'], $this->getEntityInput(), $stub);
+    }
+
+    /**
+     * @param string $stub
+     * @return string
+     */
+    private function replaceLanguage(string $stub): string
+    {
+        $context = Str::snake($this->getContextInput());
+        $entity = Str::snake($this->getEntityInput());
+        return str_replace(['{{ lang }}', '{{lang}}'], "{$context}/{$entity}", $stub);
     }
 }

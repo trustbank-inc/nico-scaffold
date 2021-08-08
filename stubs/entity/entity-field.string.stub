@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 
-use Seasalt\NicoScaffold\Components\Domain\ValueObject\StringValue;
+use Seasalt\Nicoca\Components\Domain\ValueObject\StringValue;
 use JsonSerializable;
 
 /**

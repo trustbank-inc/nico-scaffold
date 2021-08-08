@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\UseCase\Index;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestInteractorInputCommand;
+use Seasalt\NicoScaffold\Components\MakeRestInteractorInputCommand;
 
 /**
  * 一覧取得ユースケース入力のひな型のmakeコマンド

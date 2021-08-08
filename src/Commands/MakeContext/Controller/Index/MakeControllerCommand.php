@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Controller\Index;
 
-use Seasalt\NicoScaffold\Components\Infrastructure\MakeCommand\MakeRestControllerCommand;
+use Seasalt\NicoScaffold\Components\MakeRestControllerCommand;
 
 /**
  * 一覧コントローラのひな型のmakeコマンド
