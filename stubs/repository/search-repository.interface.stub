@@ -29,7 +29,7 @@ interface Search{{ entity }}ListRepository extends {{ entity }}ListRepository
     /**
      * 現在ページ
      *
-     * @param int $currentPage
+     * @param CurrentPage $currentPage
      */
     public function setCurrentPage(CurrentPage $currentPage): void;
 }
