@@ -5,5 +5,5 @@ use App\Http\Controllers\{{ context }}\Api\{{ entity }}StoreController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api', 'auth:api'])->prefix('{{ prefix }}')->group(function () {
-    Route::post('/api/{{ resource }}', {{ entity }}StoreController::class);
+    Route::post('/{{ resource }}', {{ entity }}StoreController::class);
 });

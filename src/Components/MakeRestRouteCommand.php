@@ -161,6 +161,9 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
     protected function replacePrefix(string $stub): string
     {
         $prefix = Str::snake($this->getContextInput());
+        if ($this->option('api')) {
+            $prefix = "/api/{$prefix}";
+        }
         return str_replace(['{{ prefix }}', '{{prefix}}'], $prefix, $stub);
     }
 }
