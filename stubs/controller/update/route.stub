@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Http\Controllers\{{ context }}\{{ entity }}UpdateController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::middleware(['web', 'auth'])->prefix('{{ prefix }}')->group(function () {
     Route::put('/{{ resource }}/{id}', {{ entity }}UpdateController::class)
         ->whereAlphaNumeric('id')
         ->name('{{ resource }}.update');

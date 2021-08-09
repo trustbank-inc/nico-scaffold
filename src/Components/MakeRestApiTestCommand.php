@@ -142,7 +142,8 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
 		$stub = $this->replaceUri($stub);
-        return $this->replaceModel($stub);
+        $stub = $this->replaceModel($stub);
+        return $this->replacePrefix($stub);
     }
 
     /**
@@ -180,4 +181,14 @@ abstract class MakeRestApiTestCommand extends GeneratorCommand
 	{
 		return str_replace(['{{ model }}', '{{model}}'], $this->getModelInput(), $stub);
 	}
+
+    /**
+     * @param string $stub
+     * @return string
+     */
+    protected function replacePrefix(string $stub): string
+    {
+        $prefix = Str::snake($this->getContextInput());
+        return str_replace(['{{ prefix }}', '{{prefix}}'], $prefix, $stub);
+    }
 }

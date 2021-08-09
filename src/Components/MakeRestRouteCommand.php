@@ -122,7 +122,8 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
-        return $this->replaceResource($stub);
+        $stub = $this->replaceResource($stub);
+        return $this->replacePrefix($stub);
     }
 
     /**
@@ -151,5 +152,15 @@ abstract class MakeRestRouteCommand extends GeneratorCommand
     {
         $resource = Str::snake(Str::plural($this->getEntityInput()));
         return str_replace(['{{ resource }}', '{{resource}}'], $resource, $stub);
+    }
+
+    /**
+     * @param string $stub
+     * @return string
+     */
+    protected function replacePrefix(string $stub): string
+    {
+        $prefix = Str::snake($this->getContextInput());
+        return str_replace(['{{ prefix }}', '{{prefix}}'], $prefix, $stub);
     }
 }

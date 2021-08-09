@@ -4,6 +4,6 @@ declare(strict_types=1);
 use App\Http\Controllers\{{ context }}\{{ entity }}IndexController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::middleware(['web', 'auth'])->prefix('{{ prefix }}')->group(function () {
     Route::get('/{{ resource }}', {{ entity }}IndexController::class)->name('{{ resource }}.index');
 });

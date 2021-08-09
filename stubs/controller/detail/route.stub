@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Http\Controllers\{{ context }}\{{ entity }}DetailController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::middleware(['web', 'auth'])->prefix('{{ prefix }}')->group(function () {
     Route::get('/{{ resource }}/{id}/edit', {{ entity }}DetailController::class)
         ->whereAlphaNumeric('id')
         ->name('{{ resource }}.edit');

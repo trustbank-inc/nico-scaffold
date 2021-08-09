@@ -4,7 +4,7 @@ declare(strict_types=1);
 use App\Http\Controllers\{{ context }}\{{ entity }}DestroyController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::middleware(['web', 'auth'])->prefix('{{ prefix }}')->group(function () {
     Route::delete('/{{ resource }}/{id}', {{ entity }}DestroyController::class)
         ->whereAlphaNumeric('id')
         ->name('{{ resource }}.destroy');
