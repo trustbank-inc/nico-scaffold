@@ -37,7 +37,7 @@ final class {{ class }} extends TestCase
      */
     public function 一覧が取得できること()
     {
-        $entities = {{ model }}Model::factory()
+        $rows = {{ model }}Model::factory()
             ->count(10) // ページングされない程度
             ->create()
             ->toArray();
@@ -48,7 +48,7 @@ final class {{ class }} extends TestCase
                 'Authorization' => 'Bearer ' . self::API_TOKEN,
             ]);
         $response->assertOk();
-        $this->assertEquals($entities, $response->json('data'));
+        $this->assertEquals($rows, $response->json('data'));
         $this->assertEquals(10, $response->json('total'));
     }
 
@@ -57,7 +57,7 @@ final class {{ class }} extends TestCase
      */
     public function 一覧をページ分割して取得できること()
     {
-        $entities = {{ model }}Model::factory()
+        $rows = {{ model }}Model::factory()
             ->count(30)
             ->create()
             ->toArray();
@@ -68,7 +68,7 @@ final class {{ class }} extends TestCase
             headers: [
                 'Authorization' => 'Bearer ' . self::API_TOKEN,
             ]);
-        $this->assertEquals(array_slice($entities, 0, 12), $response->json('data'));
+        $this->assertEquals(array_slice($rows, 0, 12), $response->json('data'));
         $this->assertEquals(30, $response->json('total'));
         $this->assertEquals(12, $response->json('per_page'));
         $this->assertEquals(1, $response->json('current_page'));
@@ -79,7 +79,7 @@ final class {{ class }} extends TestCase
             headers: [
                 'Authorization' => 'Bearer ' . self::API_TOKEN,
             ]);
-        $this->assertEquals(array_slice($entities, 12, 12), $response->json('data'));
+        $this->assertEquals(array_slice($rows, 12, 12), $response->json('data'));
         $this->assertEquals(30, $response->json('total'));
         $this->assertEquals(12, $response->json('per_page'));
         $this->assertEquals(2, $response->json('current_page'));
@@ -90,7 +90,7 @@ final class {{ class }} extends TestCase
             headers: [
                 'Authorization' => 'Bearer ' . self::API_TOKEN,
             ]);
-        $this->assertEquals(array_slice($entities, 24), $response->json('data'));
+        $this->assertEquals(array_slice($rows, 24), $response->json('data'));
         $this->assertEquals(30, $response->json('total'));
         $this->assertEquals(12, $response->json('per_page'));
         $this->assertEquals(3, $response->json('current_page'));
@@ -111,7 +111,7 @@ final class {{ class }} extends TestCase
 
         // 検索対象のデータ
         $phrase = '***検索テスト***';
-        $entities = {{ model }}Model::factory()
+        $rows = {{ model }}Model::factory()
             ->count(3)
             ->state(new Sequence(
                 ['title' => $this->faker->name . $phrase],
@@ -127,7 +127,7 @@ final class {{ class }} extends TestCase
                 'Authorization' => 'Bearer ' . self::API_TOKEN,
             ]);
         $response->assertOk();
-        $this->assertEquals($entities, $response->json('data'));
+        $this->assertEquals($rows, $response->json('data'));
         $this->assertEquals(3, $response->json('total'));
     }
 
