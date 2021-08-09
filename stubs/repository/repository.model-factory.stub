@@ -7,7 +7,7 @@ use App\Models\{{ model }};
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Ulid\Ulid;
 
-final class EmployeeFactory extends Factory
+final class {{ class }} extends Factory
 {
     /**
      * @var string
