@@ -105,9 +105,6 @@ final class MakeSearchRepositoryCommand extends GeneratorCommand
     public function handle(): bool
     {
         $result = parent::handle();
-        if ($result === false) {
-            return false;
-        }
 
         $this->call('make:search-repository-implements', $this->arguments());
 

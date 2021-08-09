@@ -85,9 +85,6 @@ abstract class MakeRestInteractorCommand extends GeneratorCommand
     public function handle(): bool
     {
         $result = parent::handle();
-        if ($result === false) {
-            return false;
-        }
 
         $this->call($this->name . '-input', $this->arguments());
         $this->call($this->name . '-output', $this->arguments());

@@ -105,9 +105,6 @@ final class MakeRepositoryCommand extends GeneratorCommand
     public function handle(): bool
     {
         $result = parent::handle();
-        if ($result === false) {
-            return false;
-        }
 
         $this->call('make:repository-record', $this->arguments());
         $this->call('make:repository-implements', $this->arguments());
