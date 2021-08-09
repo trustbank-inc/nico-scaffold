@@ -6,7 +6,7 @@ namespace {{ namespace }};
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Interactor;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MyCompany\{{ entity }}DestroyRequest;
+use App\Http\Requests\{{ context }}\{{ entity }}DestroyRequest;
 
 final class {{ class }} extends Controller
 {

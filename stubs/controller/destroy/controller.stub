@@ -6,8 +6,7 @@ namespace {{ namespace }};
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Interactor;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MyCompany\{{ entity }}DestroyRequest;
-use Illuminate\Contracts\Foundation\Application;
+use App\Http\Requests\{{ context }}\{{ entity }}DestroyRequest;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +19,7 @@ final class {{ entity }}DestroyController extends Controller
      * @return Factory|View|RedirectResponse
      */
     public function __invoke(
-        Request $request,
+        {{ entity }}DestroyRequest $request,
         Interactor $interactor): Factory|View|RedirectResponse
     {
         $interactor->execute(Input::fromArray($request->validated()));

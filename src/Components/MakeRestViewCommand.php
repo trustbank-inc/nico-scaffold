@@ -83,8 +83,6 @@ abstract class MakeRestViewCommand extends GeneratorCommand
     }
 
     /**
-     * Get the desired context from the input.
-     *
      * @return string
      */
     protected function getContextInput(): string
@@ -97,7 +95,9 @@ abstract class MakeRestViewCommand extends GeneratorCommand
      */
     protected function getUriInput(): string
     {
-        return Str::plural(Str::snake($this->getEntityInput()));
+        $context = Str::snake($this->getContextInput());
+        $entity = Str::plural(Str::snake($this->getEntityInput()));
+        return "{$context}/{$entity}";
     }
 
     /**

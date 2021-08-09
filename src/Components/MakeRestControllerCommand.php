@@ -114,7 +114,9 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
      */
     protected function getUriInput(): string
     {
-        return Str::plural(Str::snake($this->getEntityInput()));
+        $context = Str::snake($this->getContextInput());
+        $entity = Str::plural(Str::snake($this->getEntityInput()));
+        return "{$context}/{$entity}";
     }
 
     /**
