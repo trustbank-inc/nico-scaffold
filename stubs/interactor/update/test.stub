@@ -7,9 +7,9 @@ namespace {{ namespace }};
 use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Update\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Update\Interactor;
+use App\Models\{{ model }} as {{ model }}Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\UseCase\{{ context }}\{{ entity }}\Fixture\UpdateFixture;
 use Tests\TestCase;
 
 /**
@@ -25,14 +25,16 @@ final class UpdateTest extends TestCase
      */
     public function エンティティが更新できること()
     {
-        /** @var UpdateFixture $fixture */
-        $fixture = resolve(UpdateFixture::class);
-        $entity = $fixture->create();
+        /** @var {{ model }}Model $row */
+        $rows = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->toArray();
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
-            'id' => $entity->getId()->getValue(),
+            'id' => $rows[0]['id'],
             'title' => '更新テスト',
             /** TODO add fields */
         ]));

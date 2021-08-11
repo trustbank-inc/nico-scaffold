@@ -6,8 +6,8 @@ namespace {{ namespace }};
 
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Destroy\Interactor;
+use App\Models\{{ model }} as {{ model }}Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\UseCase\{{ context }}\{{ entity }}\Fixture\DestroyFixture;
 use Tests\TestCase;
 
 final class DestroyTest extends TestCase
@@ -19,18 +19,19 @@ final class DestroyTest extends TestCase
      */
     public function エンティティが削除できること()
     {
-        /** @var DestroyFixture $fixture */
-        $fixture = resolve(DestroyFixture::class);
-        $entity1 = $fixture->create();
-        $entity2 = $fixture->create();
+        /** @var {{ model }}Model $row */
+        $rows = {{ model }}Model::factory()
+            ->count(2)
+            ->create()
+            ->toArray();
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
-            'id' => $entity1->getId()->getValue(),
+            'id' => $rows[0]['id'],
         ]));
         $interactor->execute(Input::fromArray([
-            'id' => $entity2->getId()->getValue(),
+            'id' => $rows[1]['id'],
         ]));
 
         $this->assertDatabaseCount('{{ table }}', 0);
@@ -41,22 +42,23 @@ final class DestroyTest extends TestCase
      */
     public function 削除対象以外のエンティティに影響がないこと()
     {
-        /** @var DestroyFixture $fixture */
-        $fixture = resolve(DestroyFixture::class);
-        $entity1 = $fixture->create();
-        $entity2 = $fixture->create();
+        /** @var {{ model }}Model $row */
+        $rows = {{ model }}Model::factory()
+            ->count(2)
+            ->create()
+            ->toArray();
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
-            'id' => $entity1->getId()->getValue(),
+            'id' => $rows[0]['id'],
         ]));
 
         $this->assertDatabaseMissing('{{ table }}', [
-            'id' => $entity1->getId(),
+            'id' => $rows[0]['id'],
         ]);
         $this->assertDatabaseHas('{{ table }}', [
-            'id' => $entity2->getId(),
+            'id' => $rows[1]['id'],
         ]);
     }
 
@@ -65,22 +67,24 @@ final class DestroyTest extends TestCase
      */
     public function 削除済みのエンティティを削除してもエラーにならないこと()
     {
-        /** @var DestroyFixture $fixture */
-        $fixture = resolve(DestroyFixture::class);
-        $entity = $fixture->create();
+        /** @var {{ model }}Model $row */
+        $rows = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->toArray();
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
-            'id' => $entity->getId()->getValue(),
+            'id' => $rows[0]['id'],
         ]));
         // もう一度削除
         $interactor->execute(Input::fromArray([
-            'id' => $entity->getId()->getValue(),
+            'id' => $rows[0]['id'],
         ]));
 
         $this->assertDatabaseMissing('{{ table }}', [
-            'id' => $entity->getId(),
+            'id' => $rows[0]['id'],
         ]);
     }
 }

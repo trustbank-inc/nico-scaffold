@@ -7,9 +7,9 @@ namespace {{ namespace }};
 use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Interactor;
+use App\Models\{{ model }} as {{ model }}Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\UseCase\{{ context }}\{{ entity }}\Fixture\DetailFixture;
 use Tests\TestCase;
 
 final class DetailTest extends TestCase
@@ -22,22 +22,24 @@ final class DetailTest extends TestCase
      */
     public function エンティティの詳細が取得できること()
     {
-        /** @var DetailFixture $fixture */
-        $fixture = resolve(DetailFixture::class);
-        $entity = $fixture->create();
+        /** @var {{ model }}Model $row */
+        $row = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->first();
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $output = $interactor->execute(Input::fromArray([
-            'id' => $entity->getId()->getValue(),
+            'id' => $row->getAttribute('id'),
         ]));
 
         $this->assertEquals(
-            expected: $entity->getId(),
-            actual: $output->getEntity()->getId());
+            expected: $row->getAttribute('id'),
+            actual: $output->getEntity()->getId()->getValue());
         $this->assertEquals(
-            expected: $entity->getTitle(),
-            actual: $output->getEntity()->getTitle());
+            expected: $row->getAttribute('title'),
+            actual: $output->getEntity()->getTitle()->getValue());
     }
 
     /**
@@ -47,9 +49,11 @@ final class DetailTest extends TestCase
     {
         $this->expectException({{ entity }}NotFoundException::class);
 
-        /** @var DetailFixture $fixture */
-        $fixture = resolve(DetailFixture::class);
-        $fixture->create();
+        /** @var {{ model }}Model $row */
+        $row = {{ model }}Model::factory()
+            ->count(1)
+            ->create()
+            ->first();
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);

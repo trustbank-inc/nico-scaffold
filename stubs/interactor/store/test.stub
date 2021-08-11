@@ -7,6 +7,7 @@ namespace {{ namespace }};
 use Seasalt\Nicoca\Components\UseCase\InvalidInputException;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Store\Interactor;
+use App\Models\{{ model }} as {{ model }}Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;

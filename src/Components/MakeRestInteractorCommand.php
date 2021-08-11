@@ -88,8 +88,6 @@ abstract class MakeRestInteractorCommand extends GeneratorCommand
 
         $this->call($this->name . '-input', $this->arguments());
         $this->call($this->name . '-output', $this->arguments());
-        $this->call($this->name . '-test', $this->arguments());
-        $this->call($this->name . '-fixture', $this->arguments());
         return true;
     }
 

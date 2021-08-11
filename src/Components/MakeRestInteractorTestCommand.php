@@ -67,6 +67,7 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
         return [
             ['context', InputArgument::REQUIRED, 'The context for this Repository'],
             ['entity', InputArgument::REQUIRED, 'The name of target entity'],
+            ['model', InputArgument::OPTIONAL, 'The name of eloquent model'],
         ];
     }
 
@@ -97,6 +98,14 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
     }
 
     /**
+     * @return string
+     */
+    protected function getModelInput(): string
+    {
+        return trim($this->argument('model') ?? $this->argument('entity'));
+    }
+
+    /**
      * @param string $name
      * @return string
      * @throws FileNotFoundException
@@ -106,7 +115,8 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
-        return $this->replaceDatabaseTable($stub);
+        $stub = $this->replaceDatabaseTable($stub);
+        return $this->replaceModel($stub);
     }
 
     /**
@@ -134,5 +144,15 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
     private function replaceDatabaseTable(string $stub): string
     {
         return str_replace(['{{ table }}', '{{table}}'], Str::plural(Str::snake($this->getEntityInput())), $stub);
+    }
+
+    /**
+     * @param string $stub
+     * @return string
+     */
+    private function replaceModel(string $stub): string
+    {
+        $model = $this->getModelInput();
+        return str_replace(['{{ model }}', '{{model}}'], $model, $stub);
     }
 }

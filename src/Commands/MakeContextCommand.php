@@ -34,6 +34,11 @@ final class MakeContextCommand extends Command
         $this->call('make:interactor-detail', compact('context', 'entity'));
         $this->call('make:interactor-update', compact('context', 'entity'));
         $this->call('make:interactor-destroy', compact('context', 'entity'));
+        $this->call('make:interactor-store-test', compact('context', 'entity', 'model'));
+        $this->call('make:interactor-index-test', compact('context', 'entity', 'model'));
+        $this->call('make:interactor-detail-test', compact('context', 'entity', 'model'));
+        $this->call('make:interactor-update-test', compact('context', 'entity', 'model'));
+        $this->call('make:interactor-destroy-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
         	$apiParam = [
 				'context' => $context,
