@@ -109,23 +109,17 @@ final class {{ entity }} implements JsonSerializable
         {{ entity }}Repository $repository): void
     {
         // {{ entity }}が直接{{ entity }}RepositoryRecordをimplementsしない
-        $record = new class($this) implements {{ entity }}RepositoryRecord
+        $record = new class($this->id, $this->title) implements {{ entity }}RepositoryRecord
         {
-            public function __construct(private {{ entity }} $entity)
+            public function __construct(
+                private {{ entity }}Id $id,
+                private Title $title)
             {
 
             }
 
-            public function getId(): {{ entity }}Id
-            {
-                return $this->entity->getId();
-            }
-
-            public function getTitle(): Title
-            {
-                return $this->entity->getTitle();
-            }
-
+            public function getId(): {{ entity }}Id { return $this->id; }
+            public function getTitle(): Title { return $this->title; }
             /** TODO add fields */
         };
         $repository->save($record);
