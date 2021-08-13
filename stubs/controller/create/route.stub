@@ -5,5 +5,5 @@ use App\Http\Controllers\{{ context }}\{{ entity }}CreateController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth'])->prefix('{{ prefix }}')->group(function () {
-    Route::get('/{{ resource }}/create', {{ entity }}CreateController::class)->name('{{ resource }}.create');
+    Route::get('/{{ resource }}/create', {{ entity }}CreateController::class)->name('{{ route }}.create');
 });

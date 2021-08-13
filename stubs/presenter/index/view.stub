@@ -32,7 +32,7 @@ final class {{ entity }}IndexView
             total: $list->getTotal(),
             perPage: $list->getLimit(),
             currentPage: $list->getCurrentPage(),
-            options: ['path' => '/{{ uri }}']);
+            options: ['path' => route('{{ resource }}.index')]);
         $this->paginator->withQueryString();
         return view('{{ template }}')->with('view', $this);
     }

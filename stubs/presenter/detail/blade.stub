@@ -35,7 +35,7 @@ use Illuminate\Support\ViewErrorBag;
             <div class="alert alert-danger">{{ session('error_message') }}</div>
         @endif
 
-        <form id="form" action="{{ route('{{ uri }}.update', ['id' => $view->getEntity()->getId()]) }}" method="post">
+        <form id="form" action="{{ route('{{ resource }}.update', ['id' => $view->getEntity()->getId()]) }}" method="post">
             @csrf
             @method('put')
 
@@ -69,7 +69,7 @@ use Illuminate\Support\ViewErrorBag;
     </div>
 </div>
 
-<form action="{{ route('{{ uri }}.destroy', ['id' => $view->getEntity()->getId()->getValue()]) }}" method="post" id="delete">
+<form action="{{ route('{{ resource }}.destroy', ['id' => $view->getEntity()->getId()->getValue()]) }}" method="post" id="delete">
     @csrf
     @method('delete')
     <div class="confirm" data-message="{{ __('{{ lang }}/detail.delete_confirm') }}"></div>

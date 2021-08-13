@@ -35,7 +35,7 @@ use Illuminate\Support\ViewErrorBag;
             <div class="alert alert-danger">{{ session('error_message') }}</div>
         @endif
 
-        <form id="form" action="{{ route('{{ uri }}.store') }}" method="post">
+        <form id="form" action="{{ route('{{ resource }}.store') }}" method="post">
             @csrf
 
             <div class="title form-floating mb-3">

@@ -16,7 +16,7 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 @endsection
 
 @section('content')
-<a href="{{ route('{{ uri }}.create') }}">{{ __('{{ lang }}/create.title') }}</a>
+<a href="{{ route('{{ resource }}.create') }}">{{ __('{{ lang }}/create.title') }}</a>
 <hr>
 
 <form method="get">
@@ -44,7 +44,7 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
         <?php /** @var {{ entity }} $entity */ ?>
         @foreach  ($view->getPaginator() as $entity)
             <li>
-                <a href="{{ route('{{ uri }}.edit', ['id' => $entity->getId()->getValue()]) }}">{{ $entity->getTitle() }}</a>
+                <a href="{{ route('{{ resource }}.edit', ['id' => $entity->getId()->getValue()]) }}">{{ $entity->getTitle() }}</a>
             </li>
         @endforeach
     </ul>

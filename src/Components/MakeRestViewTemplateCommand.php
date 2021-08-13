@@ -112,16 +112,6 @@ abstract class MakeRestViewTemplateCommand extends GeneratorCommand
     }
 
     /**
-     * @return string
-     */
-    protected function getUriInput(): string
-    {
-        $context = Str::snake($this->getContextInput());
-        $entity = Str::plural(Str::snake($this->getEntityInput()));
-        return "{$context}/{$entity}";
-    }
-
-    /**
      * @param string $name
      * @return string
      * @throws FileNotFoundException
@@ -131,7 +121,7 @@ abstract class MakeRestViewTemplateCommand extends GeneratorCommand
         $stub = parent::buildClass($name);
         $stub = $this->replaceContext($stub);
         $stub = $this->replaceEntity($stub);
-        $stub = $this->replaceUri($stub);
+        $stub = $this->replaceResource($stub);
         return $this->replaceLanguage($stub);
     }
 
@@ -157,9 +147,11 @@ abstract class MakeRestViewTemplateCommand extends GeneratorCommand
      * @param string $stub
      * @return string
      */
-    private function replaceUri(string $stub): string
+    private function replaceResource(string $stub): string
     {
-        return str_replace(['{{ uri }}', '{{uri}}'], $this->getUriInput(), $stub);
+        $context = Str::snake($this->getContextInput());
+        $entity = Str::snake(Str::plural($this->getEntityInput()));
+        return str_replace(['{{ resource }}', '{{resource}}'], "{$context}.{$entity}", $stub);
     }
 
     /**

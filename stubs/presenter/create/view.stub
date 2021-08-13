@@ -26,6 +26,6 @@ final class {{ entity }}CreateView
         $searchPhrase = session()->get('{{ context }}.{{ entity }}.search_phrase');
         $limit = session()->get('{{ context }}.{{ entity }}.limit');
         $page = session()->get('{{ context }}.{{ entity }}.page');
-        return route('{{ uri }}.index') . "?search_phrase={$searchPhrase}&limit={$limit}&page={$page}";
+        return route('{{ resource }}.index') . "?search_phrase={$searchPhrase}&limit={$limit}&page={$page}";
     }
 }

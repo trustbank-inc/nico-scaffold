@@ -5,5 +5,5 @@ use App\Http\Controllers\{{ context }}\{{ entity }}IndexController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth'])->prefix('{{ prefix }}')->group(function () {
-    Route::get('/{{ resource }}', {{ entity }}IndexController::class)->name('{{ resource }}.index');
+    Route::get('/{{ resource }}', {{ entity }}IndexController::class)->name('{{ route }}.index');
 });

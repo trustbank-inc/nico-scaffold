@@ -5,5 +5,5 @@ use App\Http\Controllers\{{ context }}\{{ entity }}StoreController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth'])->prefix('{{ prefix }}')->group(function () {
-    Route::post('/{{ resource }}', {{ entity }}StoreController::class)->name('{{ resource }}.store');
+    Route::post('/{{ resource }}', {{ entity }}StoreController::class)->name('{{ route }}.store');
 });
