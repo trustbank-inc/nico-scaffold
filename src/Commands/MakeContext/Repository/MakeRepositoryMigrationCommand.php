@@ -113,7 +113,8 @@ final class MakeRepositoryMigrationCommand extends GeneratorCommand
      */
     private function replaceTable(string $stub): string
     {
+        $context = Str::snake($this->getContextInput());
         $table = Str::snake(Str::plural($this->getModelInput()));
-        return str_replace(['{{ table }}', '{{table}}'], $table, $stub);
+        return str_replace(['{{ table }}', '{{table}}'], "{$context}_{$table}", $stub);
     }
 }
