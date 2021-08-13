@@ -3,24 +3,117 @@ declare(strict_types=1);
 
 namespace Seasalt\NicoScaffold\Commands\MakeContext\Repository;
 
-use Seasalt\NicoScaffold\Components\RepositoryMigrationCreator;
-use Illuminate\Database\Console\Migrations\MigrateMakeCommand;
-use Illuminate\Support\Composer;
+use Illuminate\Console\GeneratorCommand;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Str;
+use Seasalt\NicoScaffold\Components\StubsFindable;
+use Symfony\Component\Console\Input\InputArgument;
 
-final class MakeRepositoryMigrationCommand extends MigrateMakeCommand
+/**
+ * リポジトリで利用するEloquentModelのmakeコマンド
+ */
+final class MakeRepositoryMigrationCommand extends GeneratorCommand
 {
+    use StubsFindable;
+
     /**
      * @var string
      */
-    protected $signature = 'make:repository-migration {name : The name of the migration}
-        {--create= : The table to be created}
-        {--table= : The table to migrate}
-        {--path= : The location where the migration file should be created}
-        {--realpath : Indicate any provided migration file paths are pre-resolved absolute paths}
-        {--fullpath : Output the full path of the migration}';
+    protected $name = 'make:repository-migration';
 
-    public function __construct(RepositoryMigrationCreator $creator, Composer $composer)
+    /**
+     * @var string
+     */
+    protected $description = 'Create a new migration for repository';
+
+    /**
+     * @var string
+     */
+    protected $type = 'Repository migration';
+
+    /**
+     * @return string
+     */
+    protected function getStub(): string
     {
-        parent::__construct($creator, $composer);
+        return $this->resolveStubPath('repository/repository.migration.stub');
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    protected function getPath($name): string
+    {
+        return base_path("database/migrations/contexts/{$this->getNameInput()}");
+    }
+
+    /**
+     * @return array
+     */
+    protected function getArguments(): array
+    {
+        return [
+            ['context', InputArgument::REQUIRED, 'The context for this Repository'],
+            ['entity', InputArgument::REQUIRED, 'The name of target entity'],
+            ['model', InputArgument::OPTIONAL, 'The name of eloquent model'],
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        $context = Str::snake($this->getContextInput());
+        $model = Str::snake(Str::plural($this->getModelInput()));
+        return "{$context}_{$model}_table.php";
+    }
+
+    /**
+     * @return string
+     */
+    protected function getEntityInput(): string
+    {
+        return trim($this->argument('entity'));
+    }
+
+    /**
+     * Get the desired context from the input.
+     *
+     * @return string
+     */
+    protected function getContextInput(): string
+    {
+        return trim($this->argument('context'));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelInput(): string
+    {
+        return trim($this->argument('model') ?? $this->argument('entity'));
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     * @throws FileNotFoundException
+     */
+    protected function buildClass($name): string
+    {
+        $stub = parent::buildClass($name);
+        return $this->replaceTable($stub);
+    }
+
+    /**
+     * @param string $stub
+     * @return string
+     */
+    private function replaceTable(string $stub): string
+    {
+        $table = Str::snake(Str::plural($this->getModelInput()));
+        return str_replace(['{{ table }}', '{{table}}'], $table, $stub);
     }
 }

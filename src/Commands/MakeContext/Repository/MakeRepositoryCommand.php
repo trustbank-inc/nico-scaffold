@@ -108,6 +108,7 @@ final class MakeRepositoryCommand extends GeneratorCommand
 
         $this->call('make:repository-record', $this->arguments());
         $this->call('make:repository-implements', $this->arguments());
+        $this->call('make:repository-migration', $this->arguments());
 
         $params = [
             'context' => $this->getContextInput(),

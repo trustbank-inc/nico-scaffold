@@ -108,21 +108,7 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
         parent::handle();
 
 		$this->call('make:repository-model-factory', $this->arguments());
-        $this->createMigration();
 
         return true;
-    }
-
-    /**
-     *
-     */
-    protected function createMigration(): void
-    {
-        $table = Str::snake(Str::pluralStudly(class_basename($this->getModelInput())));
-
-        $this->call('make:repository-migration', [
-            'name' => "create_{$table}_table",
-            '--create' => $table,
-        ]);
     }
 }

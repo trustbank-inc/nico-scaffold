@@ -55,6 +55,9 @@ final class ContextServiceProvider extends ServiceProvider
             }
         }
 
+        // マイグレーション
+        $this->loadMigrationsFrom(base_path('database/migrations/contexts'));
+
         // コマンド
         if ($this->app->runningInConsole()) {
             $this->loadCommands(__DIR__ . '/Commands');
