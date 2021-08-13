@@ -104,7 +104,7 @@ final class MakeListRepositoryCommand extends GeneratorCommand
      */
     public function handle(): bool
     {
-        $result = parent::handle();
+        parent::handle();
 
         $this->call('make:search-repository', $this->arguments());
         return true;

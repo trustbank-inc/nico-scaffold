@@ -108,7 +108,7 @@ abstract class MakeRestViewCommand extends GeneratorCommand
      */
     public function handle(): bool
     {
-        $result = parent::handle();
+        parent::handle();
 
         $this->call($this->name . '.blade', $this->arguments());
         $this->call($this->name . '.language', $this->arguments());

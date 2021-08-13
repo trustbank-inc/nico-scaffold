@@ -105,7 +105,7 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
      */
     public function handle(): bool
     {
-        $result = parent::handle();
+        parent::handle();
 
 		$this->call('make:repository-model-factory', $this->arguments());
         $this->createMigration();

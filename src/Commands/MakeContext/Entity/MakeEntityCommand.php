@@ -94,7 +94,7 @@ final class MakeEntityCommand extends GeneratorCommand
      */
     public function handle(): bool
     {
-        $result = parent::handle();
+        parent::handle();
 
         $params = [
             'context' => $this->getContextInput(),

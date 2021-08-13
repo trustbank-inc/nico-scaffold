@@ -120,7 +120,7 @@ final class MakeInteractorCommand extends GeneratorCommand
      */
     public function handle(): bool
     {
-        $result = parent::handle();
+        parent::handle();
 
         $this->call('make:interactor-input', $this->arguments());
         $this->call('make:interactor-output', $this->arguments());

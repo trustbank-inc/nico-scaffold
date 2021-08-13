@@ -126,7 +126,7 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
      */
     public function handle(): bool
     {
-        $result = parent::handle();
+        parent::handle();
 
         $params = $this->arguments();
         $this->call($this->name . '-request', $params);
