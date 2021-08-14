@@ -10,7 +10,7 @@ use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * リポジトリで利用するEloquentModelのmakeコマンド
+ * リポジトリで利用するマイグレーションのmakeコマンド
  */
 final class MakeRepositoryMigrationCommand extends GeneratorCommand
 {

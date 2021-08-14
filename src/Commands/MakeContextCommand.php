@@ -61,6 +61,7 @@ final class MakeContextCommand extends Command
 			$this->call('make:api-test-store', $apiTestParam);
 			$this->call('make:api-test-update', $apiTestParam);
 			$this->call('make:api-test-destroy', $apiTestParam);
+            $this->call('make:api-token-migration');
 		} else {
 			$this->call('make:controller-index', compact('context', 'entity'));
 			$this->call('make:controller-create', compact('context', 'entity'));
