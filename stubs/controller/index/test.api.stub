@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 final class {{ class }} extends TestCase
@@ -22,14 +23,12 @@ final class {{ class }} extends TestCase
     {
         parent::setUp();
 
-        $user = new User();
-        $user->fill([
+        DB::table('users')->insert([
             'name' => 'test',
             'email' => $this->faker->safeEmail(),
             'password' => password_hash('test-password', PASSWORD_DEFAULT),
             'api_token' => self::API_TOKEN,
         ]);
-        $user->save();
     }
 
     /**
