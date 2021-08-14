@@ -35,16 +35,7 @@ jobs:
         run: curl -s "https://laravel.build/example-app?with=mysql,redis" | bash
       - name: copy composer.json
         run: cp -f ./tests/composer.json ./example-app/
-      - name: cache vendor
-        id: cache
-        uses: actions/cache@v1
-        with:
-          path: ./example-app/vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - name: composer install
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: composer update
         run: composer update -n --prefer-dist
         working-directory: ./example-app
       - name: .env
