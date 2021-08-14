@@ -56,7 +56,7 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return "{$rootNamespace}\\UseCase\\{$this->getContextInput()}\\{$this->getEntityInput()}";
+        return "{$rootNamespace}\\Unit\\UseCase\\{$this->getContextInput()}\\{$this->getEntityInput()}";
     }
 
     /**
