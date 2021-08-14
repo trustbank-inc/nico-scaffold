@@ -55,6 +55,8 @@ jobs:
         working-directory: ./example-app
       - name: scaffolding
         run: php artisan make:context MyCompany Employee
+      - name: scaffolding (api)
+        run: php artisan make:context MyCompany Employee --api
         working-directory: ./example-app
       - name: npm install
         run: npm install
