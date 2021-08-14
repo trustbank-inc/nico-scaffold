@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  phpunit:
+    name: phpunit test
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7.23
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: password0
+          MYSQL_DATABASE: ci-testing
+          TZ: Japan
+        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
+
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: ci-testing
+      DB_USERNAME: root
+      DB_PASSWORD: password0
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: install laravel
+        run: curl -s "https://laravel.build/example-app?with=mysql,redis" | bash
+      - name: copy composer.json
+        run: cp -f ./tests/composer.json ./example-app/
+      - name: cache vendor
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: ./example-app/vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: composer install
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: composer install -n --prefer-dist
+        working-directory: ./example-app
+      - name: .env
+        run: php -r "copy('.env.example', '.env');"
+        working-directory: ./example-app
+      - name: key generate
+        run: php artisan key:generate
+        working-directory: ./example-app
+      - name: scaffolding
+        run: php artisan make:context MyCompany Employee
+        working-directory: ./example-app
+      - name: npm install
+        run: npm install
+        working-directory: ./example-app
+      - name: npm build
+        run: npm run dev
+        working-directory: ./example-app
+      - name: unit test
+        run: ./vendor/bin/phpunit
+        working-directory: ./example-app
