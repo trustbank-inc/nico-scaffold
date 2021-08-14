@@ -55,6 +55,7 @@ jobs:
         working-directory: ./example-app
       - name: scaffolding
         run: php artisan make:context MyCompany Employee
+        working-directory: ./example-app
       - name: scaffolding (api)
         run: php artisan make:context MyCompany Employee --api
         working-directory: ./example-app
