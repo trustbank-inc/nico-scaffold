@@ -28,7 +28,8 @@ final class MakeContextCommand extends Command
 
         $this->call('make:entity', compact('context', 'entity'));
         $this->call('make:repository-exception', compact('context', 'entity'));
-        $this->call('make:repository-model', compact('model'));
+        $this->call('make:repository-model', compact('context', 'model'));
+        $this->call('make:repository-model-factory', compact('model'));
         $this->call('make:interactor-store', compact('context', 'entity'));
         $this->call('make:interactor-index', compact('context', 'entity'));
         $this->call('make:interactor-detail', compact('context', 'entity'));

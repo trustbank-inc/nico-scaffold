@@ -58,6 +58,7 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
+            ['context', InputArgument::REQUIRED, 'The context for this Repository'],
             ['model', InputArgument::REQUIRED, 'The name of eloquent model'],
         ];
     }
@@ -68,6 +69,16 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
     protected function getNameInput(): string
     {
         return $this->getModelInput();
+    }
+
+    /**
+     * Get the desired context from the input.
+     *
+     * @return string
+     */
+    protected function getContextInput(): string
+    {
+        return trim($this->argument('context'));
     }
 
     /**
@@ -86,7 +97,8 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
     protected function buildClass($name): string
     {
         $stub = parent::buildClass($name);
-        return $this->replaceModel($stub);
+        $stub = $this->replaceModel($stub);
+        return $this->replaceTable($stub);
     }
 
     /**
@@ -99,16 +111,13 @@ final class MakeRepositoryModelCommand extends GeneratorCommand
     }
 
     /**
-     * 処理に成功したらImplementsとModelの作成処理も実行する
-     *
-     * @throws FileNotFoundException
+     * @param string $stub
+     * @return string
      */
-    public function handle(): bool
+    private function replaceTable(string $stub): string
     {
-        parent::handle();
-
-		$this->call('make:repository-model-factory', $this->arguments());
-
-        return true;
+        $context = Str::snake($this->getContextInput());
+        $table = Str::snake(Str::plural($this->getModelInput()));
+        return str_replace(['{{ table }}', '{{table}}'], "{$context}_{$table}", $stub);
     }
 }

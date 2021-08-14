@@ -143,7 +143,9 @@ abstract class MakeRestInteractorTestCommand extends GeneratorCommand
      */
     private function replaceDatabaseTable(string $stub): string
     {
-        return str_replace(['{{ table }}', '{{table}}'], Str::plural(Str::snake($this->getEntityInput())), $stub);
+        $context = Str::snake($this->getContextInput());
+        $table = Str::snake(Str::plural($this->getModelInput()));
+        return str_replace(['{{ table }}', '{{table}}'], "{$context}_{$table}", $stub);
     }
 
     /**
