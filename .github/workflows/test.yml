@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install laravel
-        run: curl -s "https://laravel.build/example-app?with=mysql,redis" | bash
+        run: curl -s "https://laravel.build/example-app?with=mysql" | bash
       - name: copy composer.json
         run: cp -f ./tests/composer.json ./example-app/
       - name: composer update
