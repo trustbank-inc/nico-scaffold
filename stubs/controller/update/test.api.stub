@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace {{ namespace }};
 
 use App\Models\{{ model }} as {{ model }}Model;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
@@ -41,8 +40,6 @@ final class {{ class }} extends TestCase
             ->create()
             ->first();
 
-        $this->actingAs(new User());
-
         $response = $this->putJson(
             uri: "/api/{{ uri }}/{$row->getAttribute('id')}",
             data: [
@@ -67,8 +64,6 @@ final class {{ class }} extends TestCase
      */
     public function 存在しないIDを指定するとエラーになること()
     {
-        $this->actingAs(new User());
-
         $response = $this->putJson(
             uri: '/api/{{ uri }}/xxxxxxxx',
             data: [
@@ -91,8 +86,6 @@ final class {{ class }} extends TestCase
             ->count(1)
             ->create()
             ->first();
-
-        $this->actingAs(new User());
 
         $title = implode('', array_pad([], 100, 'あ'));
         $response = $this->putJson(
@@ -122,8 +115,6 @@ final class {{ class }} extends TestCase
             ->create()
             ->first();
 
-        $this->actingAs(new User());
-
         $response = $this->putJson(
             uri: "/api/{{ uri }}/{$row->getAttribute('id')}",
             data: [
@@ -147,8 +138,6 @@ final class {{ class }} extends TestCase
             ->count(1)
             ->create()
             ->first();
-
-        $this->actingAs(new User());
 
         $response = $this->putJson(
             uri: "/api/{{ uri }}/{$row->getAttribute('id')}",

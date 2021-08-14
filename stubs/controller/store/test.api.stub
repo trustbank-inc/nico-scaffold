@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace {{ namespace }};
 
 use App\Models\{{ model }} as {{ model }}Model;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
@@ -81,8 +80,6 @@ final class {{ class }} extends TestCase
      */
     public function タイトルを指定していないとエラーになること()
     {
-        $this->actingAs(new User());
-
         $response = $this->postJson(
             uri: '/api/{{ uri }}',
             data: [
@@ -101,8 +98,6 @@ final class {{ class }} extends TestCase
      */
     public function タイトルの最大文字数超過でエラーになること()
     {
-        $this->actingAs(new User());
-
         $response = $this->postJson(
             uri: '/api/{{ uri }}',
             data: [
