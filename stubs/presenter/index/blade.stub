@@ -49,6 +49,6 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
         @endforeach
     </ul>
     <hr>
-    @include('elements.pagination', ['view' => $view])
+    @include('elements.pagination', ['paginator' => $view->getPaginator()])
 @endif
 @endsection
