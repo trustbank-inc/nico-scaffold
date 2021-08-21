@@ -39,7 +39,7 @@ use Illuminate\Support\ViewErrorBag;
             @csrf
 
             <div class="title form-floating mb-3">
-                <input type="text" id="title" name="title" class="form-control {{ $errors->has('title') ? ' is-invalid' : '' }}" value="{{ old('title') }}" placeholder="-" autocomplete="off">
+                <input type="text" id="title" name="title" class="form-control {{ $errors->has('title') ? ' is-invalid' : '' }}" value="{{ old('title') }}" placeholder="-" autocomplete="off" autofocus>
                 <label for="title" class="mb-1">{{ __('{{ lang }}/create.fields.title') }} <span class="required">*</span></label>
                 @include('elements.validation.message', ['field' => 'title'])
             </div>
