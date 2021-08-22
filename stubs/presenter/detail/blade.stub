@@ -62,7 +62,7 @@ use Illuminate\Support\ViewErrorBag;
             </div>
             <div class="card-body">
                 <nav class="nav flex-column">
-                    <a href="javascript: window.submitForm('delete')" class="list-link nav-link text-danger">{{ __('{{ lang }}/detail.delete_book') }}</a>
+                    <a href="javascript: window.submitForm('delete')" class="list-link nav-link text-danger">{{ __('{{ lang }}/detail.delete') }}</a>
                 </nav>
             </div>
         </div>
