@@ -35,6 +35,8 @@ jobs:
         run: curl -s "https://laravel.build/example-app?with=mysql" | bash
       - name: copy composer.json
         run: cp -f ./tests/composer.json ./example-app/
+      - name: copy auth.php
+        run: cp -f ./tests/auth.php ./example-app/config/
       - name: composer update
         run: composer update -n --prefer-dist
         working-directory: ./example-app
