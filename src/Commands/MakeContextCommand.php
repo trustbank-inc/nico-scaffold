@@ -8,13 +8,12 @@ use Illuminate\Console\Command;
 final class MakeContextCommand extends Command
 {
     /**
-     * action: index, detail, create, store, update, destroy, none (default: all)
-     *      none: common components only
+     * action: index, detail, create, store, update, destroy, none
      *
      * @var string
      */
     protected $signature = 'make:context {name} {entity} {model?}
-        {--action= : index, detail, create, store, update, destroy, none (default: all)} {--api}';
+        {--action= : index, detail, create, store, update, destroy, none} {--api}';
 
     /**
      * @var string
@@ -44,7 +43,7 @@ final class MakeContextCommand extends Command
         $this->context = $this->argument('name');
         $this->entity = $this->argument('entity');
         $this->model = $this->argument('model') ?? $this->argument('entity');
-        $action = $this->option('action') ?? 'all';
+        $action = $this->option('action');
 
         if ($this->option('api')) {
             $this->apiParam = [
@@ -60,9 +59,6 @@ final class MakeContextCommand extends Command
         }
 
         switch ($action) {
-            case 'all':
-                $this->makeAllComponents();
-                break;
             case 'none':
                 $this->makeCommonComponents();
                 break;
@@ -94,6 +90,11 @@ final class MakeContextCommand extends Command
                 $this->error('Context classes\'s creation faild.');
                 return 1;
         }
+
+        if (!$action) {
+            $this->makeAllComponents();
+        }
+
         $this->line('<info>Context classes created successfully.</info>');
         return 0;
     }
