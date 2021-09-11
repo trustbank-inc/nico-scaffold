@@ -8,12 +8,12 @@ use Illuminate\Console\Command;
 final class MakeContextCommand extends Command
 {
     /**
-     * action: index, detail, create, store, update, destroy, none
+     * action: Select index, detail, create, store, update, destroy or none
      *
      * @var string
      */
     protected $signature = 'make:context {name} {entity} {model?}
-        {--action= : index, detail, create, store, update, destroy, none} {--api}';
+        {--action= : Select index, detail, create, store, update, destroy or none} {--api}';
 
     /**
      * @var string
