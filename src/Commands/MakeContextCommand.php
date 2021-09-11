@@ -8,14 +8,13 @@ use Illuminate\Console\Command;
 final class MakeContextCommand extends Command
 {
     /**
-     * action: index, detail, create, store, update, destroy, common and all
-     *      common: entity and repository only
-     *      all   : all components
+     * action: index, detail, create, store, update, destroy, none (default: all)
+     *      none: common components only
      *
      * @var string
      */
     protected $signature = 'make:context {name} {entity} {model?}
-        {--action= : index, detail, create, store, update, destroy, common and all (default: all)} {--api}';
+        {--action= : index, detail, create, store, update, destroy, none (default: all)} {--api}';
 
     /**
      * @var string
@@ -64,7 +63,7 @@ final class MakeContextCommand extends Command
             case 'all':
                 $this->makeAllComponents();
                 break;
-            case 'common':
+            case 'none':
                 $this->makeCommonComponents();
                 break;
             case 'index':
