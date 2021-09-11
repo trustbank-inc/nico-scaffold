@@ -11,7 +11,7 @@ final class MakeContextCommand extends Command
      * action: index, detail, create, store, update, destroy, common and all
      *      common: entity and repository only
      *      all   : all components
-     * 
+     *
      * @var string
      */
     protected $signature = 'make:context {name} {entity} {model?}
@@ -49,15 +49,15 @@ final class MakeContextCommand extends Command
 
         if ($this->option('api')) {
             $this->apiParam = [
-				'context' => $this->context,
-				'entity' => $this->entity,
-				'--api' => true,
-			];
+                'context' => $this->context,
+                'entity' => $this->entity,
+                '--api' => true,
+            ];
             $this->apiTestParam = [
-				'context' => $this->context,
-				'entity' => $this->entity,
-				'model' => $this->model,
-			];
+                'context' => $this->context,
+                'entity' => $this->entity,
+                'model' => $this->model,
+            ];
         }
 
         switch ($action) {
@@ -96,7 +96,7 @@ final class MakeContextCommand extends Command
                 return 1;
         }
         $this->line('<info>Context classes created successfully.</info>');
-        return 0;  
+        return 0;
     }
 
     public function makeAllComponents(): void
@@ -130,8 +130,8 @@ final class MakeContextCommand extends Command
         $this->call('make:interactor-index', compact('context', 'entity'));
         $this->call('make:interactor-index-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
-		    $this->call('make:controller-index', $this->apiParam);
-		    $this->call('make:api-test-index', $this->apiTestParam);
+            $this->call('make:controller-index', $this->apiParam);
+            $this->call('make:api-test-index', $this->apiTestParam);
         } else {
             $this->call('make:controller-index', compact('context', 'entity'));
             $this->call('make:view-index', compact('context', 'entity'));
@@ -160,8 +160,8 @@ final class MakeContextCommand extends Command
         if ($this->option('api')) {
 
         } else {
-		    $this->call('make:controller-create', compact('context', 'entity'));
-		    $this->call('make:view-create', compact('context', 'entity'));
+            $this->call('make:controller-create', compact('context', 'entity'));
+            $this->call('make:view-create', compact('context', 'entity'));
         }
     }
 
@@ -190,7 +190,7 @@ final class MakeContextCommand extends Command
             $this->call('make:controller-update', $this->apiParam);
             $this->call('make:api-test-update', $this->apiTestParam);
         } else {
-		    $this->call('make:controller-update', compact('context', 'entity'));
+            $this->call('make:controller-update', compact('context', 'entity'));
         }
     }
 
