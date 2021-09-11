@@ -13,7 +13,7 @@
         "laravel/tinker": "^2.5",
         "laravel/sanctum": "^2.11",
         "seasalt/nicoca": "^1.0",
-        "seasalt/nico-scaffold": "dev-master"
+        "seasalt/nico-scaffold": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
