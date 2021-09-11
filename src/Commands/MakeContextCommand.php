@@ -33,7 +33,7 @@ final class MakeContextCommand extends Command
         ]);
         try {
             $validator->validate();
-        } catch (ValidationException $e) {
+        } catch (ValidationException) {
             $this->error('--action= : "index", "detail", "create", "store", "update", "destroy" or "none" is acceptable.');
             return 1;
         }
