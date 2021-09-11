@@ -55,19 +55,14 @@ final class MakeContextCommand extends Command
                 $this->makeDestroyComponents();
                 break;
             default:
-                $this->error('Context classes\'s creation faild.');
-                return 1;
-        }
-
-        if (!$action) {
-            $this->makeAllComponents();
+                $this->makeAllComponents();
         }
 
         $this->line('<info>Context classes created successfully.</info>');
         return 0;
     }
 
-    public function makeAllComponents(): void
+    private function makeAllComponents(): void
     {
         $this->makeCommonComponents();
         $this->makeIndexComponents();
@@ -78,7 +73,7 @@ final class MakeContextCommand extends Command
         $this->makeDestroyComponents();
     }
 
-    public function makeCommonComponents(): void
+    private function makeCommonComponents(): void
     {
         list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
@@ -91,7 +86,7 @@ final class MakeContextCommand extends Command
         }
     }
 
-    public function makeIndexComponents(): void
+    private function makeIndexComponents(): void
     {
         list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
@@ -106,7 +101,7 @@ final class MakeContextCommand extends Command
         }
     }
 
-    public function makeDetailComponents(): void
+    private function makeDetailComponents(): void
     {
         list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
@@ -121,7 +116,7 @@ final class MakeContextCommand extends Command
         }
     }
 
-    public function makeCreateComponents(): void
+    private function makeCreateComponents(): void
     {
         list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
@@ -133,7 +128,7 @@ final class MakeContextCommand extends Command
         }
     }
 
-    public function makeStoreComponents(): void
+    private function makeStoreComponents(): void
     {
         list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
@@ -148,7 +143,7 @@ final class MakeContextCommand extends Command
 
     }
 
-    public function makeUpdateComponents(): void
+    private function makeUpdateComponents(): void
     {
         list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
@@ -162,7 +157,7 @@ final class MakeContextCommand extends Command
         }
     }
 
-    public function makeDestroyComponents(): void
+    private function makeDestroyComponents(): void
     {
         list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
