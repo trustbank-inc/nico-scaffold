@@ -29,8 +29,8 @@ final class MakeContextCommand extends Command
     {
         $action = $this->option('action');
         $validator = Validator::make(['action' => $action], 
-            ['action' => ['regex:/^(index)|(detail)|(create)|(store)|(update)|(destroy)|(none)$/', 'nullable'],
-        ]);
+            ['action' => ['regex:/^(index)|(detail)|(create)|(store)|(update)|(destroy)|(none)$/', 'nullable'],]
+        );
         try {
             $validator->validate();
         } catch (ValidationException) {
