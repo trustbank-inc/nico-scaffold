@@ -20,44 +20,12 @@ final class MakeContextCommand extends Command
      */
     protected $description = 'Create a new context';
 
-    /**@var stirng */
-    private $context;
-
-    /**@var stirng */
-    private $entity;
-
-    /**@var stirng */
-    private $model;
-
-    /** @var array */
-    private $apiParam;
-
-    /** @var array */
-    private $apiTestParam;
-
     /**
      * @return int
      */
     public function handle(): int
     {
-        $this->context = $this->argument('name');
-        $this->entity = $this->argument('entity');
-        $this->model = $this->argument('model') ?? $this->argument('entity');
         $action = $this->option('action');
-
-        if ($this->option('api')) {
-            $this->apiParam = [
-                'context' => $this->context,
-                'entity' => $this->entity,
-                '--api' => true,
-            ];
-            $this->apiTestParam = [
-                'context' => $this->context,
-                'entity' => $this->entity,
-                'model' => $this->model,
-            ];
-        }
-
         switch ($action) {
             case 'none':
                 $this->makeCommonComponents();
@@ -112,7 +80,7 @@ final class MakeContextCommand extends Command
 
     public function makeCommonComponents(): void
     {
-        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+        list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
         $this->call('make:entity', compact('context', 'entity'));
         $this->call('make:repository-exception', compact('context', 'entity'));
@@ -125,13 +93,13 @@ final class MakeContextCommand extends Command
 
     public function makeIndexComponents(): void
     {
-        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+        list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
         $this->call('make:interactor-index', compact('context', 'entity'));
         $this->call('make:interactor-index-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
-            $this->call('make:controller-index', $this->apiParam);
-            $this->call('make:api-test-index', $this->apiTestParam);
+            $this->call('make:controller-index', $this->getApiParam());
+            $this->call('make:api-test-index', $this->getApiTestParam());
         } else {
             $this->call('make:controller-index', compact('context', 'entity'));
             $this->call('make:view-index', compact('context', 'entity'));
@@ -140,13 +108,13 @@ final class MakeContextCommand extends Command
 
     public function makeDetailComponents(): void
     {
-        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+        list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
         $this->call('make:interactor-detail', compact('context', 'entity'));
         $this->call('make:interactor-detail-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
-            $this->call('make:controller-detail', $this->apiParam);
-            $this->call('make:api-test-detail', $this->apiTestParam);
+            $this->call('make:controller-detail', $this->getApiParam());
+            $this->call('make:api-test-detail', $this->getApiTestParam());
         } else {
             $this->call('make:controller-detail', compact('context', 'entity'));
             $this->call('make:view-detail', compact('context', 'entity'));
@@ -155,7 +123,7 @@ final class MakeContextCommand extends Command
 
     public function makeCreateComponents(): void
     {
-        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+        list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
         if ($this->option('api')) {
 
@@ -167,13 +135,13 @@ final class MakeContextCommand extends Command
 
     public function makeStoreComponents(): void
     {
-        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+        list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
         $this->call('make:interactor-store', compact('context', 'entity'));
         $this->call('make:interactor-store-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
-            $this->call('make:controller-store', $this->apiParam);
-            $this->call('make:api-test-store', $this->apiTestParam);
+            $this->call('make:controller-store', $this->getApiParam());
+            $this->call('make:api-test-store', $this->getApiTestParam());
         } else {
             $this->call('make:controller-store', compact('context', 'entity'));
         }
@@ -182,13 +150,13 @@ final class MakeContextCommand extends Command
 
     public function makeUpdateComponents(): void
     {
-        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+        list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
         $this->call('make:interactor-update', compact('context', 'entity'));
         $this->call('make:interactor-update-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
-            $this->call('make:controller-update', $this->apiParam);
-            $this->call('make:api-test-update', $this->apiTestParam);
+            $this->call('make:controller-update', $this->getApiParam());
+            $this->call('make:api-test-update', $this->getApiTestParam());
         } else {
             $this->call('make:controller-update', compact('context', 'entity'));
         }
@@ -196,15 +164,48 @@ final class MakeContextCommand extends Command
 
     public function makeDestroyComponents(): void
     {
-        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+        list($context, $entity, $model) = [$this->getContextInput(), $this->getEntityInput(), $this->getModelInput()];
 
         $this->call('make:interactor-destroy', compact('context', 'entity'));
         $this->call('make:interactor-destroy-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
-            $this->call('make:controller-destroy', $this->apiParam);
-            $this->call('make:api-test-destroy', $this->apiTestParam);
+            $this->call('make:controller-destroy', $this->getApiParam());
+            $this->call('make:api-test-destroy', $this->getApiTestParam());
         } else {
             $this->call('make:controller-destroy', compact('context', 'entity'));
         }
+    }
+
+    private function getContextInput(): string
+    {
+        return $this->argument('name');
+    }
+
+    private function getEntityInput(): string
+    {
+        return $this->argument('entity');
+    }
+
+    private function getModelInput(): string
+    {
+        return $this->argument('model') ?? $this->argument('entity');
+    }
+
+    private function getApiParam(): array
+    {
+        return [
+            'context' => $this->getContextInput(),
+            'entity' => $this->getEntityInput(),
+            '--api' => true,
+        ];
+    }
+
+    private function getApiTestParam(): array
+    {
+        return [
+            'context' => $this->getContextInput(),
+            'entity' => $this->getEntityInput(),
+            'model' => $this->getModelInput(),
+        ];
     }
 }
