@@ -15,12 +15,21 @@ final class MakeContextCommand extends Command
      * @var string
      */
     protected $signature = 'make:context {name} {entity} {model?}
-        {--action: index, detail, create, store, update, destroy, common and all (default: all)} {--api}';
+        {--action= : index, detail, create, store, update, destroy, common and all (default: all)} {--api}';
 
     /**
      * @var string
      */
     protected $description = 'Create a new context';
+
+    /**@var stirng */
+    private $context;
+
+    /**@var stirng */
+    private $entity;
+
+    /**@var stirng */
+    private $model;
 
     /** @var array */
     private $apiParam;
@@ -33,21 +42,21 @@ final class MakeContextCommand extends Command
      */
     public function handle(): int
     {
-        $context = $this->argument('name');
-        $entity = $this->argument('entity');
-        $model = $this->argument('model') ?? $this->argument('entity');
+        $this->context = $this->argument('name');
+        $this->entity = $this->argument('entity');
+        $this->model = $this->argument('model') ?? $this->argument('entity');
         $action = $this->option('action') ?? 'all';
 
         if ($this->option('api')) {
             $this->apiParam = [
-				'context' => $context,
-				'entity' => $entity,
+				'context' => $this->context,
+				'entity' => $this->entity,
 				'--api' => true,
 			];
             $this->apiTestParam = [
-				'context' => $context,
-				'entity' => $entity,
-				'model' => $model,
+				'context' => $this->context,
+				'entity' => $this->entity,
+				'model' => $this->model,
 			];
         }
 
@@ -83,13 +92,14 @@ final class MakeContextCommand extends Command
                 $this->makeDestroyComponents();
                 break;
             default:
-                $this->line('<info>Context classes\'s creation faild.</info>');
+                $this->error('Context classes\'s creation faild.');
+                return 1;
         }
         $this->line('<info>Context classes created successfully.</info>');
         return 0;  
     }
 
-    public function makeAllComponents():void
+    public function makeAllComponents(): void
     {
         $this->makeCommonComponents();
         $this->makeIndexComponents();
@@ -102,6 +112,8 @@ final class MakeContextCommand extends Command
 
     public function makeCommonComponents(): void
     {
+        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+
         $this->call('make:entity', compact('context', 'entity'));
         $this->call('make:repository-exception', compact('context', 'entity'));
         $this->call('make:repository-model', compact('context', 'model'));
@@ -113,6 +125,8 @@ final class MakeContextCommand extends Command
 
     public function makeIndexComponents(): void
     {
+        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+
         $this->call('make:interactor-index', compact('context', 'entity'));
         $this->call('make:interactor-index-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
@@ -126,6 +140,8 @@ final class MakeContextCommand extends Command
 
     public function makeDetailComponents(): void
     {
+        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+
         $this->call('make:interactor-detail', compact('context', 'entity'));
         $this->call('make:interactor-detail-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
@@ -139,6 +155,8 @@ final class MakeContextCommand extends Command
 
     public function makeCreateComponents(): void
     {
+        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+
         if ($this->option('api')) {
 
         } else {
@@ -149,6 +167,8 @@ final class MakeContextCommand extends Command
 
     public function makeStoreComponents(): void
     {
+        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+
         $this->call('make:interactor-store', compact('context', 'entity'));
         $this->call('make:interactor-store-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
@@ -162,6 +182,8 @@ final class MakeContextCommand extends Command
 
     public function makeUpdateComponents(): void
     {
+        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+
         $this->call('make:interactor-update', compact('context', 'entity'));
         $this->call('make:interactor-update-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
@@ -174,6 +196,8 @@ final class MakeContextCommand extends Command
 
     public function makeDestroyComponents(): void
     {
+        list($context, $entity, $model) = [$this->context, $this->entity, $this->model];
+
         $this->call('make:interactor-destroy', compact('context', 'entity'));
         $this->call('make:interactor-destroy-test', compact('context', 'entity', 'model'));
         if ($this->option('api')) {
