@@ -4,16 +4,18 @@ declare(strict_types=1);
 namespace Seasalt\NicoScaffold\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 final class MakeContextCommand extends Command
 {
     /**
-     * action: Select index, detail, create, store, update, destroy or none
+     * action: "index", "detail", "create", "store", "update", "destroy" or "none"
      *
      * @var string
      */
     protected $signature = 'make:context {name} {entity} {model?}
-        {--action= : Select index, detail, create, store, update, destroy or none} {--api}';
+        {--action= : Select "index", "detail", "create", "store", "update", "destroy" or "none"} {--api}';
 
     /**
      * @var string
@@ -26,6 +28,16 @@ final class MakeContextCommand extends Command
     public function handle(): int
     {
         $action = $this->option('action');
+        $validator = Validator::make(['action' => $action], 
+            ['action' => ['regex:/^(index)|(detail)|(create)|(store)|(update)|(destroy)|(none)$/', 'nullable'],
+        ]);
+        try {
+            $validator->validate();
+        } catch (ValidationException $e) {
+            $this->error('--action= : "index", "detail", "create", "store", "update", "destroy" or "none" is acceptable.');
+            return 1;
+        }
+        $validator->validate();
         switch ($action) {
             case 'none':
                 $this->makeCommonComponents();
