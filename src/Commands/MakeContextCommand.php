@@ -6,6 +6,7 @@ namespace Seasalt\NicoScaffold\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 
 final class MakeContextCommand extends Command
 {
@@ -28,9 +29,13 @@ final class MakeContextCommand extends Command
     public function handle(): int
     {
         $action = $this->option('action');
-        $validator = Validator::make(['action' => $action], 
-            ['action' => ['regex:/^(index)|(detail)|(create)|(store)|(update)|(destroy)|(none)$/', 'nullable'],]
-        );
+        $validator = Validator::make(['action' => $action],
+            [
+                'action' => [
+                    Rule::in(['index', 'detail', 'create', 'store', 'update', 'destroy', 'none']),
+                    'nullable',
+                ],
+            ]);
         try {
             $validator->validate();
         } catch (ValidationException) {
