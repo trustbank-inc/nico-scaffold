@@ -21,40 +21,40 @@ final class {{ class }} implements Search{{ entity }}ListRepository
     use PaginatorCreatable;
 
     /**
-     * @var SearchPhrase
+     * @var SearchPhrase|null
      */
-    private SearchPhrase $searchPhrase;
+    private SearchPhrase $searchPhrase = null;
 
     /**
-     * @var LimitPerPage
+     * @var LimitPerPage|null
      */
-    private LimitPerPage $limit;
+    private LimitPerPage $limit = null;
 
     /**
-     * @var CurrentPage
+     * @var CurrentPage|null
      */
-    private CurrentPage $currentPage;
+    private CurrentPage $currentPage = null;
 
     /**
-     * @param SearchPhrase $searchPhrase
+     * @param SearchPhrase|null $searchPhrase
      */
-    public function setSearchPhrase(SearchPhrase $searchPhrase): void
+    public function setSearchPhrase(SearchPhrase|null $searchPhrase): void
     {
         $this->searchPhrase = $searchPhrase;
     }
 
     /**
-     * @param LimitPerPage $limit
+     * @param LimitPerPage|null $limit
      */
-    public function setLimit(LimitPerPage $limit): void
+    public function setLimit(LimitPerPage|null $limit): void
     {
         $this->limit = $limit;
     }
 
     /**
-     * @param CurrentPage $currentPage
+     * @param CurrentPage|null $currentPage
      */
-    public function setCurrentPage(CurrentPage $currentPage): void
+    public function setCurrentPage(CurrentPage|null $currentPage): void
     {
         $this->currentPage = $currentPage;
     }
@@ -70,8 +70,8 @@ final class {{ class }} implements Search{{ entity }}ListRepository
             /** TODO add fields */
         ]);
         $paginator = $builder->paginate(
-            perPage: $this->limit->getValue(),
-            page: $this->currentPage->getValue());
+            perPage: $this->limit?->getValue(),
+            page: $this->currentPage?->getValue());
         $records = [];
         /** @var {{ model }}Model $row */
         foreach ($paginator as $row) {

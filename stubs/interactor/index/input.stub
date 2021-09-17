@@ -19,33 +19,33 @@ final class Input
      * @param CurrentPage $currentPage
      */
     public function __construct(
-        private SearchPhrase $searchPhrase,
-        private LimitPerPage $limit,
-        private CurrentPage $currentPage)
+        private SearchPhrase|null $searchPhrase,
+        private LimitPerPage|null $limit,
+        private CurrentPage|null $currentPage)
     {
 
     }
 
     /**
-     * @return SearchPhrase
+     * @return SearchPhrase|null
      */
-    public function getSearchPhrase(): SearchPhrase
+    public function getSearchPhrase(): SearchPhrase|null
     {
         return $this->searchPhrase;
     }
 
     /**
-     * @return LimitPerPage
+     * @return LimitPerPage|null
      */
-    public function getLimit(): LimitPerPage
+    public function getLimit(): LimitPerPage|null
     {
         return $this->limit;
     }
 
     /**
-     * @return CurrentPage
+     * @return CurrentPage|null
      */
-    public function getCurrentPage(): CurrentPage
+    public function getCurrentPage(): CurrentPage|null
     {
         return $this->currentPage;
     }

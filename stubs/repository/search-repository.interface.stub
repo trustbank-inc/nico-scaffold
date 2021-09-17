@@ -15,21 +15,21 @@ interface Search{{ entity }}ListRepository extends {{ entity }}ListRepository
     /**
      * 検索フレーズ
      *
-     * @param SearchPhrase $searchPhrase
+     * @param SearchPhrase $searchPhrase|null
      */
-    public function setSearchPhrase(SearchPhrase $searchPhrase): void;
+    public function setSearchPhrase(SearchPhrase|null $searchPhrase): void;
 
     /**
      * 1ページ当たりの表示件数
      *
-     * @param LimitPerPage $limit
+     * @param LimitPerPage|null $limit
      */
-    public function setLimit(LimitPerPage $limit): void;
+    public function setLimit(LimitPerPage|null $limit): void;
 
     /**
      * 現在ページ
      *
-     * @param CurrentPage $currentPage
+     * @param CurrentPage|null $currentPage
      */
-    public function setCurrentPage(CurrentPage $currentPage): void;
+    public function setCurrentPage(CurrentPage|null $currentPage): void;
 }
