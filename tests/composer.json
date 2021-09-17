@@ -12,7 +12,7 @@
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
         "laravel/sanctum": "^2.11",
-        "seasalt/nicoca": "^1.0",
+        "seasalt/nicoca": "^2.0",
         "seasalt/nico-scaffold": "*"
     },
     "require-dev": {

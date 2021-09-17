@@ -48,7 +48,7 @@ final class Input
         $validator->validate($input);
 
         return new self(
-            Title::fromString($input['title']),
+            $validator->getValidated('title'),
             /** TODO add fields */
         );
     }

@@ -70,9 +70,9 @@ final class Input
         $validator->validate($input);
 
         return new self(
-            searchPhrase: SearchPhrase::fromString($input['search_phrase'] ?? ''),
-            limit: LimitPerPage::fromString((string)($input['limit'] ?? '')),
-            currentPage: CurrentPage::fromString((string)($input['page'] ?? ''))
+            $validator->getValidated('search_phrase'),
+            $validator->getValidated('limit'),
+            $validator->getValidated('page'),
         );
     }
 }

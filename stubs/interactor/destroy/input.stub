@@ -44,7 +44,7 @@ final class Input
         $validator->validate($input);
 
         return new self(
-            {{ entity }}Id::fromString($input['id'])
+            $validator->getValidated('id')
         );
     }
 }
