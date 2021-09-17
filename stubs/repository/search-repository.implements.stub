@@ -23,17 +23,17 @@ final class {{ class }} implements Search{{ entity }}ListRepository
     /**
      * @var SearchPhrase|null
      */
-    private SearchPhrase $searchPhrase = null;
+    private SearchPhrase|null $searchPhrase = null;
 
     /**
      * @var LimitPerPage|null
      */
-    private LimitPerPage $limit = null;
+    private LimitPerPage|null $limit = null;
 
     /**
      * @var CurrentPage|null
      */
-    private CurrentPage $currentPage = null;
+    private CurrentPage|null $currentPage = null;
 
     /**
      * @param SearchPhrase|null $searchPhrase
