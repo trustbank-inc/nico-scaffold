@@ -52,12 +52,12 @@ final class {{ class }} implements {{ entity }}Repository
 
                 public function getId(): {{ entity }}\Id
                 {
-                    return {{ entity }}Id::fromString($this->row['id']);
+                    return {{ entity }}\Id::fromString($this->row['id']);
                 }
 
                 public function getTitle(): {{ entity }}\Title
                 {
-                    return Title::fromString($this->row['title'] ?? '');
+                    return {{ entity }}\Title::fromString($this->row['title'] ?? '');
                 }
 
                 /** TODO add fields */

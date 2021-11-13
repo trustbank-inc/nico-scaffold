@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Contexts\{{ context }}\Domain\Entity;
 
 use Seasalt\Nicoca\Components\Domain\Persistence\IdGenerator;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}ListRepository;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
