@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace {{ namespace }};
 
 use Seasalt\Nicoca\Components\UseCase\InputValidator;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 
 /**
  * 新規作成の入力パラメータ
@@ -13,7 +13,7 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
 final class Input
 {
     public function __construct(
-        private Title $title,
+        private {{ entity }}\Title $title,
         /** TODO add fields */
         )
     {
@@ -21,9 +21,9 @@ final class Input
     }
 
     /**
-     * @return Title
+     * @return {{ entity }}\Title
      */
-    public function getTitle(): Title
+    public function getTitle(): {{ entity }}\Title
     {
         return $this->title;
     }
@@ -40,7 +40,7 @@ final class Input
     {
         $validator = new InputValidator(
             requiredFields: [
-                'title' => Title::class,
+                'title' => {{ entity }}\Title::class,
                 /** TODO add fields */
             ],
             optionalFields: [

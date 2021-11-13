@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace {{ namespace }};
 
 use Seasalt\Nicoca\Components\UseCase\InputValidator;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 
 /**
  * 詳細を取得する際の入力パラメータ
@@ -13,17 +13,17 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
 final class Input
 {
     /**
-     * @param {{ entity }}Id $id
+     * @param {{ entity }}\Id $id
      */
-    public function __construct(private {{ entity }}Id $id)
+    public function __construct(private {{ entity }}\Id $id)
     {
 
     }
 
     /**
-     * @return {{ entity }}Id
+     * @return {{ entity }}\Id
      */
-    public function getId(): {{ entity }}Id
+    public function getId(): {{ entity }}\Id
     {
         return $this->id;
     }
@@ -38,7 +38,7 @@ final class Input
     {
         $validator = new InputValidator(
             requiredFields: [
-                'id' => {{ entity }}Id::class,
+                'id' => {{ entity }}\Id::class,
             ]);
         $validator->validate($input);
 
