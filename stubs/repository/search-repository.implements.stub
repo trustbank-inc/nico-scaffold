@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace {{ namespace }};
@@ -9,11 +10,10 @@ use Seasalt\Nicoca\Components\UseCase\LimitPerPage;
 use Seasalt\Nicoca\Components\UseCase\SearchPhrase;
 use Seasalt\Nicoca\Components\Infrastructure\Persistence\HasSearchPhrase;
 use Seasalt\Nicoca\Components\Infrastructure\Persistence\PaginatorCreatable;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
 use App\Contexts\{{ context }}\Domain\Persistence\Search{{ entity }}ListRepository;
-use App\Models\{{ model }} as {{ model }}Model;
+use App\Models;
 
 final class {{ class }} implements Search{{ entity }}ListRepository
 {
@@ -64,7 +64,7 @@ final class {{ class }} implements Search{{ entity }}ListRepository
      */
     public function restore(): Paginator
     {
-        $builder = {{ model }}Model::query();
+        $builder = Models\{{ model }}Model::query();
         $this->buildSearchPhraseWhereClauses($builder, $this->searchPhrase, [
             'title',
             /** TODO add fields */
@@ -100,14 +100,14 @@ final class {{ class }} implements Search{{ entity }}ListRepository
 
             }
 
-            public function getId(): {{ entity }}Id
+            public function getId(): {{ entity }}\Id
             {
-                return {{ entity }}Id::fromString($this->row['id']);
+                return {{ entity }}\Id::fromString($this->row['id']);
             }
 
-            public function getTitle(): Title
+            public function getTitle(): {{ entity }}\Title
             {
-                return Title::fromString($this->row['title'] ?? '');
+                return {{ entity }}\Title::fromString($this->row['title'] ?? '');
             }
         };
     }

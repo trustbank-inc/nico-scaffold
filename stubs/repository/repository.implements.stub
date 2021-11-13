@@ -1,14 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
-use App\Models\{{ model }};
+use App\Models;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +23,7 @@ final class {{ class }} implements {{ entity }}Repository
     public function save({{ entity }}RepositoryRecord $record): void
     {
         DB::transaction(function () use ($record) {
-            $row = {{ model }}::query()->findOrNew($record->getId()->getValue());
+            $row = Models\{{ model }}::query()->findOrNew($record->getId()->getValue());
             $row->fill([
                 'id' => $record->getId()->getValue(),
                 'title' => $record->getTitle()->getValue(),
@@ -36,26 +36,26 @@ final class {{ class }} implements {{ entity }}Repository
     /**
      * @inheritDoc
      */
-    public function restore({{ entity }}Id $id): {{ entity }}RepositoryRecord
+    public function restore({{ entity }}\Id $id): {{ entity }}RepositoryRecord
     {
         try {
             return new class($id) implements {{ entity }}RepositoryRecord
             {
                 private array $row;
 
-                public function __construct({{ entity }}Id $id)
+                public function __construct({{ entity }}\Id $id)
                 {
-                    $this->row = {{ model }}::query()
+                    $this->row = Models\{{ model }}::query()
                         ->findOrFail($id->getValue())
                         ->toArray();
                 }
 
-                public function getId(): {{ entity }}Id
+                public function getId(): {{ entity }}\Id
                 {
                     return {{ entity }}Id::fromString($this->row['id']);
                 }
 
-                public function getTitle(): Title
+                public function getTitle(): {{ entity }}\Title
                 {
                     return Title::fromString($this->row['title'] ?? '');
                 }
@@ -70,11 +70,11 @@ final class {{ class }} implements {{ entity }}Repository
     /**
      * @inheritDoc
      */
-    public function destroy({{ entity }}Id $id): void
+    public function destroy({{ entity }}\Id $id): void
     {
         DB::transaction(function () use ($id) {
             try {
-                {{ model }}::query()
+                Models\{{ model }}::query()
                     ->findOrFail($id->getValue())
                     ->delete();
             } catch (ModelNotFoundException) {
@@ -86,9 +86,9 @@ final class {{ class }} implements {{ entity }}Repository
     /**
      * @inheritDoc
      */
-    public function exists({{ entity }}Id $id): bool
+    public function exists({{ entity }}\Id $id): bool
     {
-        return {{ model }}::query()
+        return Models\{{ model }}::query()
             ->where('id', $id->getValue())
             ->exists();
     }

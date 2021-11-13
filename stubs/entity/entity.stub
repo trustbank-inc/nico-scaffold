@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Contexts\{{ context }}\Domain\Entity;
 
 use Seasalt\Nicoca\Components\Domain\Persistence\IdGenerator;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}ListRepository;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
@@ -20,15 +20,15 @@ final class {{ entity }} implements JsonSerializable
     /**
      * newによるインスタンス化はさせない
      *
-     * @param {{ entity }}Id $id
-     * @param Title $title
+     * @param {{ entity }}\Id $id
+     * @param {{ entity }}\Title $title
      * @see create()
      * @see restore()
      * @see restoreList()
      */
     private function __construct(
-        private {{ entity }}Id $id,
-        private Title $title,
+        private {{ entity }}\Id $id,
+        private {{ entity }}\Title $title,
         /** TODO add fields */
         )
     {
@@ -36,25 +36,25 @@ final class {{ entity }} implements JsonSerializable
     }
 
     /**
-     * @return {{ entity }}Id
+     * @return {{ entity }}\Id
      */
-    public function getId(): {{ entity }}Id
+    public function getId(): {{ entity }}\Id
     {
         return $this->id;
     }
 
     /**
-     * @return Title
+     * @return {{ entity }}\Title
      */
-    public function getTitle(): Title
+    public function getTitle(): {{ entity }}\Title
     {
         return $this->title;
     }
 
     /**
-     * @param Title $title
+     * @param {{ entity }}\Title $title
      */
-    public function setTitle(Title $title): void
+    public function setTitle({{ entity }}\Title $title): void
     {
         $this->title = $title;
     }
@@ -70,17 +70,17 @@ final class {{ entity }} implements JsonSerializable
     /**
      * 新規のエンティティを作成する
      *
-     * @param Title $title タイトル
+     * @param {{ entity }}\Title $title タイトル
      * @param IdGenerator $idGenerator IDジェネレータ
      * @return self
      */
     public static function create(
-        Title $title,
+        {{ entity }}\Title $title,
         /** TODO add fields */
         IdGenerator $idGenerator): self
     {
         return new self(
-            {{ entity }}Id::generate($idGenerator),
+            {{ entity }}\Id::generate($idGenerator),
             $title
             /** TODO add fields */
         );
@@ -89,12 +89,12 @@ final class {{ entity }} implements JsonSerializable
     /**
      * 永続化されたエンティティを復元する
      *
-     * @param {{ entity }}Id $id エンティティID
+     * @param {{ entity }}\Id $id エンティティID
      * @param {{ entity }}Repository $repository リポジトリ
      * @return self
      */
     public static function restore(
-        {{ entity }}Id $id,
+        {{ entity }}\Id $id,
         {{ entity }}Repository $repository): self
     {
         return self::restoreFromRecord($repository->restore($id));
@@ -112,14 +112,14 @@ final class {{ entity }} implements JsonSerializable
         $record = new class($this->id, $this->title) implements {{ entity }}RepositoryRecord
         {
             public function __construct(
-                private {{ entity }}Id $id,
-                private Title $title)
+                private {{ entity }}\Id $id,
+                private {{ entity }}\Title $title)
             {
 
             }
 
-            public function getId(): {{ entity }}Id { return $this->id; }
-            public function getTitle(): Title { return $this->title; }
+            public function getId(): {{ entity }}\Id { return $this->id; }
+            public function getTitle(): {{ entity }}\Title { return $this->title; }
             /** TODO add fields */
         };
         $repository->save($record);
@@ -157,11 +157,11 @@ final class {{ entity }} implements JsonSerializable
     /**
      * 永続化されたエンティティを削除する
      *
-     * @param {{ entity }}Id $id
+     * @param {{ entity }}\Id $id
      * @param {{ entity }}Repository $repository
      */
     public static function destroy(
-        {{ entity }}Id $id,
+        {{ entity }}\Id $id,
         {{ entity }}Repository $repository): void
     {
         $repository->destroy($id);

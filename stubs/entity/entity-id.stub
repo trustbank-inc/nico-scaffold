@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
@@ -10,7 +11,7 @@ use JsonSerializable;
 /**
  * TODO add description
  */
-final class {{ entity }}Id implements JsonSerializable
+final class Id implements JsonSerializable
 {
     use StringValue;
 

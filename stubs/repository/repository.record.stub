@@ -1,10 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\{{ entity }}Id;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 
 /**
  * データベースへの永続化のレコードインターフェース
@@ -12,14 +12,14 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}\Title;
 interface {{ class }}
 {
     /**
-     * @return {{ entity }}Id $id
+     * @return {{ entity }}\Id $id
      */
-    public function getId(): {{ entity }}Id;
+    public function getId(): {{ entity }}\Id;
 
     /**
-     * @return Title
+     * @return {{ entity }}\Title
      */
-    public function getTitle(): Title;
+    public function getTitle(): {{ entity }}\Title;
 
     /** TODO add fields */
 }
