@@ -56,7 +56,7 @@ final class MakeEntityIdCommand extends GeneratorCommand
      */
     protected function getNameInput(): string
     {
-        return $this->getEntityInput() . 'Id';
+        return 'Id';
     }
 
     /**
