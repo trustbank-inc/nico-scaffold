@@ -64,7 +64,7 @@ final class {{ class }} implements Search{{ entity }}ListRepository
      */
     public function restore(): Paginator
     {
-        $builder = Models\{{ model }}Model::query();
+        $builder = Models\{{ model }}::query();
         $this->buildSearchPhraseWhereClauses($builder, $this->searchPhrase, [
             'title',
             /** TODO add fields */
@@ -73,7 +73,7 @@ final class {{ class }} implements Search{{ entity }}ListRepository
             perPage: $this->limit?->getValue(),
             page: $this->currentPage?->getValue());
         $records = [];
-        /** @var {{ model }}Model $row */
+        /** @var Models\{{ model }} $row */
         foreach ($paginator as $row) {
             $records[] = $this->createRecord($row->toArray());
         }
