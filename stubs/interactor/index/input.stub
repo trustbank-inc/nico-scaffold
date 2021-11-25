@@ -15,9 +15,9 @@ use Seasalt\Nicoca\Components\UseCase\InputValidator;
 final class Input
 {
     /**
-     * @param SearchPhrase $searchPhrase
-     * @param LimitPerPage $limit
-     * @param CurrentPage $currentPage
+     * @param SearchPhrase|null $searchPhrase
+     * @param LimitPerPage|null $limit
+     * @param CurrentPage|null $currentPage
      */
     public function __construct(
         private SearchPhrase|null $searchPhrase,

@@ -22,7 +22,7 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 
 <form method="get" id="searchForm">
     <input type="hidden" name="limit" value="{{ request()->get('limit', '') }}">
-    <input type="hidden" name="page" value="{{ request()->get('page', '') }}">
+    <input type="hidden" name="page" value="">
     <div class="row g-1">
         <div class="col-md-5">
             <div class="input-group">
