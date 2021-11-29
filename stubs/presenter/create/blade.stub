@@ -13,15 +13,15 @@ use Illuminate\Support\ViewErrorBag;
 
 @extends('layouts.basic')
 
-@section('title')
-    {{ __('{{ lang }}/create.title') }}
+@section('name')
+    {{ __('{{ lang }}/create.name') }}
 @endsection
 
 @section('breadcrumb')
     @parent
     <li class="breadcrumb-item">
         <a href="{{ $view->getIndexUrl() }}">
-            {{ __('{{ lang }}/index.title') }}
+            {{ __('{{ lang }}/index.name') }}
         </a>
     </li>
 @endsection
@@ -39,10 +39,10 @@ use Illuminate\Support\ViewErrorBag;
         <form id="form" action="{{ route('{{ resource }}.store') }}" method="post">
             @csrf
 
-            <div class="title form-floating mb-3">
-                <input type="text" id="title" name="title" class="form-control {{ $errors->has('title') ? ' is-invalid' : '' }}" value="{{ old('title') }}" placeholder="-" autocomplete="off" autofocus>
-                <label for="title" class="mb-1">{{ __('{{ lang }}/create.fields.title') }} <span class="required">*</span></label>
-                @include('elements.validation.message', ['field' => 'title'])
+            <div class="name form-floating mb-3">
+                <input type="text" id="name" name="name" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="-" autocomplete="off" autofocus>
+                <label for="name" class="mb-1">{{ __('{{ lang }}/create.fields.name') }} <span class="required">*</span></label>
+                @include('elements.validation.message', ['field' => 'name'])
             </div>
 
             <!-- TODO add fields -->

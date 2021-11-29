@@ -1,8 +1,8 @@
 <?php
 /** TODO replace placeholders */
 return [
-    'title' => '***一覧',
+    'name' => '***一覧',
     'entities_not_found' => '***がありません。',
     'search' => '検索',
-    'search_phrase' => 'タイトル',
+    'search_phrase' => '名前',
 ];

@@ -13,7 +13,7 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 final class Input
 {
     public function __construct(
-        private {{ entity }}\Title $title,
+        private {{ entity }}\Name $name,
         /** TODO add fields */
         )
     {
@@ -21,11 +21,11 @@ final class Input
     }
 
     /**
-     * @return {{ entity }}\Title
+     * @return {{ entity }}\Name
      */
-    public function getTitle(): {{ entity }}\Title
+    public function getName(): {{ entity }}\Name
     {
-        return $this->title;
+        return $this->name;
     }
 
     /** TODO add getter */
@@ -40,7 +40,7 @@ final class Input
     {
         $validator = new InputValidator(
             requiredFields: [
-                'title' => {{ entity }}\Title::class,
+                'name' => {{ entity }}\Name::class,
                 /** TODO add fields */
             ],
             optionalFields: [
@@ -49,7 +49,7 @@ final class Input
         $validator->validate($input);
 
         return new self(
-            $validator->getValidated('title'),
+            $validator->getValidated('name'),
             /** TODO add fields */
         );
     }

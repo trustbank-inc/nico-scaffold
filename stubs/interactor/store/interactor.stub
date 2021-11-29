@@ -23,7 +23,7 @@ final class Interactor
     public function execute(Input $input): Output
     {
         $entity = {{ entity }}::create(
-            $input->getTitle(),
+            $input->getName(),
             /** TODO add fields */
             $this->idGenerator);
         $entity->save($this->repository);

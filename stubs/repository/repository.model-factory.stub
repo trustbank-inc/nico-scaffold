@@ -22,7 +22,7 @@ final class {{ class }} extends Factory
     {
         return [
             'id' => (string)Ulid::generate(),
-            'title' => $this->faker->title,
+            'name' => $this->faker->name,
         ];
     }
 }

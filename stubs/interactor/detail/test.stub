@@ -38,8 +38,8 @@ final class DetailTest extends TestCase
             expected: $row->getAttribute('id'),
             actual: $output->getEntity()->getId()->getValue());
         $this->assertEquals(
-            expected: $row->getAttribute('title'),
-            actual: $output->getEntity()->getTitle()->getValue());
+            expected: $row->getAttribute('name'),
+            actual: $output->getEntity()->getName()->getValue());
     }
 
     /**

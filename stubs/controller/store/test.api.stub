@@ -37,7 +37,7 @@ final class {{ class }} extends TestCase
         $response = $this->postJson(
             uri: '/api/{{ uri }}',
             data: [
-                'title' => 'テストタイトル',
+                'name' => 'テスト',
                 /** TODO add fields */
             ],
             headers: [
@@ -48,7 +48,7 @@ final class {{ class }} extends TestCase
         $table = (new {{ model }}Model())->getTable();
         $this->assertDatabaseCount(table: $table, count: 1);
         $this->assertDatabaseHas(table: $table, data: [
-            'title' => 'テストタイトル',
+            'name' => 'テスト',
             /** TODO add fields */
         ]);
     }
@@ -56,13 +56,13 @@ final class {{ class }} extends TestCase
     /**
      * @test
      */
-    public function タイトルの最大文字数まで登録できること()
+    public function 名前の最大文字数まで登録できること()
     {
-        $title = implode('', array_pad([], 100, 'あ'));
+        $name = implode('', array_pad([], 100, 'あ'));
         $response = $this->postJson(
             uri: '/api/{{ uri }}',
             data: [
-                'title' => $title,
+                'name' => $name,
                 /** TODO add fields */
             ],
             headers: [
@@ -72,42 +72,42 @@ final class {{ class }} extends TestCase
 
         $table = (new {{ model }}Model())->getTable();
         $this->assertDatabaseCount(table: $table, count: 1);
-        $this->assertDatabaseHas(table: $table, data: ['title' => $title]);
+        $this->assertDatabaseHas(table: $table, data: ['name' => $name]);
     }
 
     /**
      * @test
      */
-    public function タイトルを指定していないとエラーになること()
+    public function 名前を指定していないとエラーになること()
     {
         $response = $this->postJson(
             uri: '/api/{{ uri }}',
             data: [
-                'title' => '',
+                'name' => '',
                 /** TODO add fields */
             ],
             headers: [
               'Authorization' => 'Bearer ' . self::API_TOKEN,
             ]);
         $response->assertStatus(422);
-        $this->assertArrayHasKey(key: 'title', array: $response->json('errors'));
+        $this->assertArrayHasKey(key: 'name', array: $response->json('errors'));
     }
 
     /**
      * @test
      */
-    public function タイトルの最大文字数超過でエラーになること()
+    public function 名前の最大文字数超過でエラーになること()
     {
         $response = $this->postJson(
             uri: '/api/{{ uri }}',
             data: [
-                'title' => implode('', array_pad([], 101, 'あ')),
+                'name' => implode('', array_pad([], 101, 'あ')),
                 /** TODO add fields */
             ],
             headers: [
             'Authorization' => 'Bearer ' . self::API_TOKEN,
             ]);
         $response->assertStatus(422);
-        $this->assertArrayHasKey(key: 'title', array: $response->json('errors'));
+        $this->assertArrayHasKey(key: 'name', array: $response->json('errors'));
     }
 }

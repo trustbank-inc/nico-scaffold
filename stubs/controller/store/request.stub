@@ -22,7 +22,7 @@ final class {{ class }} extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => [
+            'name' => [
                 'required',
                 'string',
                 'max:100',
@@ -37,7 +37,7 @@ final class {{ class }} extends FormRequest
     public function attributes(): array
     {
         return [
-            'title' => __('{{ lang }}/create.fields.title'),
+            'name' => __('{{ lang }}/create.fields.name'),
             /** TODO add fields */
         ];
     }

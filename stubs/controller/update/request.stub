@@ -27,7 +27,7 @@ final class {{ class }} extends FormRequest
                 'string',
                 'max:50',
             ],
-            'title' => [
+            'name' => [
                 'required',
                 'string',
                 'max:100',
@@ -42,7 +42,7 @@ final class {{ class }} extends FormRequest
     public function attributes(): array
     {
         return [
-            'title' => __('{{ lang }}/detail.fields.title'),
+            'name' => __('{{ lang }}/detail.fields.name'),
             /** TODO add fields */
         ];
     }

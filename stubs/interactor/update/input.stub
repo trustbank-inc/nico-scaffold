@@ -14,11 +14,11 @@ final class Input
 {
     /**
      * @param {{ entity }}\Id $id
-     * @param {{ entity }}\Title $title
+     * @param {{ entity }}\Name $name
      */
     public function __construct(
         private {{ entity }}\Id $id,
-        private {{ entity }}\Title $title)
+        private {{ entity }}\Name $name)
     {
 
     }
@@ -32,11 +32,11 @@ final class Input
     }
 
     /**
-     * @return {{ entity }}\Title
+     * @return {{ entity }}\Name
      */
-    public function getTitle(): {{ entity }}\Title
+    public function getName(): {{ entity }}\Name
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
@@ -50,7 +50,7 @@ final class Input
         $validator = new InputValidator(
             requiredFields: [
                 'id' => {{ entity }}\Id::class,
-                'title' => {{ entity }}\Title::class,
+                'name' => {{ entity }}\Name::class,
                 /** TODO: add fields */
             ],
             optionalFields: [
@@ -60,7 +60,7 @@ final class Input
 
         return new self(
             $validator->getValidated('id'),
-            $validator->getValidated('title'),
+            $validator->getValidated('name'),
             /** TODO: add fields */
         );
     }

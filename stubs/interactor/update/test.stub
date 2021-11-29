@@ -35,12 +35,12 @@ final class UpdateTest extends TestCase
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
             'id' => $rows[0]['id'],
-            'title' => '更新テスト',
+            'name' => '更新テスト',
             /** TODO add fields */
         ]));
 
         $this->assertDatabaseCount(table: '{{ table }}', count: 1);
-        $this->assertDatabaseHas(table: '{{ table }}', data: ['title' => '更新テスト']);
+        $this->assertDatabaseHas(table: '{{ table }}', data: ['name' => '更新テスト']);
         /** TODO assert fields */
     }
 
@@ -55,7 +55,7 @@ final class UpdateTest extends TestCase
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
             'id' => 'dummy',
-            'title' => '更新テスト',
+            'name' => '更新テスト',
         ]));
     }
 }

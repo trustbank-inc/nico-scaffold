@@ -26,7 +26,7 @@ final class {{ class }} implements {{ entity }}Repository
             $row = Models\{{ model }}::query()->findOrNew($record->getId()->getValue());
             $row->fill([
                 'id' => $record->getId()->getValue(),
-                'title' => $record->getTitle()->getValue(),
+                'name' => $record->getName()->getValue(),
                 /** TODO add fields */
             ]);
             $row->saveOrFail();
@@ -55,9 +55,9 @@ final class {{ class }} implements {{ entity }}Repository
                     return {{ entity }}\Id::fromString($this->row['id']);
                 }
 
-                public function getTitle(): {{ entity }}\Title
+                public function getName(): {{ entity }}\Name
                 {
-                    return {{ entity }}\Title::fromString($this->row['title'] ?? '');
+                    return {{ entity }}\Name::fromString($this->row['name'] ?? '');
                 }
 
                 /** TODO add fields */

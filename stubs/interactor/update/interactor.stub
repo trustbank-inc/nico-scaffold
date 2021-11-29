@@ -27,7 +27,7 @@ final class Interactor
     public function execute(Input $input): void
     {
         $entity = {{ entity }}::restore(id: $input->getId(), repository: $this->repository);
-        $entity->setTitle($input->getTitle());
+        $entity->setName($input->getName());
         /** TODO set fields */
         $entity->save($this->repository);
     }

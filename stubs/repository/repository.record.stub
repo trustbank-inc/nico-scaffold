@@ -17,9 +17,9 @@ interface {{ class }}
     public function getId(): {{ entity }}\Id;
 
     /**
-     * @return {{ entity }}\Title
+     * @return {{ entity }}\Name
      */
-    public function getTitle(): {{ entity }}\Title;
+    public function getName(): {{ entity }}\Name;
 
     /** TODO add fields */
 }

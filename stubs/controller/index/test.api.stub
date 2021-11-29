@@ -112,9 +112,9 @@ final class {{ class }} extends TestCase
         $rows = {{ model }}Model::factory()
             ->count(3)
             ->state(new Sequence(
-                ['title' => $this->faker->name . $phrase],
-                ['title' => $phrase . $this->faker->name],
-                ['title' => $phrase . $this->faker->name . $phrase],
+                ['name' => $this->faker->name . $phrase],
+                ['name' => $phrase . $this->faker->name],
+                ['name' => $phrase . $this->faker->name . $phrase],
             ))
             ->create()
             ->toArray();

@@ -1,9 +1,9 @@
 <?php
 /** TODO replace placeholders */
 return [
-    'title' => '***作成',
+    'name' => '***作成',
     'fields' => [
-        'title' => 'タイトル',
+        'name' => '名前',
         /** TODO add fields */
     ],
     'submit' => '送信',

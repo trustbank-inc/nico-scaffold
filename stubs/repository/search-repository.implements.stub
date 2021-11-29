@@ -66,7 +66,7 @@ final class {{ class }} implements Search{{ entity }}ListRepository
     {
         $builder = Models\{{ model }}::query();
         $this->buildSearchPhraseWhereClauses($builder, $this->searchPhrase, [
-            'title',
+            'name',
             /** TODO add fields */
         ]);
         $paginator = $builder->paginate(
@@ -105,9 +105,9 @@ final class {{ class }} implements Search{{ entity }}ListRepository
                 return {{ entity }}\Id::fromString($this->row['id']);
             }
 
-            public function getTitle(): {{ entity }}\Title
+            public function getName(): {{ entity }}\Name
             {
-                return {{ entity }}\Title::fromString($this->row['title'] ?? '');
+                return {{ entity }}\Name::fromString($this->row['name'] ?? '');
             }
         };
     }

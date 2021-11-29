@@ -20,14 +20,14 @@ final class {{ entity }} implements JsonSerializable
      * newによるインスタンス化はさせない
      *
      * @param {{ entity }}\Id $id
-     * @param {{ entity }}\Title $title
+     * @param {{ entity }}\Name $name
      * @see create()
      * @see restore()
      * @see restoreList()
      */
     private function __construct(
         private {{ entity }}\Id $id,
-        private {{ entity }}\Title $title,
+        private {{ entity }}\Name $name,
         /** TODO add fields */
         )
     {
@@ -43,19 +43,19 @@ final class {{ entity }} implements JsonSerializable
     }
 
     /**
-     * @return {{ entity }}\Title
+     * @return {{ entity }}\Name
      */
-    public function getTitle(): {{ entity }}\Title
+    public function getName(): {{ entity }}\Name
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
-     * @param {{ entity }}\Title $title
+     * @param {{ entity }}\Name $name
      */
-    public function setTitle({{ entity }}\Title $title): void
+    public function setName({{ entity }}\Name $name): void
     {
-        $this->title = $title;
+        $this->name = $name;
     }
 
     /**
@@ -69,18 +69,18 @@ final class {{ entity }} implements JsonSerializable
     /**
      * 新規のエンティティを作成する
      *
-     * @param {{ entity }}\Title $title タイトル
+     * @param {{ entity }}\Name $name 名前
      * @param IdGenerator $idGenerator IDジェネレータ
      * @return self
      */
     public static function create(
-        {{ entity }}\Title $title,
+        {{ entity }}\Name $name,
         /** TODO add fields */
         IdGenerator $idGenerator): self
     {
         return new self(
             {{ entity }}\Id::generate($idGenerator),
-            $title
+            $name
             /** TODO add fields */
         );
     }
@@ -108,17 +108,17 @@ final class {{ entity }} implements JsonSerializable
         {{ entity }}Repository $repository): void
     {
         // {{ entity }}が直接{{ entity }}RepositoryRecordをimplementsしない
-        $record = new class($this->id, $this->title) implements {{ entity }}RepositoryRecord
+        $record = new class($this->id, $this->name) implements {{ entity }}RepositoryRecord
         {
             public function __construct(
                 private {{ entity }}\Id $id,
-                private {{ entity }}\Title $title)
+                private {{ entity }}\Name $name)
             {
 
             }
 
             public function getId(): {{ entity }}\Id { return $this->id; }
-            public function getTitle(): {{ entity }}\Title { return $this->title; }
+            public function getName(): {{ entity }}\Name { return $this->name; }
             /** TODO add fields */
         };
         $repository->save($record);
@@ -189,7 +189,7 @@ final class {{ entity }} implements JsonSerializable
     {
         return new self(
             id: $record->getId(),
-            title: $record->getTitle(),
+            name: $record->getName(),
             /** TODO add fields */
         );
     }

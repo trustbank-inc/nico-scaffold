@@ -28,13 +28,13 @@ final class StoreTest extends TestCase
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
-            'title' => 'テストタイトル',
+            'name' => 'テスト',
             /** TODO add fields */
         ]));
 
         $this->assertDatabaseCount(table: '{{ table }}', count: 1);
         $this->assertDatabaseHas(table: '{{ table }}', data: [
-            'title' => 'テストタイトル',
+            'name' => 'テスト',
             /** TODO add fields */
         ]);
     }
@@ -42,45 +42,45 @@ final class StoreTest extends TestCase
     /**
      * @test
      */
-    public function タイトルの最大文字数まで登録できること()
+    public function 名前の最大文字数まで登録できること()
     {
-        $title = implode('', array_pad([], 100, 'あ'));
+        $name = implode('', array_pad([], 100, 'あ'));
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
-            'title' => $title,
+            'name' => $name,
         ]));
 
         $this->assertDatabaseCount(table: '{{ table }}', count: 1);
-        $this->assertDatabaseHas(table: '{{ table }}', data: ['title' => $title]);
+        $this->assertDatabaseHas(table: '{{ table }}', data: ['name' => $name]);
     }
 
     /**
      * @test
      */
-    public function タイトルを指定していないとエラーになること()
+    public function 名前を指定していないとエラーになること()
     {
         $this->expectException(InvalidInputException::class);
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
-            'title' => '',
+            'name' => '',
         ]));
     }
 
     /**
      * @test
      */
-    public function タイトルの最大文字数超過でエラーになること()
+    public function 名前の最大文字数超過でエラーになること()
     {
         $this->expectException(InvalidInputException::class);
 
         /** @var Interactor $interactor */
         $interactor = resolve(Interactor::class);
         $interactor->execute(Input::fromArray([
-            'title' => implode('', array_pad([], 101, 'あ')),
+            'name' => implode('', array_pad([], 101, 'あ')),
         ]));
     }
 }
