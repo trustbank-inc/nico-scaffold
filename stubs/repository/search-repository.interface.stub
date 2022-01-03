@@ -16,7 +16,7 @@ interface Search{{ entity }}ListRepository extends {{ entity }}ListRepository
     /**
      * 検索フレーズ
      *
-     * @param SearchPhrase $searchPhrase|null
+     * @param SearchPhrase|null $searchPhrase
      */
     public function setSearchPhrase(SearchPhrase|null $searchPhrase): void;
 
