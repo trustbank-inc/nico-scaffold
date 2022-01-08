@@ -14,6 +14,9 @@ final class {{ entity }}CreateView
 
     public function render(): Factory|View|Application
     {
+        \Illuminate\Support\Facades\View::addNamespace(
+            namespace: '{{ context }}',
+            hints: __DIR__ . '/templates');
         return view('{{ template }}')->with('view', $this);
     }
 

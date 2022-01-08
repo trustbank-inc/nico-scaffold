@@ -67,10 +67,10 @@ abstract class MakeRestViewTemplateCommand extends GeneratorCommand
      */
     protected function getPath($name): string
     {
-        $context = Str::snake($this->getContextInput());
+        $context = $this->getContextInput();
         $entity = Str::snake($this->getEntityInput());
         $useCase = Str::snake($this->getUseCase());
-        return base_path("resources/views/{$context}/{$entity}/{$useCase}.blade.php");
+        return app_path("Contexts/{$context}/Infrastructure/Presenter/templates/{$entity}/{$useCase}.blade.php");
     }
 
     /**

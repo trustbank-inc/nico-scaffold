@@ -20,6 +20,9 @@ final class {{ entity }}DetailView
     public function render({{ entity }} $entity): Factory|View|Application
     {
         $this->entity = $entity;
+        \Illuminate\Support\Facades\View::addNamespace(
+            namespace: '{{ context }}',
+            hints: __DIR__ . '/templates');
         return view('{{ template }}')->with('view', $this);
     }
 

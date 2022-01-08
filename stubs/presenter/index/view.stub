@@ -35,6 +35,9 @@ final class {{ entity }}IndexView
             currentPage: $list->getCurrentPage(),
             options: ['path' => route('{{ resource }}.index')]);
         $this->paginator->withQueryString();
+        \Illuminate\Support\Facades\View::addNamespace(
+            namespace: '{{ context }}',
+            hints: __DIR__ . '/templates');
         return view('{{ template }}')->with('view', $this);
     }
 }

@@ -95,10 +95,10 @@ abstract class MakeRestViewCommand extends GeneratorCommand
      */
     protected function getTemplateInput(): string
     {
-        $context = Str::snake($this->getContextInput());
+        $context = $this->getContextInput();
         $entity = Str::snake($this->getEntityInput());
         $useCase = Str::snake($this->getUseCase());
-        return "{$context}/{$entity}/{$useCase}";
+        return "{$context}::{$entity}/{$useCase}";
     }
 
     /**
