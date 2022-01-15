@@ -13,15 +13,15 @@ use Illuminate\Support\ViewErrorBag;
 
 @extends('layouts.basic')
 
-@section('name')
-    {{ __('{{ lang }}/detail.name') }}
+@section('title')
+    {{ __('{{ lang }}/detail.title') }}
 @endsection
 
 @section('breadcrumb')
     @parent
     <li class="breadcrumb-item">
         <a href="{{ $view->getIndexUrl() }}">
-            {{ __('{{ lang }}/index.name') }}
+            {{ __('{{ lang }}/index.title') }}
         </a>
     </li>
 @endsection

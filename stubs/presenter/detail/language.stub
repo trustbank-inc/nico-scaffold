@@ -2,7 +2,7 @@
 /** TODO replace placeholders */
 
 $messages = require(__DIR__ . '/create.php');
-$messages['name'] = '***編集';
+$messages['title'] = '***編集';
 $messages['delete_confirm'] = '***を削除します。この操作は元に戻せませんがよろしいですか？';
 $messages['operations'] = 'その他の操作';
 $messages['delete'] = '***を削除';
