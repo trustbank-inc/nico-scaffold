@@ -58,6 +58,9 @@ final class ContextServiceProvider extends ServiceProvider
     {
         // ルーティング
         foreach (glob(base_path('routes/contexts/*'), GLOB_ONLYDIR) as $context) {
+            foreach (glob("{$context}/*.php") as $routes) {
+                $this->loadRoutesFrom($routes);
+            }
             foreach (glob("{$context}/*", GLOB_ONLYDIR) as $entity) {
                 foreach (glob("{$entity}/*.php") as $routes) {
                     $this->loadRoutesFrom($routes);
