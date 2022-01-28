@@ -12,15 +12,15 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 interface {{ class }}
 {
     /**
-     * @param {{ entity }}RepositoryRecord $record
+     * @param {{ entity }}Record $record
      */
-    public function save({{ entity }}RepositoryRecord $record): void;
+    public function save({{ entity }}Record $record): void;
 
     /**
      * @param {{ entity }}\Id $id
-     * @return {{ entity }}RepositoryRecord
+     * @return {{ entity }}Record
      */
-    public function restore({{ entity }}\Id $id): {{ entity }}RepositoryRecord;
+    public function restore({{ entity }}\Id $id): {{ entity }}Record;
 
     /**
      * @param {{ entity }}\Id $id

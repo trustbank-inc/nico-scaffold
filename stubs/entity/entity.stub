@@ -7,7 +7,7 @@ namespace App\Contexts\{{ context }}\Domain\Entity;
 use Seasalt\Nicoca\Components\Domain\Persistence\IdGenerator;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}ListRepository;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
-use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Record;
 use JsonSerializable;
 use Traversable;
 
@@ -107,8 +107,8 @@ final class {{ entity }} implements JsonSerializable
     public function save(
         {{ entity }}Repository $repository): void
     {
-        // {{ entity }}が直接{{ entity }}RepositoryRecordをimplementsしない
-        $record = new class($this->id, $this->name) implements {{ entity }}RepositoryRecord
+        // {{ entity }}が直接{{ entity }}Recordをimplementsしない
+        $record = new class($this->id, $this->name) implements {{ entity }}Record
         {
             public function __construct(
                 private {{ entity }}\Id $id,
@@ -169,7 +169,7 @@ final class {{ entity }} implements JsonSerializable
     /**
      * リポジトリの返すデータからエンティティのリストを復元する
      *
-     * @param {{ entity }}RepositoryRecord[] $records
+     * @param {{ entity }}Record[] $records
      * @return Traversable
      */
     private static function restoreFromRecords(array $records): Traversable
@@ -182,10 +182,10 @@ final class {{ entity }} implements JsonSerializable
     /**
      * リポジトリの返すデータからエンティティを復元する
      *
-     * @param {{ entity }}RepositoryRecord $record
+     * @param {{ entity }}Record $record
      * @return self
      */
-    private static function restoreFromRecord({{ entity }}RepositoryRecord $record): self
+    private static function restoreFromRecord({{ entity }}Record $record): self
     {
         return new self(
             id: $record->getId(),

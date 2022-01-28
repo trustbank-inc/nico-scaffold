@@ -32,7 +32,7 @@ final class MakeRepositoryRecordCommand extends GeneratorCommand
     /**
      * @var string
      */
-    protected $type = 'RepositoryRecord';
+    protected $type = 'Record';
 
     /**
      * @return string
@@ -68,7 +68,7 @@ final class MakeRepositoryRecordCommand extends GeneratorCommand
      */
     protected function getNameInput(): string
     {
-        return $this->getEntityInput() . 'RepositoryRecord';
+        return $this->getEntityInput() . 'Record';
     }
 
     /**

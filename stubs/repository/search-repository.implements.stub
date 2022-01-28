@@ -11,7 +11,7 @@ use Seasalt\Nicoca\Components\UseCase\SearchPhrase;
 use Seasalt\Nicoca\Components\Infrastructure\Persistence\HasSearchPhrase;
 use Seasalt\Nicoca\Components\Infrastructure\Persistence\PaginatorCreatable;
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
-use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Record;
 use App\Contexts\{{ context }}\Domain\Persistence\Search{{ entity }}ListRepository;
 use App\Models;
 
@@ -89,11 +89,11 @@ final class {{ class }} implements Search{{ entity }}ListRepository
      * 行データからエンティティ向けのレコードを作成する
      *
      * @param array $row
-     * @return {{ entity }}RepositoryRecord
+     * @return {{ entity }}Record
      */
-    private function createRecord(array $row): {{ entity }}RepositoryRecord
+    private function createRecord(array $row): {{ entity }}Record
     {
-        return new class($row) implements {{ entity }}RepositoryRecord
+        return new class($row) implements {{ entity }}Record
         {
             public function __construct(private array $row)
             {

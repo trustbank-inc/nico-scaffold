@@ -7,7 +7,7 @@ namespace {{ namespace }};
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
-use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}RepositoryRecord;
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Record;
 use App\Models;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +20,7 @@ final class {{ class }} implements {{ entity }}Repository
     /**
      * @inheritDoc
      */
-    public function save({{ entity }}RepositoryRecord $record): void
+    public function save({{ entity }}Record $record): void
     {
         DB::transaction(function () use ($record) {
             $row = Models\{{ model }}::query()->findOrNew($record->getId()->getValue());
@@ -36,10 +36,10 @@ final class {{ class }} implements {{ entity }}Repository
     /**
      * @inheritDoc
      */
-    public function restore({{ entity }}\Id $id): {{ entity }}RepositoryRecord
+    public function restore({{ entity }}\Id $id): {{ entity }}Record
     {
         try {
-            return new class($id) implements {{ entity }}RepositoryRecord
+            return new class($id) implements {{ entity }}Record
             {
                 private array $row;
 
