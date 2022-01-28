@@ -26,7 +26,12 @@ final class {{ class }} extends Controller
         Interactor $interactor,
         {{ entity }}IndexView $view): Factory|View|Application
     {
-        $output = $interactor->execute(Input::fromArray($request->validated()));
+        $input = $request->validated();
+        // ページ移動毎にパラメータを保持し、別画面に遷移して一覧に戻った際に現在ページを復元する
+        $request->session()->flash('{{ context }}.{{ entity }}.search_phrase', $input['search_phrase'] ?? '');
+        $request->session()->flash('{{ context }}.{{ entity }}.limit', $input['limit'] ?? '');
+        $request->session()->flash('{{ context }}.{{ entity }}.page', $input['page'] ?? '');
+        $output = $interactor->execute(Input::fromArray($input));
         return $view->render($output->getList());
     }
 }
