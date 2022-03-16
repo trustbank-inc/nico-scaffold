@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
+use App\Contexts\{{ context }}\Infrastructure\Http\Request\{{ entity }}IndexRequest;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Index\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Index\Interactor;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\{{ context }}\{{ entity }}IndexRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 final class {{ class }} extends Controller

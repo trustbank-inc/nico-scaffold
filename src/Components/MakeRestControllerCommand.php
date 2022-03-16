@@ -57,10 +57,11 @@ abstract class MakeRestControllerCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
+        $namespace = "$rootNamespace\\Contexts\\{$this->getContextInput()}\\Infrastructure\\Http\\Controller";
 		if ($this->option('api')) {
-			return $rootNamespace . "\\Http\\Controllers\\{$this->getContextInput()}\\Api";
+			return "$namespace\\Api";
 		} else {
-			return $rootNamespace . "\\Http\\Controllers\\{$this->getContextInput()}";
+			return $namespace;
 		}
     }
 

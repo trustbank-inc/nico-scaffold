@@ -52,7 +52,7 @@ abstract class MakeRestRequestCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . "\\Http\\Requests\\{$this->getContextInput()}";
+        return "$rootNamespace\\Contexts\\{$this->getContextInput()}\\Infrastructure\\Http\\Request";
     }
 
     /**

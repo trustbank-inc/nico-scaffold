@@ -10,8 +10,6 @@ use Illuminate\Contracts\View\View;
 
 final class {{ entity }}CreateView
 {
-    private const DEFAULT_RECORD_COUNT = 3;
-
     public function render(): Factory|View|Application
     {
         \Illuminate\Support\Facades\View::addNamespace(

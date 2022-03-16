@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\{{ context }}\{{ entity }}UpdateController;
+use App\Contexts\{{ context }}\Infrastructure\Http\Controller\{{ entity }}UpdateController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth'])->prefix('{{ prefix }}')->group(function () {
