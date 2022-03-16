@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install laravel
-        run: curl -s "https://laravel.build/example-app?with=mysql" | bash
+        run: composer create-project laravel/laravel:^8.0 example-app
       - name: copy composer.json
         run: cp -f ./tests/composer.json ./example-app/
       - name: copy auth.php
