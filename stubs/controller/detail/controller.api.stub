@@ -6,10 +6,10 @@ namespace {{ namespace }};
 
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Exception\{{ entity }}NotFoundException;
+use App\Contexts\{{ context }}\Infrastructure\Http\Request\{{ entity }}DetailRequest;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Input;
 use App\Contexts\{{ context }}\UseCase\{{ entity }}\Detail\Interactor;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\{{ context }}\{{ entity }}DetailRequest;
 use Illuminate\Http\JsonResponse;
 
 final class {{ entity }}DetailController extends Controller

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\{{ context }}\Api\{{ entity }}DestroyController;
+use App\Contexts\{{ context }}\Infrastructure\Http\Controller\Api\{{ entity }}DestroyController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api', 'auth:api'])->prefix('{{ prefix }}')->group(function () {
