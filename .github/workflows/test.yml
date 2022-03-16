@@ -36,12 +36,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: install laravel
         run: composer create-project laravel/laravel:^8.0 example-app
-      - name: copy composer.json
-        run: cp -f ./tests/composer.json ./example-app/
-      - name: copy auth.php
-        run: cp -f ./tests/auth.php ./example-app/config/
-      - name: composer update
-        run: composer update -n --prefer-dist
+      - name: install nicoca
+        run: composer require seasalt/nicoca
+        working-directory: ./example-app
+      - name: install nico-scaffold
+        run: composer require seasalt/nico-scaffold
         working-directory: ./example-app
       - name: .env
         run: php -r "copy('.env.example', '.env');"
