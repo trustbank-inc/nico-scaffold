@@ -8,7 +8,7 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Persistence\Search{{ entity }}ListRepository;
 
 /**
- * TODO add description
+ * 一覧取得
  */
 final class Interactor
 {
