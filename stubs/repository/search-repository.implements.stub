@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use Seasalt\Nicoca\Components\Domain\Persistence\Paginator;
 use Seasalt\Nicoca\Components\UseCase\CurrentPage;
 use Seasalt\Nicoca\Components\UseCase\LimitPerPage;
 use Seasalt\Nicoca\Components\UseCase\SearchPhrase;
@@ -20,95 +19,77 @@ final class {{ class }} implements Search{{ entity }}ListRepository
     use HasSearchPhrase;
     use PaginatorCreatable;
 
-    /**
-     * @var SearchPhrase|null
-     */
-    private SearchPhrase|null $searchPhrase = null;
-
-    /**
-     * @var LimitPerPage|null
-     */
-    private LimitPerPage|null $limit = null;
-
-    /**
-     * @var CurrentPage|null
-     */
-    private CurrentPage|null $currentPage = null;
+    /** @var LengthAwarePaginator */
+    private LengthAwarePaginator $paginator;
 
     /**
      * @param SearchPhrase|null $searchPhrase
-     */
-    public function setSearchPhrase(SearchPhrase|null $searchPhrase): void
-    {
-        $this->searchPhrase = $searchPhrase;
-    }
-
-    /**
      * @param LimitPerPage|null $limit
-     */
-    public function setLimit(LimitPerPage|null $limit): void
-    {
-        $this->limit = $limit;
-    }
-
-    /**
      * @param CurrentPage|null $currentPage
+     * @return void
      */
-    public function setCurrentPage(CurrentPage|null $currentPage): void
-    {
-        $this->currentPage = $currentPage;
-    }
-
-    /**
-     * @return Paginator
-     */
-    public function restore(): Paginator
+    public function restore(
+        SearchPhrase|null $searchPhrase = null,
+        LimitPerPage|null $limit = null,
+        CurrentPage|null $currentPage = null): void
     {
         $builder = Models\{{ model }}::query();
         $this->buildSearchPhraseWhereClauses($builder, $this->searchPhrase, [
             'name',
             /** TODO add fields */
         ]);
-        $paginator = $builder->paginate(
+        $this->paginator = $builder->paginate(
             perPage: $this->limit?->getValue(),
             page: $this->currentPage?->getValue());
-        $records = [];
-        /** @var Models\{{ model }} $row */
-        foreach ($paginator as $row) {
-            $records[] = $this->createRecord($row->toArray());
-        }
-        return $this->createPaginator(
-            records: $records,
-            total: $paginator->total(),
-            limit: $paginator->perPage(),
-            currentPage: $paginator->currentPage(),
-            lastPage: $paginator->lastPage());
     }
 
     /**
-     * 行データからエンティティ向けのレコードを作成する
-     *
-     * @param array $row
-     * @return {{ entity }}Record
+     * @inheritDoc
      */
-    private function createRecord(array $row): {{ entity }}Record
+    public function getIterator(): Traversable
     {
-        return new class($row) implements {{ entity }}Record
-        {
-            public function __construct(private array $row)
-            {
+        foreach ($this->paginator as $row) {
+            yield $this->createRecord($row->toArray());
+        }
+    }
 
-            }
+    /**
+     * @inheritDoc
+     */
+    public function getTotal(): int
+    {
+        return $this->paginator->total();
+    }
 
-            public function getId(): {{ entity }}\Id
-            {
-                return {{ entity }}\Id::fromString($this->row['id']);
-            }
+    /**
+     * @inheritDoc
+     */
+    public function getLimit(): int
+    {
+        return $this->paginator->perPage();
+    }
 
-            public function getName(): {{ entity }}\Name
-            {
-                return {{ entity }}\Name::fromString($this->row['name'] ?? '');
-            }
-        };
+    /**
+     * @inheritDoc
+     */
+    public function getCurrentPage(): int
+    {
+        return $this->paginator->currentPage();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastPage(): int
+    {
+        return $this->paginator->lastPage();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasMorePages(): bool
+    {
+        return $this->paginator->hasMorePages();
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Contexts\{{ context }}\Domain\Persistence;
 
-use Seasalt\Nicoca\Components\Domain\Persistence\Paginator;
+use Seasalt\Nicoca\Components\Domain\Persistence\Collection;
 
 /**
  * 永続化されたエンティティ一覧
  */
-interface {{ entity }}ListRepository
+interface {{ entity }}ListRepository extends Collection
 {
-    public function restore(): Paginator;
+
 }

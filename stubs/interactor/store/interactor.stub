@@ -9,7 +9,7 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
 
 /**
- * TODO add description
+ * 新規登録
  */
 final class Interactor
 {

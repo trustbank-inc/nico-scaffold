@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}List;
+use Seasalt\Nicoca\Components\Domain\Persistence\Collection;
 
 /**
  * 一覧取得の出力
@@ -12,17 +12,17 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }}List;
 final class Output
 {
     /**
-     * @param {{ entity }}List $list
+     * @param Collection $list
      */
-    public function __construct(private {{ entity }}List $list)
+    public function __construct(private Collection $list)
     {
 
     }
 
     /**
-     * @return {{ entity }}List
+     * @return Collection
      */
-    public function getList(): {{ entity }}List
+    public function getList(): Collection
     {
         return $this->list;
     }
