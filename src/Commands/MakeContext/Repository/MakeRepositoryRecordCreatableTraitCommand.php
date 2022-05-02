@@ -59,6 +59,7 @@ final class MakeRepositoryRecordCreatableTraitCommand extends GeneratorCommand
         return [
             ['context', InputArgument::REQUIRED, 'The context for this repository'],
             ['entity', InputArgument::REQUIRED, 'The name of target entity'],
+            ['model', InputArgument::OPTIONAL, 'The name of eloquent model'],
         ];
     }
 
