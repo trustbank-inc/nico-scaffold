@@ -135,29 +135,13 @@ final class {{ entity }} implements JsonSerializable
      * 永続化されたエンティティのリストを復元する
      *
      * @param {{ entity }}ListRepository $repository
-     * @return {{ entity }}List
+     * @return Collection
      */
-    public static function restoreList({{ entity }}ListRepository $repository): {{ entity }}List
+    public static function restoreList({{ entity }}ListRepository $repository): Collection
     {
-        $paginator = $repository->restore();
-        $entities = self::restoreFromRecords($paginator->getRecords());
-        return new class(
-            $entities,
-            $paginator->getTotal(),
-            $paginator->getLimit(),
-            $paginator->getCurrentPage()) implements {{ entity }}List
-        {
-            public function __construct(
-                private Traversable $entities,
-                private int $total,
-                private int $limit,
-                private int $currentPage) {}
-            public function getIterator(): Traversable { return $this->entities; }
-            public function getTotal(): int { return $this->total; }
-            public function getLimit(): int { return $this->limit; }
-            public function getCurrentPage(): int { return $this->currentPage; }
-            public function jsonSerialize(): array { return iterator_to_array($this->entities); }
-        };
+        return new MappedCollection($repository, function ($record) {
+            return self::restoreFromRecord($record);
+        });
     }
 
     /**
@@ -171,19 +155,6 @@ final class {{ entity }} implements JsonSerializable
         {{ entity }}Repository $repository): void
     {
         $repository->destroy($id);
-    }
-
-    /**
-     * リポジトリの返すデータからエンティティのリストを復元する
-     *
-     * @param {{ entity }}Record[] $records
-     * @return Traversable
-     */
-    private static function restoreFromRecords(array $records): Traversable
-    {
-        foreach ($records as $record) {
-            yield self::restoreFromRecord($record);
-        }
     }
 
     /**

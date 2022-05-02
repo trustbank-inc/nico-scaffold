@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace {{ namespace }};
 
+use App\Contexts\{{ context }}\Domain\Persistence\Search{{ entity }}ListRepository;
+use App\Models;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Seasalt\Nicoca\Components\Infrastructure\Persistence\HasSearchPhrase;
+use Seasalt\Nicoca\Components\Infrastructure\Persistence\PaginatorCreatable;
 use Seasalt\Nicoca\Components\UseCase\CurrentPage;
 use Seasalt\Nicoca\Components\UseCase\LimitPerPage;
 use Seasalt\Nicoca\Components\UseCase\SearchPhrase;
-use Seasalt\Nicoca\Components\Infrastructure\Persistence\HasSearchPhrase;
-use Seasalt\Nicoca\Components\Infrastructure\Persistence\PaginatorCreatable;
-use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
-use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Record;
-use App\Contexts\{{ context }}\Domain\Persistence\Search{{ entity }}ListRepository;
-use App\Models;
+use Traversable;
 
 final class {{ class }} implements Search{{ entity }}ListRepository
 {
     use HasSearchPhrase;
     use PaginatorCreatable;
+    use {{ entity }}RecordCreatable;
 
     /** @var LengthAwarePaginator */
     private LengthAwarePaginator $paginator;
@@ -34,13 +35,13 @@ final class {{ class }} implements Search{{ entity }}ListRepository
         CurrentPage|null $currentPage = null): void
     {
         $builder = Models\{{ model }}::query();
-        $this->buildSearchPhraseWhereClauses($builder, $this->searchPhrase, [
+        $this->buildSearchPhraseWhereClauses($builder, $searchPhrase, [
             'name',
             /** TODO add fields */
         ]);
         $this->paginator = $builder->paginate(
-            perPage: $this->limit?->getValue(),
-            page: $this->currentPage?->getValue());
+            perPage: $limit?->getValue(),
+            page: $currentPage?->getValue());
     }
 
     /**

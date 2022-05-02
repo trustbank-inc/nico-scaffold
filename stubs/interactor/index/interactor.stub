@@ -27,9 +27,10 @@ final class Interactor
      */
     public function execute(Input $input): Output
     {
-        $this->listRepository->setSearchPhrase($input->getSearchPhrase());
-        $this->listRepository->setLimit($input->getLimit());
-        $this->listRepository->setCurrentPage($input->getCurrentPage());
+        $this->listRepository->restore(
+            $input->getSearchPhrase(),
+            $input->getLimit(),
+            $input->getCurrentPage());
         return new Output({{ entity }}::restoreList($this->listRepository));
     }
 }
