@@ -107,6 +107,7 @@ final class MakeRepositoryCommand extends GeneratorCommand
         parent::handle();
 
         $this->call('make:repository-record', $this->arguments());
+        $this->call('make:repository-record-creatable-trait', $this->arguments());
         $this->call('make:repository-implements', $this->arguments());
         $this->call('make:repository-migration', $this->arguments());
 
