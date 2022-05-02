@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
+use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Record;
+
+trait {{ class }}
+{
+    private function createRecord(array $row): {{ entity }}Record
+    {
+        return new class($row) implements {{ entity }}Record
+        {
+            public function __construct(private array $row)
+            {
+
+            }
+
+            public function getId(): {{ entity }}\Id
+            {
+                return {{ entity }}\Id::fromString($this->row['id']);
+            }
+
+            public function getName(): {{ entity }}\Name
+            {
+                return {{ entity }}\Name::fromString($this->row['name']);
+            }
+        };
+    }
+}
