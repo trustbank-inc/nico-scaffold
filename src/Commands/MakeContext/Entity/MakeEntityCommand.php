@@ -101,7 +101,6 @@ final class MakeEntityCommand extends GeneratorCommand
             'entity' => $this->getEntityInput(),
         ];
         $this->call('make:entity-id', $params);
-        $this->call('make:entity-list', $params);
         $this->call('make:entity-field', $params + [
             'name' => 'Name',
             'type' => 'String',
