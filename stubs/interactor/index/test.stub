@@ -75,7 +75,7 @@ final class IndexTest extends TestCase
         $this->assertCount(3, $page1Items);
         $this->assertEquals(
             expected: $rows[0]['id'],
-            actual: $page1Items[0]->getId()); // データの一致はIDだけで行う
+            actual: $page1Items[0]->getId()->getValue()); // データの一致はIDだけで行う
 
         $page2 = $interactor->execute(Input::fromArray(['limit' => 3, 'page' => 2]));
         $page2Items = iterator_to_array($page2->getList());
@@ -83,7 +83,7 @@ final class IndexTest extends TestCase
         $this->assertCount(3, $page2Items);
         $this->assertEquals(
             expected: $rows[3]['id'],
-            actual: $page2Items[0]->getId()); // データの一致はIDだけで行う
+            actual: $page2Items[0]->getId()->getValue()); // データの一致はIDだけで行う
 
         $page3 = $interactor->execute(Input::fromArray(['limit' => 3, 'page' => 3]));
         $page3Items = iterator_to_array($page3->getList());
@@ -91,7 +91,7 @@ final class IndexTest extends TestCase
         $this->assertCount(3, $page3Items);
         $this->assertEquals(
             expected: $rows[6]['id'],
-            actual: $page3Items[0]->getId()); // データの一致はIDだけで行う
+            actual: $page3Items[0]->getId()->getValue()); // データの一致はIDだけで行う
 
         $page4 = $interactor->execute(Input::fromArray(['limit' => 3, 'page' => 4]));
         $page4Items = iterator_to_array($page4->getList());
@@ -99,7 +99,7 @@ final class IndexTest extends TestCase
         $this->assertCount(1, $page4Items); // 最終ページの件数もちゃんと合っていること
         $this->assertEquals(
             expected: $rows[9]['id'],
-            actual: $page4Items[0]->getId()); // データの一致はIDだけで行う
+            actual: $page4Items[0]->getId()->getValue()); // データの一致はIDだけで行う
     }
 
     /**

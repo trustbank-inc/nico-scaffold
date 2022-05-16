@@ -7,7 +7,7 @@ namespace {{ namespace }};
 use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 
 /**
- * データベースへの永続化のインターフェース
+ * 永続化のインターフェース
  */
 interface {{ class }}
 {

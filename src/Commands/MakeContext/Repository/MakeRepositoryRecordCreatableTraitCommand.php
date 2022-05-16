@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Seasalt\NicoScaffold\Commands\MakeContext\Entity;
+namespace Seasalt\NicoScaffold\Commands\MakeContext\Repository;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -9,9 +9,9 @@ use Seasalt\NicoScaffold\Components\StubsFindable;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
- * エンティティリストのひな型のmakeコマンド
+ * リポジトリレコード生成traitのひな型のmakeコマンド
  */
-final class MakeEntityListCommand extends GeneratorCommand
+final class MakeRepositoryRecordCreatableTraitCommand extends GeneratorCommand
 {
     use StubsFindable;
 
@@ -20,26 +20,26 @@ final class MakeEntityListCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'make:entity-list';
+    protected $name = 'make:repository-record-creatable-trait';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new entity list interface';
+    protected $description = 'Create a new repository record creatable trait';
 
     /**
      * @var string
      */
-    protected $type = 'EntityList';
+    protected $type = 'RecordCreatableTrait';
 
     /**
      * @return string
      */
     protected function getStub(): string
     {
-        return $this->resolveStubPath('entity/entity-list.stub');
+        return $this->resolveStubPath('repository/repository.record-creatable-trait.stub');
     }
 
     /**
@@ -48,15 +48,7 @@ final class MakeEntityListCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace): string
     {
-        return $rootNamespace . "\\Contexts\\{$this->getContextInput()}\\Domain\\Entity";
-    }
-
-    /**
-     * @return string
-     */
-    protected function getNameInput(): string
-    {
-        return $this->getEntityInput() . 'List';
+        return $rootNamespace . "\\Contexts\\{$this->getContextInput()}\\Infrastructure\\Persistence";
     }
 
     /**
@@ -65,9 +57,18 @@ final class MakeEntityListCommand extends GeneratorCommand
     protected function getArguments(): array
     {
         return [
-            ['context', InputArgument::REQUIRED, 'The context for this Entity'],
-            ['entity', InputArgument::REQUIRED, 'The name of this Entity'],
+            ['context', InputArgument::REQUIRED, 'The context for this repository'],
+            ['entity', InputArgument::REQUIRED, 'The name of target entity'],
+            ['model', InputArgument::OPTIONAL, 'The name of eloquent model'],
         ];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNameInput(): string
+    {
+        return $this->getEntityInput() . 'RecordCreatable';
     }
 
     /**

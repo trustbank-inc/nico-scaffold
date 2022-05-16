@@ -8,7 +8,7 @@ use App\Contexts\{{ context }}\Domain\Entity\{{ entity }};
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
 
 /**
- * 詳細を取得
+ * 詳細取得
  */
 final class Interactor
 {

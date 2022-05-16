@@ -14,23 +14,15 @@ use Seasalt\Nicoca\Components\UseCase\SearchPhrase;
 interface Search{{ entity }}ListRepository extends {{ entity }}ListRepository
 {
     /**
-     * 検索フレーズ
-     *
-     * @param SearchPhrase|null $searchPhrase
+     * @param SearchPhrase|null $searchPhrase 検索フレーズ
+     * @param LimitPerPage|null $limit 1ページ当たりの表示件数
+     * @param CurrentPage|null $currentPage 現在ページ
+     * @return void
      */
-    public function setSearchPhrase(SearchPhrase|null $searchPhrase): void;
+    public function restore(
+        SearchPhrase|null $searchPhrase = null,
+        LimitPerPage|null $limit = null,
+        CurrentPage|null $currentPage = null): void;
 
-    /**
-     * 1ページ当たりの表示件数
-     *
-     * @param LimitPerPage|null $limit
-     */
-    public function setLimit(LimitPerPage|null $limit): void;
 
-    /**
-     * 現在ページ
-     *
-     * @param CurrentPage|null $currentPage
-     */
-    public function setCurrentPage(CurrentPage|null $currentPage): void;
 }

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Contexts\{{ context }}\Domain\Entity;
 
-use Seasalt\Nicoca\Components\Domain\Persistence\IdGenerator;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}ListRepository;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Repository;
 use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Record;
 use JsonSerializable;
-use Traversable;
+use Seasalt\Nicoca\Components\Domain\Persistence\Collection;
+use Seasalt\Nicoca\Components\Domain\Persistence\IdGenerator;
+use Seasalt\Nicoca\Components\Domain\Persistence\MappedCollection;
 
 /**
  * TODO add description
@@ -108,17 +109,23 @@ final class {{ entity }} implements JsonSerializable
         {{ entity }}Repository $repository): void
     {
         // {{ entity }}が直接{{ entity }}Recordをimplementsしない
-        $record = new class($this->id, $this->name) implements {{ entity }}Record
+        $record = new class(get_object_vars($this)) implements {{ entity }}Record
         {
-            public function __construct(
-                private {{ entity }}\Id $id,
-                private {{ entity }}\Name $name)
+            public function __construct(private array $fields)
             {
 
             }
 
-            public function getId(): {{ entity }}\Id { return $this->id; }
-            public function getName(): {{ entity }}\Name { return $this->name; }
+            public function getId(): {{ entity }}\Id
+            {
+                return $this->fields['id'];
+            }
+
+            public function getName(): {{ entity }}\Name
+            {
+                return $this->fields['name'];
+            }
+
             /** TODO add fields */
         };
         $repository->save($record);
@@ -128,29 +135,13 @@ final class {{ entity }} implements JsonSerializable
      * 永続化されたエンティティのリストを復元する
      *
      * @param {{ entity }}ListRepository $repository
-     * @return {{ entity }}List
+     * @return Collection
      */
-    public static function restoreList({{ entity }}ListRepository $repository): {{ entity }}List
+    public static function restoreList({{ entity }}ListRepository $repository): Collection
     {
-        $paginator = $repository->restore();
-        $entities = self::restoreFromRecords($paginator->getRecords());
-        return new class(
-            $entities,
-            $paginator->getTotal(),
-            $paginator->getLimit(),
-            $paginator->getCurrentPage()) implements {{ entity }}List
-        {
-            public function __construct(
-                private Traversable $entities,
-                private int $total,
-                private int $limit,
-                private int $currentPage) {}
-            public function getIterator(): Traversable { return $this->entities; }
-            public function getTotal(): int { return $this->total; }
-            public function getLimit(): int { return $this->limit; }
-            public function getCurrentPage(): int { return $this->currentPage; }
-            public function jsonSerialize(): array { return iterator_to_array($this->entities); }
-        };
+        return new MappedCollection($repository, function ($record) {
+            return self::restoreFromRecord($record);
+        });
     }
 
     /**
@@ -164,19 +155,6 @@ final class {{ entity }} implements JsonSerializable
         {{ entity }}Repository $repository): void
     {
         $repository->destroy($id);
-    }
-
-    /**
-     * リポジトリの返すデータからエンティティのリストを復元する
-     *
-     * @param {{ entity }}Record[] $records
-     * @return Traversable
-     */
-    private static function restoreFromRecords(array $records): Traversable
-    {
-        foreach ($records as $record) {
-            yield self::restoreFromRecord($record);
-        }
     }
 
     /**
