@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
  */
 final class {{ class }} implements {{ entity }}Repository
 {
+    use {{ entity }}RecordCreatable;
+
     /**
      * @inheritDoc
      */
@@ -39,29 +41,10 @@ final class {{ class }} implements {{ entity }}Repository
     public function restore({{ entity }}\Id $id): {{ entity }}Record
     {
         try {
-            return new class($id) implements {{ entity }}Record
-            {
-                private array $row;
-
-                public function __construct({{ entity }}\Id $id)
-                {
-                    $this->row = Models\{{ model }}::query()
-                        ->findOrFail($id->getValue())
-                        ->toArray();
-                }
-
-                public function getId(): {{ entity }}\Id
-                {
-                    return {{ entity }}\Id::fromString($this->row['id']);
-                }
-
-                public function getName(): {{ entity }}\Name
-                {
-                    return {{ entity }}\Name::fromString($this->row['name'] ?? '');
-                }
-
-                /** TODO add fields */
-            };
+            $row = Models\{{ model }}::query()
+                ->findOrFail($id->getValue())
+                ->toArray();
+            return $this->create{{ entity }}Record($row->toArray());
         } catch (ModelNotFoundException) {
             throw new {{ entity }}NotFoundException();
         }

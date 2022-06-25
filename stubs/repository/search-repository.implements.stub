@@ -50,7 +50,7 @@ final class {{ class }} implements Search{{ entity }}ListRepository
     public function getIterator(): Traversable
     {
         foreach ($this->paginator as $row) {
-            yield $this->createRecord($row->toArray());
+            yield $this->create{{ entity }}Record($row->toArray());
         }
     }
 

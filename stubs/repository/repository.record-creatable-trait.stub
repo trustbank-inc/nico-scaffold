@@ -9,7 +9,7 @@ use App\Contexts\{{ context }}\Domain\Persistence\{{ entity }}Record;
 
 trait {{ class }}
 {
-    private function createRecord(array $row): {{ entity }}Record
+    private function create{{ entity }}Record(array $row): {{ entity }}Record
     {
         return new class($row) implements {{ entity }}Record
         {
