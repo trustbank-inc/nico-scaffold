@@ -35,7 +35,7 @@ final class ContextServiceProvider extends ServiceProvider
         }
 
         foreach (glob(app_path('Contexts/*'), GLOB_ONLYDIR) as $contextDirectory) {
-            foreach (glob("{$contextDirectory}/Infrastructure/Http/Controller/*") as $path) {
+            foreach (glob("{$contextDirectory}/Infrastructure/Provider/*") as $path) {
                 $this->registerProvider($path);
             }
         }
