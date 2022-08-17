@@ -30,23 +30,34 @@ final class ContextServiceProvider extends ServiceProvider
      */
     private function registerProviders(string $directory): void
     {
-        $namespace = "App\\";
         foreach (glob("{$directory}/*") as $path) {
-            if (is_dir($path)) {
-                $this->registerProviders($path);
-                continue;
-            }
-            if (!str_ends_with(haystack: $path, needle: 'ServiceProvider.php')) {
-                continue;
-            }
-            $providerName = $namespace . str_replace(
-                    ['/', '.php'],
-                    ['\\', ''],
-                    Str::after($path, app_path() . DIRECTORY_SEPARATOR)
-                );
-            $provider = $this->app->resolveProvider($providerName);
-            $provider->register();
+            $this->registerProvider($path);
         }
+
+        foreach (glob(app_path('Contexts/*'), GLOB_ONLYDIR) as $contextDirectory) {
+            foreach (glob("{$contextDirectory}/Infrastructure/Http/Controller/*") as $path) {
+                $this->registerProvider($path);
+            }
+        }
+    }
+
+    private function registerProvider(string $path): void
+    {
+        $namespace = "App\\";
+        if (is_dir($path)) {
+            $this->registerProviders($path);
+            return;
+        }
+        if (!str_ends_with(haystack: $path, needle: 'ServiceProvider.php')) {
+            return;
+        }
+        $providerName = $namespace . str_replace(
+                ['/', '.php'],
+                ['\\', ''],
+                Str::after($path, app_path() . DIRECTORY_SEPARATOR)
+            );
+        $provider = $this->app->resolveProvider($providerName);
+        $provider->register();
     }
 
     /**
